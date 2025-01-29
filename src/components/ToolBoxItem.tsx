@@ -1,14 +1,18 @@
-import React from 'react'
-import TechIcon from './TechIcon';
-import { twMerge } from 'tailwind-merge';
+import TechIcon from "./TechIcon";
+import { twMerge } from "tailwind-merge";
+import LeftToRight from "./LeftToRight";
 
 const ToolBoxItem = ({
   items,
   className,
   itemWraperClassName,
+  moveValue,
+  direction = "left",
 }: {
   className?: string;
-  itemWraperClassName?:string
+  itemWraperClassName?: string;
+  moveValue?: string;
+  direction?: "left" | "right";
   items: {
     title: string;
     iconsType: React.ElementType;
@@ -21,7 +25,14 @@ const ToolBoxItem = ({
         className
       )}
     >
-      <div className={twMerge("flex float- py-0.5 gap-6 pr-6",itemWraperClassName)}>
+      <LeftToRight
+        moveValue={moveValue}
+        direction={direction}
+        className={twMerge(
+          "flex float- py-0.5 gap-6 pr-6",
+          itemWraperClassName
+        )}
+      >
         {items.map((item) => (
           <div
             key={item.title}
@@ -32,9 +43,9 @@ const ToolBoxItem = ({
             <span className="font-semibold">{item.title}</span>
           </div>
         ))}
-      </div>
+      </LeftToRight>
     </div>
   );
 };
 
-export default ToolBoxItem
+export default ToolBoxItem;

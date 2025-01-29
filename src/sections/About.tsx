@@ -1,94 +1,22 @@
+"use client";
+import { motion } from "framer-motion";
+
 import Card from "@/components/Card";
 import SectionHeader from "@/components/SectionHeader";
 import myBookImage from "@/assets/images/book-cover.png";
 import Image from "next/image";
-import JavaScriptIcon from "@/assets/icons/square-js.svg";
-import HTMLIcon from "@/assets/icons/html5.svg";
-import CssIcon from "@/assets/icons/css3.svg";
-import ReactIcon from "@/assets/icons/react.svg";
-import ChromeIcon from "@/assets/icons/chrome.svg";
-import GitubIcon from "@/assets/icons/github.svg";
+
 import mapImage from "@/assets/images/map.png";
 import smileMemoji from "@/assets/images/memoji-smile.png";
 import CardHeader from "@/components/CardHeader";
 import ToolBoxItem from "@/components/ToolBoxItem";
-
-const toolsBoxItem = [
-  {
-    title: "JavaScript",
-    iconsType: JavaScriptIcon,
-  },
-  {
-    title: "HTML5",
-    iconsType: HTMLIcon,
-  },
-  {
-    title: "CSS3",
-    iconsType: CssIcon,
-  },
-  {
-    title: "React",
-    iconsType: ReactIcon,
-  },
-
-  {
-    title: "Chrome",
-    iconsType: ChromeIcon,
-  },
-  {
-    title: "Github",
-    iconsType: GitubIcon,
-  },
-];
-
-const hobbies = [
-  {
-    title: "Painting",
-    emoji: "🎨",
-    left: "5%",
-    top: "5%",
-  },
-  {
-    title: "Photography",
-    emoji: "📷",
-    left: "50%",
-    top: "5%",
-  },
-  {
-    title: "Hiking",
-    emoji: "🥾",
-    left: "35%",
-    top: "40%",
-  },
-  {
-    title: "Gaming",
-    emoji: "🎮",
-    left: "10%",
-    top: "35%",
-  },
-  {
-    title: "Music",
-    emoji: "🎶",
-    left: "70%",
-    top: "45%",
-  },
-  {
-    title: "Fitness",
-    emoji: "🏋️",
-    left: "5%",
-    top: "65%",
-  },
-  {
-    title: "Reading",
-    emoji: "📚",
-    left: "45%",
-    top: "70%",
-  },
-];
+import { useRef } from "react";
+import { toolsBoxItem, hobbies } from "@/data/data";
 
 export const AboutSection = () => {
+  const constraintRef = useRef(null);
   return (
-    <div className="py-20 lg:py-28">
+    <div id="about" className="py-20 lg:py-28">
       <div className="container">
         <SectionHeader
           eyebrow="About Me"
@@ -117,11 +45,17 @@ export const AboutSection = () => {
                   description="Explore the technologies and tools I use to craft exceptional
                 digital experiences."
                 />
-                <ToolBoxItem items={toolsBoxItem} className="" />
+                <ToolBoxItem
+                  items={toolsBoxItem}
+                  direction="left"
+                  moveValue="50%"
+                />
 
                 <ToolBoxItem
                   items={toolsBoxItem}
+                  direction="right"
                   className="mt-6  "
+                  moveValue="50%"
                   itemWraperClassName="-translate-x-1/2"
                 />
               </Card>
@@ -136,21 +70,23 @@ export const AboutSection = () => {
                   className="px-6 py-6"
                 />
 
-                <div className="relative flex-1">
+                <div className="relative flex-1" ref={constraintRef}>
                   {hobbies.map((hobbie) => (
-                    <div
+                    <motion.div
                       key={hobbie.title}
                       className="inline-flex items-center gap-2 px-6 bg-gradient-to-r from-emerald-300 to-sky-400 rounded-full py-1.5 absolute"
                       style={{
                         left: hobbie.left,
                         top: hobbie.top,
                       }}
+                      drag
+                      dragConstraints={constraintRef}
                     >
                       <span className="font-medium text-gray-950">
                         {hobbie.title}
                       </span>
                       <span>{hobbie.emoji}</span>
-                    </div>
+                    </motion.div>
                   ))}
                 </div>
               </Card>
@@ -162,7 +98,8 @@ export const AboutSection = () => {
                   alt="map"
                   className="h-full w-full object-cover  object-left-top"
                 />
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-2 rounded-full bg-gradient-to-r from-emerald-300 to-sky-400 after:content-[' '] after:absolute after:inset-0 after:outline after:outline-2 after:-outline-offset-2 after:rounded-full after:outline-gray-950/30">
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-2 rounded-full  after:content-[''] after:absolute after:inset-0 after:outline after:outline-2 after:-outline-offset-2 after:rounded-full after:outline-gray-950/30">
+                  <div className="absolute inset-0 rounded-full bg-gradient-to-r from-emerald-300 to-sky-400"></div>
                   <Image
                     src={smileMemoji}
                     alt="smiling memoji"
@@ -174,7 +111,6 @@ export const AboutSection = () => {
           </div>
         </div>
       </div>
-      
     </div>
   );
 };
