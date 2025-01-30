@@ -50,7 +50,7 @@ export const Header = () => {
 
   return (
     <div className="flex justify-center items-center fixed top-3 w-full z-10 px-4 ">
-      <nav className="relative flex gap-1 p-0.5 border border-white/15 rounded-full bg-white/10 backdrop-blur flex-wrap max-w-[90%] sm:max-w-none ">
+      <nav className="relative flex gap-1 p-0.5 border border-white/15 rounded-full bg-white/10 backdrop-blur  max-w-[90%] sm:max-w-none ">
         <motion.div
           className="absolute transition-all duration-300 ease-in-out"
           style={{
