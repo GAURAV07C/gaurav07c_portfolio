@@ -20,7 +20,6 @@ export const Header = () => {
     }
   };
 
-  // Array of navigation links
   const navLinks = useMemo(
     () => [
       { title: "Home", href: "#home" },
@@ -37,7 +36,6 @@ export const Header = () => {
   };
 
   useEffect(() => {
-    // Set initial highlight position for the active link
     const activeIndex = navLinks.findIndex(
       (link) => link.title.toLowerCase() === activeLink
     );
@@ -51,8 +49,8 @@ export const Header = () => {
   }, [activeLink, navLinks]);
 
   return (
-    <div className="flex justify-center items-center fixed top-3 w-full z-10">
-      <nav className="relative flex gap-1 p-0.5 border border-white/15 rounded-full bg-white/10 backdrop-blur">
+    <div className="flex justify-center items-center fixed top-3 w-full z-10 px-4 ">
+      <nav className="relative flex gap-1 p-0.5 border border-white/15 rounded-full bg-white/10 backdrop-blur flex-wrap max-w-[90%] sm:max-w-none ">
         <motion.div
           className="absolute transition-all duration-300 ease-in-out"
           style={{
@@ -75,7 +73,7 @@ export const Header = () => {
             }}
           >
             <Link
-              className={`px-4 py-1.5 rounded-full text-sm font-semibold ${
+              className={`px-3 sm:px-4 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-all ${
                 activeLink === link.title.toLowerCase()
                   ? "text-gray-900"
                   : "text-white/70 hover:bg-white/10 hover:text-white"
