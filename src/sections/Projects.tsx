@@ -1,3 +1,7 @@
+"use client";
+
+import { motion } from "framer-motion";
+
 import Link from "next/link";
 import Image from "next/image";
 import CheakCircleIcon from "@/assets/icons/check-circle.svg";
@@ -17,7 +21,9 @@ export const ProjectsSection = () => {
           description="See how I transform concepts intp engaging digital experiences."
         />
 
-        <div className="flex flex-col mt-10 md:mt-20 gap-20 ">
+        <motion.div whileHover={{
+          scale:1.1
+        }} className="flex flex-col mt-10 md:mt-20 gap-20 ">
           {portfolioProjects.map((project, index) => (
             <div
               key={project.title}
@@ -51,7 +57,7 @@ export const ProjectsSection = () => {
                       ))}
                     </ul>
                     <div>
-                      <ul className="inline-flex items-center gap-2 px-6  rounded-full  absolute lg:-ml-8 mt-2 flex-wrap  py-4 w-[50%]">
+                      <ul className="flex flex-row   items-center gap-2 md:px-6  px-0 -ml-6  rounded-full  absolute lg:-ml-8 mt-2 py-5 lg:w-[50%] flex-wrap md:flex-wrap">
                         {project.techStack.map((tech) => (
                           <li
                             key={tech.title}
@@ -59,15 +65,17 @@ export const ProjectsSection = () => {
                             font-semibold  font-mono 
                             
                             px-2
-                            py-0 text-[13px] outline outline-2 outline-white/10 text-black bg-white tracking-wider   "
+                            py-0 text-[13px] 
+                            
+                            outline outline-2 outline-white/10 text-black bg-white tracking-wider   "
                           >
                             {tech.title}
                           </li>
                         ))}
                       </ul>
                     </div>
-                    <div className="mt-10 inline-flex gap-2 py-3">
-                      <div>
+                    <div className="mt-10 inline-flex gap-2 py-7 -ml-5 sm:-ml-0 ">
+                      <div className="">
                         <Link href={project.link}>
                           <button className="bg-white text-gray-950 h-12 w-full md:w-auto px-6 rounded-xl font-semibold inline-flex items-center justify-center gap-3 mt-8 hover:bg-white/80 ">
                             <SourceIcon className="size-4" />
@@ -96,7 +104,7 @@ export const ProjectsSection = () => {
               </Card>
             </div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );
