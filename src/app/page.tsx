@@ -9,13 +9,13 @@ import { TestimonialsSection } from "@/sections/Testimonials";
 
 export default function Home() {
   return (
-    <div>
+    <div className="">
       <Header />
       <HeroSection />
       <AboutSection />
       <ProjectsSection />
       <TapeSection />
-      <TestimonialsSection /> 
+      <TestimonialsSection />
       <ContactSection />
       <Footer />
     </div>

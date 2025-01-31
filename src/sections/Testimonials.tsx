@@ -6,6 +6,7 @@ import SectionHeader from "@/components/SectionHeader";
 import Image from "next/image";
 import Card from "@/components/Card";
 import { Fragment } from "react";
+import BlurFade from "@/components/BlurFade";
 const testimonials = [
   {
     name: "Alex Turner",
@@ -48,10 +49,10 @@ export const TestimonialsSection = () => {
         <div className="mt-12 lg:mt-20 flex overflow-x-clip [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)] py-4 -my-4">
           <motion.div
             animate={controls}
-            initial={{ x: 0 }}
+            initial={{ x: "-50%" }}
             transition={{ duration: 90, ease: "linear", repeat: Infinity }}
-            onMouseEnter={() => controls.stop()} 
-            onMouseLeave={() => controls.start({ x: "-50%" })} 
+            onMouseEnter={() => controls.stop()}
+            onMouseLeave={() => controls.start({ x: "50%" })}
             className="flex pr-8 gap-8 flex-none  py-3"
           >
             {[...new Array(2)].fill(0).map((_, idx) => (
@@ -79,14 +80,14 @@ export const TestimonialsSection = () => {
                             className="max-h-full"
                           />
                         </div>
-                        <div>
+                        <BlurFade>
                           <div className="font-semibold">
                             {testimonial.name}
                           </div>
                           <div className="text-sm text-white/40">
                             {testimonial.position}
                           </div>
-                        </div>
+                        </BlurFade>
                       </div>
                       <p className="mt-4 md:mt-6 text-sm md:text-base">
                         {testimonial.text}

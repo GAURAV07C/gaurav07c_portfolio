@@ -8,6 +8,23 @@ import ReactIcon from "@/assets/icons/react.svg";
 import ChromeIcon from "@/assets/icons/chrome.svg";
 import GitubIcon from "@/assets/icons/github.svg";
 
+import Node from "@/assets/icons/node-js.svg";
+
+import NextJs from "@/assets/icons/nextjs.svg";
+
+import Zustand from "@/assets/icons/zustand.svg";
+
+import PostGress from "@/assets/icons/postgreSQL.svg";
+import MongoDb from "@/assets/icons/mongoDB.svg";
+
+import Redux from "@/assets/icons/redux.svg";
+import Redis from "@/assets/icons/redis.svg";
+
+import Prisma from "@/assets/icons/prisma.svg";
+
+import WebSocket from "@/assets/icons/websocket.svg";
+
+export const BLUR_FADE_DELAY = 0.04;
 
 export const portfolioProjects = [
   {
@@ -155,10 +172,45 @@ export const toolsBoxItem = [
     title: "Github",
     iconsType: GitubIcon,
   },
+  {
+    title: "Zustand",
+    iconsType: Zustand,
+  },
+  {
+    title: "Redux",
+    iconsType: Redux,
+  },
+  {
+    title: "Node.js",
+    iconsType: Node,
+  },
+  {
+    title: "Next.js",
+    iconsType: NextJs,
+  },
+  {
+    title: "Redis",
+    iconsType: Redis,
+  },
+  {
+    title: "MongoDB",
+    iconsType: MongoDb,
+  },
+  {
+    title: "Prisma",
+    iconsType: Prisma,
+  },
+  {
+    title: "PostgresSQL",
+    iconsType: PostGress,
+  },
+  {
+    title: "WebSocket",
+    iconsType: WebSocket,
+  },
 ];
 
 export const hobbies = [
- 
   {
     title: "Photography",
     emoji: "📷",
@@ -192,7 +244,6 @@ export const hobbies = [
   },
 ];
 
-
 export const words = [
   "Performant",
   "Accesssible",
@@ -205,4 +256,16 @@ export const words = [
   "Search Optimized",
   "Usable",
   "Reliable",
+];
+
+export const herOrbit = [
+  {
+    size: 430,
+    rotation: -14,
+    spinDuration: "30s",
+
+    starType: "sparkle",
+    starDuration: "3s",
+    className: "size-8 text-emerald-300/20",
+  },
 ];

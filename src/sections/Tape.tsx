@@ -1,7 +1,8 @@
 "use client";
 import StarIcon from "@/assets/icons/star.svg";
-import { words } from "@/data/data";
+import { BLUR_FADE_DELAY, words } from "@/data/data";
 import LeftToRight from "@/components/LeftToRight";
+import BlurFade from "@/components/BlurFade";
 
 export const TapeSection = () => {
   return (
@@ -13,12 +14,20 @@ export const TapeSection = () => {
             moveValue="50%"
             className="flex  flex-none gap-4 pr-4 py-3 "
           >
-            {words.map((word) => (
+            {words.map((word, index) => (
               <div key={word} className="inline-flex gap-4 items-center">
-                <span className="text-gray-900 uppercase font-semibold text-sm">
+                <BlurFade
+                  delay={BLUR_FADE_DELAY + index * 0.5}
+                  className="text-gray-900 uppercase font-semibold text-sm"
+                >
                   {word}
-                </span>
-                <StarIcon className="size-6 text-gray-900 -rotate-12" />
+                </BlurFade>
+                <BlurFade
+                  delay={BLUR_FADE_DELAY + index * 0.3}
+                  className="text-gray-900 uppercase font-semibold text-sm"
+                >
+                  <StarIcon className="size-6 text-gray-900 -rotate-12" />
+                </BlurFade>
               </div>
             ))}
           </LeftToRight>
