@@ -20,18 +20,6 @@ const testimonials = [
     text: "Working with Alex was a pleasure. His expertise in frontend development brought our designs to life in a way we never imagined. The website has exceeded our expectations.",
     avatar: memojiAvatar2,
   },
-  {
-    name: "Oliva Green",
-    position: "Head of Design @ GreenLeaf",
-    text: "Working with Alex was a pleasure. His expertise in frontend development brought our designs to life in a way we never imagined. The website has exceeded our expectations.",
-    avatar: memojiAvatar2,
-  },
-  {
-    name: "Olivi Green",
-    position: "Head of Design @ GreenLeaf",
-    text: "Working with Alex was a pleasure. His expertise in frontend development brought our designs to life in a way we never imagined. The website has exceeded our expectations.",
-    avatar: memojiAvatar2,
-  },
 ];
 
 export const TestimonialsSection = () => {
@@ -48,12 +36,13 @@ export const TestimonialsSection = () => {
 
         <div className="mt-12 lg:mt-20 flex overflow-x-clip [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)] py-4 -my-4">
           <motion.div
+          
             animate={controls}
-            initial={{ x: "-50%" }}
-            transition={{ duration: 90, ease: "linear", repeat: Infinity }}
+            initial={{ x: "0%" ,}}
+            transition={{ duration: 60, ease: "linear", repeat: Infinity }}
             onMouseEnter={() => controls.stop()}
-            onMouseLeave={() => controls.start({ x: "50%" })}
-            className="flex pr-8 gap-8 flex-none  py-3"
+            onMouseLeave={() => controls.start({ x: "-50%" })}
+            className="flex pr-8 gap-8 flex-none  py-3 "
           >
             {[...new Array(2)].fill(0).map((_, idx) => (
               <Fragment key={idx}>
