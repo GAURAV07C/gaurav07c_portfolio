@@ -1,6 +1,7 @@
 import darkSaasLandingPage from "@/assets/images/dark-saas-landing-page.png";
-import lightSaasLandingPage from "@/assets/images/light-saas-landing-page.png";
-import aiStartupLandingPage from "@/assets/images/ai-startup-landing-page.png";
+import Portfolio from "@/assets/images/Portfolio.png";
+// import lightSaasLandingPage from "@/assets/images/light-saas-landing-page.png";
+// import aiStartupLandingPage from "@/assets/images/ai-startup-landing-page.png";
 import JavaScriptIcon from "@/assets/icons/square-js.svg";
 import HTMLIcon from "@/assets/icons/html5.svg";
 import CssIcon from "@/assets/icons/css3.svg";
@@ -31,96 +32,10 @@ export const portfolioProjects = [
     company: "DevAurasion",
     year: "2024",
     title: "DevAurasion Landing Page",
-    results: [{ title: "Enhanced user experience by 40%" }],
-    techStack: [
-      {
-        title: "Next.js",
-      },
-      {
-        title: "React.js",
-      },
-      {
-        title: "Typescript",
-      },
-      {
-        title: "TailwindCSS",
-      },
-      {
-        title: "Shadcn UI",
-      },
-    ],
-    link: "",
-    source: "",
-    image: darkSaasLandingPage,
-  },
-  {
-    company: "",
-    year: "",
-    title: "Dark Saas Landing Page",
-    results: [
-      { title: "Enhanced user experience by 40%" },
-      { title: "Improved site speed by 50%" },
-      { title: "Increased mobile traffic by 35%" },
-    ],
-    techStack: [
-      {
-        title: "Next.js",
-      },
-      {
-        title: "React.js",
-      },
-      {
-        title: "Typescript",
-      },
-      {
-        title: "TailwindCSS",
-      },
-      {
-        title: "Shadcn UI",
-      },
-    ],
-    link: "",
-    source: "",
-    image: darkSaasLandingPage,
-  },
-  {
-    company: "",
-    year: "",
-    title: "Light Saas Landing Page",
-    results: [
-      { title: "Boosted sales by 20%" },
-      { title: "Expanded customer reach by 35%" },
-      { title: "Increased brand awareness by 15%" },
-    ],
-    techStack: [
-      {
-        title: "Next.js",
-      },
-      {
-        title: "React.js",
-      },
-      {
-        title: "Typescript",
-      },
-      {
-        title: "TailwindCSS",
-      },
-      {
-        title: "Shadcn UI",
-      },
-    ],
-    link: "",
-    source: "",
-    image: lightSaasLandingPage,
-  },
-  {
-    company: "",
-    year: "",
-    title: "AI Startup Landing Page",
     results: [
       {
         title:
-          "Developed a stunning landing page, built with Next.js, React.js, Tailwind CSS, and Framer Motion, offers a highly responsive and visually engaging experience. Designed with a strong focus on aesthetics and fluid animations, it provides a seamless user interface across all devices, ensuring a captivating first impression for visitors.",
+          "Developed a stunning landing page for DevaAurasion Community, built with Next.js, React.js, Tailwind CSS, and Framer Motion, offers a highly responsive and visually engaging experience. Designed with a strong focus on aesthetics and fluid animations, it provides a seamless user interface across all devices, ensuring a captivating first impression for visitors.",
       },
     ],
     techStack: [
@@ -142,8 +57,130 @@ export const portfolioProjects = [
     ],
     link: "",
     source: "",
-    image: aiStartupLandingPage,
+    image: darkSaasLandingPage,
   },
+  {
+    company: "",
+    year: "2025",
+    title: "Portfolio ",
+    results: [
+      {
+        title:
+          "Developed an amazing Portfolio to showase my work to potentiol recruiters. I used latest web desiging techniques like TailwindCSS and Shadcn UI to make it look good and Next.js to make it fast.",
+      },
+    ],
+    techStack: [
+      {
+        title: "Next.js",
+      },
+      {
+        title: "React.js",
+      },
+      {
+        title: "Typescript",
+      },
+      {
+        title: "TailwindCSS",
+      },
+      {
+        title: "Shadcn UI",
+      },
+    ],
+    link: "https://gaurav07c.vercel.app/",
+    source: "https://github.com/GAURAV07C/gaurav07c_portfolio",
+    image: Portfolio,
+  },
+  // {
+  //   company: "",
+  //   year: "",
+  //   title: "Dark Saas Landing Page",
+  //   results: [
+  //     { title: "Enhanced user experience by 40%" },
+  //     { title: "Improved site speed by 50%" },
+  //     { title: "Increased mobile traffic by 35%" },
+  //   ],
+  //   techStack: [
+  //     {
+  //       title: "Next.js",
+  //     },
+  //     {
+  //       title: "React.js",
+  //     },
+  //     {
+  //       title: "Typescript",
+  //     },
+  //     {
+  //       title: "TailwindCSS",
+  //     },
+  //     {
+  //       title: "Shadcn UI",
+  //     },
+  //   ],
+  //   link: "",
+  //   source: "",
+  //   image: darkSaasLandingPage,
+  // },
+  // {
+  //   company: "",
+  //   year: "",
+  //   title: "Light Saas Landing Page",
+  //   results: [
+  //     { title: "Boosted sales by 20%" },
+  //     { title: "Expanded customer reach by 35%" },
+  //     { title: "Increased brand awareness by 15%" },
+  //   ],
+  //   techStack: [
+  //     {
+  //       title: "Next.js",
+  //     },
+  //     {
+  //       title: "React.js",
+  //     },
+  //     {
+  //       title: "Typescript",
+  //     },
+  //     {
+  //       title: "TailwindCSS",
+  //     },
+  //     {
+  //       title: "Shadcn UI",
+  //     },
+  //   ],
+  //   link: "",
+  //   source: "",
+  //   image: lightSaasLandingPage,
+  // },
+  // {
+  //   company: "",
+  //   year: "",
+  //   title: "AI Startup Landing Page",
+  //   results: [
+  //     {
+  //       title:
+  //         "Developed a stunning landing page, built with Next.js, React.js, Tailwind CSS, and Framer Motion, offers a highly responsive and visually engaging experience. Designed with a strong focus on aesthetics and fluid animations, it provides a seamless user interface across all devices, ensuring a captivating first impression for visitors.",
+  //     },
+  //   ],
+  //   techStack: [
+  //     {
+  //       title: "Next.js",
+  //     },
+  //     {
+  //       title: "React.js",
+  //     },
+  //     {
+  //       title: "Typescript",
+  //     },
+  //     {
+  //       title: "TailwindCSS",
+  //     },
+  //     {
+  //       title: "Shadcn UI",
+  //     },
+  //   ],
+  //   link: "",
+  //   source: "",
+  //   image: aiStartupLandingPage,
+  // },
 ];
 
 export const toolsBoxItem = [
