@@ -10,8 +10,26 @@ import HeroOrbit from "./HeroOrbit";
 
 import SparkleIcon from "@/assets/icons/sparkle.svg";
 import BlurFade from "@/components/BlurFade";
+import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
+import { TypewriterEffect } from "@/components/ui/typewriter-effect";
 
 export const HeroSection = () => {
+  const words = [
+    {
+      text: "Building",
+      className: "text-white text-3xl md:text-5xl font-serif",
+    },
+    {
+      text: "Exceptional",
+      className: "text-white text-3xl md:text-5xl font-serif",
+    },
+    { text: "User", className: "text-white text-3xl md:text-5xl font-serif" },
+    {
+      text: "Experience",
+      className: "text-white text-3xl md:text-5xl font-serif",
+    },
+  ];
+
   return (
     <BlurFade>
       <div className="py-32 md:py-48 lg:py-60 z-0 overflow-x-clip relative">
@@ -156,12 +174,17 @@ export const HeroSection = () => {
           </div>
           <div className="max-w-lg mx-auto">
             <h1 className="font-serif text-3xl md:text-5xl text-center mt-8 tracking-wide">
-              Building Exceptional User Experience
+              <TypewriterEffect
+                words={words}
+                className="text-center mt-8 tracking-wide"
+              />
             </h1>
             <p className="mt-4 text-center text-white/60 md:text-lg">
-              I specialize in transforming designs into functional,
+              <TextGenerateEffect
+                words="I specialize in transforming designs into functional,
               high-performing web applications. Let&lsquo;s discuss your next
-              project.
+              project."
+              />
             </p>
           </div>
           <div className="flex justify-center flex-col md:flex-row items-center mt-8 gap-4 ">

@@ -1,5 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  images: {
+    domains: [
+      "api.microlink.io", // Microlink Image Preview
+    ],
+  },
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   webpack(config: { module: { rules: any[]; }; }) {
     // Grab the existing rule that handles SVG imports
