@@ -179,13 +179,9 @@ export const HeroSection = () => {
                 className="text-center mt-8 tracking-wide"
               />
             </h1>
-            <p className="mt-4 text-center text-white/60 md:text-lg">
-              <TextGenerateEffect
-                words="I specialize in transforming designs into functional,
-              high-performing web applications. Let&lsquo;s discuss your next
-              project."
-              />
-            </p>
+            <div className="mt-4 text-center text-white/60 md:text-lg">
+              <TextGenerateEffect words="I specialize in transforming designs into functional, high-performing web applications. Let's discuss your next project." />
+            </div>
           </div>
           <div className="flex justify-center flex-col md:flex-row items-center mt-8 gap-4 ">
             <button

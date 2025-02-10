@@ -13,16 +13,16 @@ const Aboutme = () => {
           />
           <div className="mt-20 flex flex-col gap-8">
             <div className="grid grid-cols-1 gap-8 ">
-              <div className="md:col-span-2 lg:col-span-1">
+              <div className="md:col-span-2 lg:col-span-1 text-white/70">
                 I’m a passionate{" "}
-                <span className="text-red-600">pre-final year undergrad</span>{" "}
+                <span className="text-white">pre-final year undergrad</span>{" "}
                 with a deep love for coding and technology. My journey has led
                 me to develop a strong foundation in{" "}
-                <span className="text-red-600">
+                <span className="text-white">
                   Web development and the emerging world of Web3
                 </span>
                 . I thrive on building innovative{" "}
-                <span className="text-red-600">products</span> . Always eager to
+                <span className="text-white">products</span> . Always eager to
                 expand my skills and tackle new challenges, I’m actively seeking
                 lucrative opportunities to leverage my tech expertise and drive
                 impactful projects. Whether it’s through creating seamless web
