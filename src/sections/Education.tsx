@@ -25,7 +25,7 @@ const Education = () => {
     },
   ];
   return (
-    <div className="-mt-16 py-16">
+    <div className="-mt-16 py-16" id='education'>
       <div>
         <SectionHeader eyebrow="Education" title="" description="" />
       </div>

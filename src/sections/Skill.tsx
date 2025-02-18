@@ -26,7 +26,7 @@ const skillData = [
 
 const Skill = () => {
   return (
-    <div className="container w-[50%] py-16">
+    <div className="container w-[50%] py-16" id="skill" >
       <div className="py-3 container">
         <SectionHeader eyebrow="Skills" title="" description="" />
       </div>

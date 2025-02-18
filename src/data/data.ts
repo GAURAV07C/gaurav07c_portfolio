@@ -55,8 +55,8 @@ export const portfolioProjects = [
         title: "Shadcn UI",
       },
     ],
-    link: "",
-    source: "",
+    link: "https://devaurasion.vercel.app/",
+    source: "https://github.com/GAURAV07C/DevAurasion",
     image: devaAurasion,
   },
   {
