@@ -3,7 +3,7 @@ import Aboutme from "@/sections/Aboutme";
 import { ContactSection } from "@/sections/Contact";
 import Education from "@/sections/Education";
 import Experience from "@/sections/Experience";
-// import { Footer } from "@/sections/Footer";
+import { Footer } from "@/sections/Footer";
 import { Header } from "@/sections/Header";
 import { HeroSection } from "@/sections/Hero";
 import Introduction from "@/sections/Introduction";
@@ -27,7 +27,7 @@ export default function Home() {
       <Aboutme  />
       <AboutSection />
       <ContactSection />
-      {/* <Footer /> */}
+      <Footer />
     </div>
   );
 }
