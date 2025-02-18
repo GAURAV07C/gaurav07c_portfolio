@@ -1,8 +1,9 @@
 import devaAurasion from "@/assets/images/DevaAurasion.png";
 import Portfolio from "@/assets/images/Portfolio.png";
 import Aisas from "@/assets/images/ai-startup-landing-page.png";
+import ProjectHub from "@/assets/images/projectHub.png";
 // import lightSaasLandingPage from "@/assets/images/light-saas-landing-page.png";
-// import aiStartupLandingPage from "@/assets/images/ai-startup-landing-page.png";
+
 import JavaScriptIcon from "@/assets/icons/square-js.svg";
 import HTMLIcon from "@/assets/icons/html5.svg";
 import CssIcon from "@/assets/icons/css3.svg";
@@ -29,6 +30,43 @@ import WebSocket from "@/assets/icons/websocket.svg";
 export const BLUR_FADE_DELAY = 0.04;
 
 export const portfolioProjects = [
+  {
+    company: "Feb",
+    year: "2025 still working",
+    title: "Project Hub ",
+    results: [
+      {
+        title:
+          "Developed an amazing Project Hub platform, a full-stack social platform where students can showcase their projects, discuss ideas, and collaborate. 🚀 I implemented Next.js for a fast and seamless experience, Tailwind CSS and ShadCN UI for a modern and intuitive design, and Auth.js for secure authentication, including two-factor authentication. This platform allows students to share their work, get feedback, and engage with a like-minded community. 🔥",
+      },
+    ],
+    techStack: [
+      {
+        title: "Next.js",
+      },
+      {
+        title: "React.js",
+      },
+      {
+        title: "Typescript",
+      },
+      {
+        title: "TailwindCSS",
+      },
+      {
+        title: "Shadcn UI",
+      },
+      {
+        title: "Postgres SQL",
+      },
+      {
+        title: "Auth Js",
+      },
+    ],
+    link: "https://project-hub-rho.vercel.app/",
+    source: "https://github.com/GAURAV07C/ProjectHub",
+    image: ProjectHub,
+  },
   {
     company: "DevAurasion",
     year: "2024",
@@ -61,37 +99,6 @@ export const portfolioProjects = [
     image: devaAurasion,
   },
   {
-    company: "Dec",
-    year: "2024",
-    title: "AI Landing Page",
-    results: [
-      {
-        title:
-          "Developed a stunning landing page, built with Next.js, React.js, Tailwind CSS, and Framer Motion, offers a highly responsive and visually engaging experience. Designed with a strong focus on aesthetics and fluid animations, it provides a seamless user interface across all devices, ensuring a captivating first impression for visitors.",
-      },
-    ],
-    techStack: [
-      {
-        title: "Next.js",
-      },
-      {
-        title: "React.js",
-      },
-      {
-        title: "Typescript",
-      },
-      {
-        title: "TailwindCSS",
-      },
-      {
-        title: "Shadcn UI",
-      },
-    ],
-    link: "https://ai-landing-page-virid.vercel.app/",
-    source: "https://github.com/GAURAV07C/AI-Landing_Page",
-    image: Aisas,
-  },
-  {
     company: "Jan",
     year: "2025",
     title: "Portfolio ",
@@ -122,6 +129,38 @@ export const portfolioProjects = [
     source: "https://github.com/GAURAV07C/gaurav07c_portfolio",
     image: Portfolio,
   },
+  {
+    company: "Dec",
+    year: "2024",
+    title: "AI Landing Page",
+    results: [
+      {
+        title:
+          "Developed a stunning landing page, built with Next.js, React.js, Tailwind CSS, and Framer Motion, offers a highly responsive and visually engaging experience. Designed with a strong focus on aesthetics and fluid animations, it provides a seamless user interface across all devices, ensuring a captivating first impression for visitors.",
+      },
+    ],
+    techStack: [
+      {
+        title: "Next.js",
+      },
+      {
+        title: "React.js",
+      },
+      {
+        title: "Typescript",
+      },
+      {
+        title: "TailwindCSS",
+      },
+      {
+        title: "Shadcn UI",
+      },
+    ],
+    link: "https://ai-landing-page-virid.vercel.app/",
+    source: "https://github.com/GAURAV07C/AI-Landing_Page",
+    image: Aisas,
+  },
+
   // {
   //   company: "",
   //   year: "",
