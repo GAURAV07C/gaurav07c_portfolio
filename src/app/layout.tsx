@@ -1,9 +1,13 @@
 import type { Metadata } from "next";
-import {Inter,Calistoga} from 'next/font/google'
+import { Inter, Calistoga } from "next/font/google";
 import "./globals.css";
-import { twMerge } from 'tailwind-merge'
-const inter = Inter({subsets: ['latin'],variable:'--font-inter'})
-const calistoga = Calistoga({ subsets: ["latin"], variable: "--font-inter" , weight:['400'] });
+import { twMerge } from "tailwind-merge";
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+const calistoga = Calistoga({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  weight: ["400"],
+});
 
 export const metadata: Metadata = {
   title: "Gaurav07C | Gaurav Kumar | MERN Stack Developer | Web Developer ",
@@ -41,6 +45,9 @@ export const metadata: Metadata = {
     "frontend developer",
     "backend developer",
   ],
+  icons: {
+    icon: "/logofavicon.svg", // Correct path to your logo
+  },
 };
 
 export default function RootLayout({
@@ -50,16 +57,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
-        {/* Additional SEO tags */}
-        <meta name="author" content="Gaurav Kumar" />
-        <meta
-          name="google-site-verification"
-          content="YOUR_GOOGLE_VERIFICATION_CODE"
-        />
-        <meta name="theme-color" content="#ffffff" />
-        <link rel="canonical" href="https://www.gaurav07c.dev" />
-      </head>
       <body
         className={twMerge(
           inter.variable,
