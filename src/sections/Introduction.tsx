@@ -40,7 +40,7 @@ const Introduction = () => {
         transition={{ duration: 0.8 }}
       >
         <Image
-          src="/mypic.jpg"
+          src="/mypic.png"
           alt="my-pic"
           width={150}
           height={200}
