@@ -17,7 +17,7 @@ export const ProjectsSection = () => {
       <div className="container">
         <SectionHeader
           eyebrow="Real-world Results"
-          title="Featured Projects"
+          title="My Recent work"
           description="See how I transform concepts intp engaging digital experiences."
         />
 
