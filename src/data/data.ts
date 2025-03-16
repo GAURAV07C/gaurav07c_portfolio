@@ -31,8 +31,8 @@ export const BLUR_FADE_DELAY = 0.04;
 
 export const portfolioProjects = [
   {
-    company: "Feb",
-    year: "2025 still working",
+    company: "Feb ",
+    year: "2025 ",
     title: "Project Hub ",
     results: [
       {
