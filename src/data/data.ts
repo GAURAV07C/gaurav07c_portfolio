@@ -2,6 +2,7 @@ import devaAurasion from "@/assets/images/DevaAurasion.png";
 import Portfolio from "@/assets/images/Portfolio.png";
 import Aisas from "@/assets/images/ai-startup-landing-page.png";
 import ProjectHub from "@/assets/images/projectHub.png";
+import ainotes from "@/assets/images/ai-notes.png";
 // import lightSaasLandingPage from "@/assets/images/light-saas-landing-page.png";
 
 import JavaScriptIcon from "@/assets/icons/square-js.svg";
@@ -30,6 +31,43 @@ import WebSocket from "@/assets/icons/websocket.svg";
 export const BLUR_FADE_DELAY = 0.04;
 
 export const portfolioProjects = [
+  {
+    company: "April ",
+    year: "2025 ",
+    title: " Mini AI-Powered Notes App ",
+    results: [
+      {
+        title:
+          "Developed an amazing AI-Powered Notes App, a full-stack application that allows users to create, edit, and delete notes. The app uses gemai  API to summarize notes based on user input. I implemented Next.js for a fast and seamless experience, Tanstack Query for efficient data fetching, and Supabase for secure authentication and database management. This app is perfect for students and professionals who want to keep their notes organized and easily accessible.",
+      },
+    ],
+    techStack: [
+      {
+        title: "Next.js",
+      },
+      {
+        title: "Tanstack Query",
+      },
+      {
+        title: "Typescript",
+      },
+      {
+        title: "gemnai",
+      },
+      {
+        title: "Shadcn UI",
+      },
+      {
+        title: "Postgres SQL",
+      },
+      {
+        title: "Supabase",
+      },
+    ],
+    link: "https://ai-notes-app-azure.vercel.app/",
+    source: "https://github.com/GAURAV07C/ai-notes-app",
+    image: ainotes,
+  },
   {
     company: "Feb ",
     year: "2025 ",
