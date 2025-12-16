@@ -21,9 +21,12 @@ export const ProjectsSection = () => {
           description="See how I transform concepts intp engaging digital experiences."
         />
 
-        <motion.div whileHover={{
-          scale:1.1
-        }} className="flex flex-col mt-10 md:mt-20 gap-20 ">
+        <motion.div
+          whileHover={{
+            scale: 1.1,
+          }}
+          className="flex flex-col mt-10 md:mt-20 gap-20 "
+        >
           {portfolioProjects.map((project, index) => (
             <div
               key={project.title}

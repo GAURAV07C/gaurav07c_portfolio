@@ -8,16 +8,40 @@ import React from "react";
 const Experience = () => {
   const work = [
     {
+      company: "Sprinpak Manufacturing LLP",
+      href: "",
+      badges: [],
+      location: "Gurgon Bilaspur",
+      title: "Full Stack Developer",
+      logoUrl: "/memoji.jpeg",
+      start: "JULY 2025",
+      end: "PRESENT",
+      description:
+        "Developed automation-driven production planning tools and internal applications by designing user-friendly interfaces, streamlining production workflows, and integrating real-time data tracking, resulting in improved operational efficiency and smoother team collaboration.",
+    },
+    {
+      company: "Save Rush",
+      href: "",
+      badges: [],
+      location: "Remote",
+      title: "Full Stack Developer",
+      logoUrl: "/memoji.jpeg",
+      start: "MARCH 2025",
+      end: "JULY 2025",
+      description:
+        "Built scalable backend APIs for a real-time flash sale platform using Node.js, MongoDB, Redis, focusing on performance, concurrency, and seamless frontend integration.",
+    },
+    {
       company: "DevAurasion Community ",
       href: "",
       badges: [],
       location: "Remote",
       title: "Full Stack Developer",
       logoUrl: "/memoji.jpeg",
-      start: "2024",
-      end: "Present",
+      start: "DEC 2024",
+      end: "FEB 2025",
       description:
-        "Implemented the Bitcoin discreet log contract (DLC) protocol specifications as an open source Typescript SDK. Dockerized all microservices and setup production kubernetes cluster. Architected a data lake using AWS S3 and Athena for historical backtesting of bitcoin trading strategies. Built a mobile app using react native and typescript.",
+        "Built responsive and interactive user interfaces for a developer community platform, focusing on usability, performance, and seamless API integration.",
     },
   ];
 

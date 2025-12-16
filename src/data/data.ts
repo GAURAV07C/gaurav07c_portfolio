@@ -3,6 +3,7 @@ import Portfolio from "@/assets/images/Portfolio.png";
 import Aisas from "@/assets/images/ai-startup-landing-page.png";
 import ProjectHub from "@/assets/images/projectHub.png";
 import ainotes from "@/assets/images/ai-notes.png";
+import watchTogether from "@/assets/images/watch-together.png";
 // import lightSaasLandingPage from "@/assets/images/light-saas-landing-page.png";
 
 import JavaScriptIcon from "@/assets/icons/square-js.svg";
@@ -31,6 +32,27 @@ import WebSocket from "@/assets/icons/websocket.svg";
 export const BLUR_FADE_DELAY = 0.04;
 
 export const portfolioProjects = [
+  {
+    company: "Dec",
+    year: "2025",
+    title: "Watch Together App",
+    results: [
+      {
+        title:
+          "Developed a real-time Watch Together platform that allows multiple users to watch YouTube videos in sync while chatting. Implemented WebSocket-based signaling for room management and playback synchronization, ensuring minimal latency and a smooth shared viewing experience using WebRTC and React.",
+      },
+    ],
+    techStack: [
+      { title: "React" },
+      { title: "WebRTC" },
+      { title: "WebSockets" },
+      { title: "Node.js" },
+      { title: "JavaScript" },
+    ],
+    link: "https://watchtogetherstream.onrender.com/",
+    source: "https://github.com/GAURAV07C/WatchTogetherStream.git",
+    image: watchTogether, // project image variable
+  },
   {
     company: "April ",
     year: "2025 ",
