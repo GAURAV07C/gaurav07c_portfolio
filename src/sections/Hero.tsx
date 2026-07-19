@@ -12,23 +12,28 @@ import SparkleIcon from "@/assets/icons/sparkle.svg";
 import BlurFade from "@/components/BlurFade";
 import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
 import { TypewriterEffect } from "@/components/ui/typewriter-effect";
+import { useEffect, useState } from "react";
 
 export const HeroSection = () => {
-  const words = [
-    {
-      text: "Building",
-      className: "text-white text-3xl md:text-5xl font-serif",
-    },
-    {
-      text: "Exceptional",
-      className: "text-white text-3xl md:text-5xl font-serif",
-    },
-    { text: "User", className: "text-white text-3xl md:text-5xl font-serif" },
-    {
-      text: "Experience",
-      className: "text-white text-3xl md:text-5xl font-serif",
-    },
-  ];
+  const [data, setData] = useState<{ words: { text: string; className: string }[]; description: string } | null>(null);
+
+  useEffect(() => {
+    fetch("/api/settings")
+      .then(res => res.json())
+      .then(settings => {
+        if (settings) {
+          setData({
+            words: JSON.parse(settings.heroWords || "[]"),
+            description: settings.heroDesc
+          });
+        }
+      })
+      .catch(console.error);
+  }, []);
+
+  if (!data) return <div className="h-screen bg-gray-950"></div>;
+
+  const { words, description } = data;
 
   return (
     <BlurFade>
@@ -180,7 +185,7 @@ export const HeroSection = () => {
               />
             </h1>
             <div className="mt-4 text-center text-white/60 md:text-lg">
-              <TextGenerateEffect words="I specialize in transforming designs into functional, high-performing web applications. Let's discuss your next project." />
+              <TextGenerateEffect words={description} />
             </div>
           </div>
           <div className="flex justify-center flex-col md:flex-row items-center mt-8 gap-4 ">

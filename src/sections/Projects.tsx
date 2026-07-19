@@ -1,7 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-
 import Link from "next/link";
 import Image from "next/image";
 import CheakCircleIcon from "@/assets/icons/check-circle.svg";
@@ -9,16 +8,25 @@ import SourceIcon from "@/assets/icons/source.svg";
 import GithubIcon from "@/assets/icons/github.svg";
 import SectionHeader from "@/components/SectionHeader";
 import Card from "@/components/Card";
-import { portfolioProjects } from "@/data/data";
+import { useEffect, useState } from "react";
 
 export const ProjectsSection = () => {
+  const [projects, setProjects] = useState<{ id: string; company: string; year: string; title: string; results: string; techStack: string; liveLink?: string; sourceLink?: string; demoLink?: string; image: string }[]>([]);
+
+  useEffect(() => {
+    fetch("/api/projects")
+      .then(res => res.json())
+      .then(data => setProjects(data))
+      .catch(console.error);
+  }, []);
+
   return (
     <section id="project" className="pb-16 lg:py-24">
       <div className="container">
         <SectionHeader
           eyebrow="Real-world Results"
           title="My Recent work"
-          description="See how I transform concepts intp engaging digital experiences."
+          description="See how I transform concepts into engaging digital experiences."
         />
 
         <motion.div
@@ -27,9 +35,9 @@ export const ProjectsSection = () => {
           }}
           className="flex flex-col mt-10 md:mt-20 gap-20 "
         >
-          {portfolioProjects.map((project, index) => (
+          {projects.map((project, index) => (
             <div
-              key={project.title}
+              key={project.id}
               className="sticky "
               style={{
                 top: `calc(64px + ${index * 20}px)`,
@@ -49,9 +57,9 @@ export const ProjectsSection = () => {
                     </h3>
                     <hr className="border-t-2 border-white/5 mt-4 md:mt-5" />
                     <ul className="flex flex-col gap-4 mt-4 md:mt-5">
-                      {project.results.map((result) => (
+                      {JSON.parse(project.results || "[]").map((result: { title: string }, i: number) => (
                         <li
-                          key={result.title}
+                          key={i}
                           className="flex gap-2 text-sm md:text-base text-white/50"
                         >
                           <CheakCircleIcon className="size-5 md:size-6" />
@@ -60,48 +68,64 @@ export const ProjectsSection = () => {
                       ))}
                     </ul>
                     <div>
-                      <ul className="flex flex-row   items-center gap-2 md:px-6  px-0 -ml-6  rounded-full  absolute lg:-ml-8 mt-2 py-5 lg:w-[50%] flex-wrap md:flex-wrap">
-                        {project.techStack.map((tech) => (
+                      <ul className="flex flex-row items-center gap-2 md:px-6 px-0 -ml-6 rounded-full absolute lg:-ml-8 mt-2 py-5 lg:w-[50%] flex-wrap md:flex-wrap">
+                        {JSON.parse(project.techStack || "[]").map((tech: { title: string }, i: number) => (
                           <li
-                            key={tech.title}
-                            className="inline-flex  items-center rounded-lg 
-                            font-semibold  font-mono 
-                            
+                            key={i}
+                            className="inline-flex items-center rounded-lg 
+                            font-semibold font-mono 
                             px-2
                             py-0 text-[13px] 
-                            
-                            outline outline-2 outline-white/10 text-black bg-white tracking-wider   "
+                            outline outline-2 outline-white/10 text-black bg-white tracking-wider"
                           >
                             {tech.title}
                           </li>
                         ))}
                       </ul>
                     </div>
-                    <div className="mt-10 inline-flex gap-2 py-7 -ml-5 sm:-ml-0 ">
-                      <div className="">
-                        <Link href={project.link}>
-                          <button className="bg-white text-gray-950 h-12 w-full md:w-auto px-6 rounded-xl font-semibold inline-flex items-center justify-center gap-3 mt-8 hover:bg-white/80 ">
-                            <SourceIcon className="size-4" />
-                            <span> Website </span>
-                          </button>
-                        </Link>
-                      </div>
-                      <div>
-                        <Link href={project.source}>
-                          <button className="bg-white text-gray-950 h-12 w-full md:w-auto px-6 rounded-xl font-semibold inline-flex items-center justify-center gap-3 mt-8 hover:bg-white/80 ">
-                            <GithubIcon className="size-4" />
-                            <span> Source </span>
-                          </button>
-                        </Link>
-                      </div>
+                    <div className="mt-10 flex flex-wrap gap-4 py-7 -ml-5 sm:-ml-0">
+                      {project.liveLink && (
+                        <div className="">
+                          <Link href={project.liveLink} target="_blank" rel="noopener noreferrer">
+                            <button className="bg-white text-gray-950 h-12 w-full md:w-auto px-6 rounded-xl font-semibold inline-flex items-center justify-center gap-3 hover:bg-white/80">
+                              <SourceIcon className="size-4" />
+                              <span>Live</span>
+                            </button>
+                          </Link>
+                        </div>
+                      )}
+                      {project.sourceLink && (
+                        <div>
+                          <Link href={project.sourceLink} target="_blank" rel="noopener noreferrer">
+                            <button className="bg-white text-gray-950 h-12 w-full md:w-auto px-6 rounded-xl font-semibold inline-flex items-center justify-center gap-3 hover:bg-white/80">
+                              <GithubIcon className="size-4" />
+                              <span>Source</span>
+                            </button>
+                          </Link>
+                        </div>
+                      )}
+                      {project.demoLink && (
+                        <div>
+                          <Link href={project.demoLink} target="_blank" rel="noopener noreferrer">
+                            <button className="bg-white text-gray-950 h-12 w-full md:w-auto px-6 rounded-xl font-semibold inline-flex items-center justify-center gap-3 hover:bg-white/80">
+                              <SourceIcon className="size-4" />
+                              <span>Demo</span>
+                            </button>
+                          </Link>
+                        </div>
+                      )}
                     </div>
                   </div>
                   <div className="relative">
-                    <Image
-                      src={project.image}
-                      alt={project.title}
-                      className="mt-8 pb-0 -mb-4 md:mb-0   lg:mt-0  lg:absolute lg:h-full lg:w-auto lg:max-w-none"
-                    />
+                    {project.image && (
+                      <Image
+                        src={project.image}
+                        alt={project.title}
+                        width={800}
+                        height={600}
+                        className="mt-8 pb-0 -mb-4 md:mb-0 lg:mt-0 lg:absolute lg:h-full lg:w-auto lg:max-w-none"
+                      />
+                    )}
                   </div>
                 </div>
               </Card>

@@ -23,10 +23,11 @@ export const Header = () => {
 
   const navLinks = useMemo(
     () => [
-      { title: "Home", href: "#home" },
-      { title: "Project", href: "#project" },
-      { title: "About", href: "#about" },
-      { title: "Contact", href: "#contact" },
+      { title: "Home", href: "/#home" },
+      { title: "Project", href: "/#project" },
+      { title: "About", href: "/#about" },
+      { title: "Blog", href: "/blog" },
+      { title: "Contact", href: "/#contact" },
     ],
     []
   );

@@ -1,10 +1,19 @@
 "use client";
 import StarIcon from "@/assets/icons/star.svg";
-import { BLUR_FADE_DELAY, words } from "@/data/data";
-import LeftToRight from "@/components/LeftToRight";
 import BlurFade from "@/components/BlurFade";
+import LeftToRight from "@/components/LeftToRight";
+import { useEffect, useState } from "react";
 
 export const TapeSection = () => {
+  const [words, setWords] = useState<string[]>([]);
+
+  useEffect(() => {
+    fetch("/api/tape-words")
+      .then(res => res.json())
+      .then(data => setWords(Array.isArray(data) ? data : []))
+      .catch(console.error);
+  }, []);
+
   return (
     <div className="py-16 lg:py-24 overflow-x-clip">
       <div className="bg-gradient-to-r from-emerald-300 to-sky-400 overflow-x-clip -rotate-3 -mx-1">
@@ -17,13 +26,13 @@ export const TapeSection = () => {
             {words.map((word, index) => (
               <div key={word} className="inline-flex gap-4 items-center">
                 <BlurFade
-                  delay={BLUR_FADE_DELAY + index * 0.5}
+                  delay={0.04 + index * 0.5}
                   className="text-gray-900 uppercase font-semibold text-sm"
                 >
                   {word}
                 </BlurFade>
                 <BlurFade
-                  delay={BLUR_FADE_DELAY + index * 0.3}
+                  delay={0.04 + index * 0.3}
                   className="text-gray-900 uppercase font-semibold text-sm"
                 >
                   <StarIcon className="size-6 text-gray-900 -rotate-12" />

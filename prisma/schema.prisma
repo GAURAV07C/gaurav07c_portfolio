@@ -1,0 +1,127 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id       String @id @default(cuid())
+  email    String @unique
+  password String
+}
+
+model SiteSettings {
+  id          String @id @default("global") // We'll only have one row
+  heroWords   String // JSON array of {text, className}
+  heroDesc    String
+  aboutMe     String
+  socialLinks String // JSON array of {name, href}
+  introductionWords String @default("[]") // JSON array of {text, className}
+}
+
+model Project {
+  id         String @id @default(cuid())
+  company    String
+  year       String
+  title      String
+  results    String // JSON array of {title}
+  techStack  String // JSON array of {title}
+  liveLink   String?
+  sourceLink String?
+  demoLink   String?
+  image      String
+}
+
+model Blog {
+  id      String @id @default(cuid())
+  title   String
+  date    String
+  excerpt String
+  content String
+  link    String
+  image   String
+}
+
+model Skill {
+  id        String @id @default(cuid())
+  title     String
+  iconsType String
+}
+
+model TapeWord {
+  id        String   @id @default(cuid())
+  word      String
+  createdAt DateTime @default(now())
+}
+
+model HeroOrbit {
+  id            String   @id @default(cuid())
+  size          Int
+  rotation      Int
+  spinDuration  String
+  starType      String
+  starDuration  String
+  className     String
+  createdAt     DateTime @default(now())
+}
+
+model Hobby {
+  id        String   @id @default(cuid())
+  title     String
+  emoji     String
+  left      String
+  top       String
+  createdAt DateTime @default(now())
+}
+
+model Tool {
+  id        String   @id @default(cuid())
+  title     String
+  iconName  String
+  createdAt DateTime @default(now())
+}
+
+model Education {
+  id        String   @id @default(cuid())
+  school    String
+  href      String
+  degree    String
+  logoUrl   String
+  start     String
+  end       String
+  createdAt DateTime @default(now())
+}
+
+model Experience {
+  id         String   @id @default(cuid())
+  company    String
+  href       String
+  badges     String
+  location   String
+  title      String
+  logoUrl    String
+  start      String
+  end        String
+  description String
+  createdAt  DateTime @default(now())
+}
+
+model Testimonial {
+  id        String   @id @default(cuid())
+  name      String
+  position  String
+  text      String
+  avatar    String
+  createdAt DateTime @default(now())
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  message   String
+  createdAt DateTime @default(now())
+}

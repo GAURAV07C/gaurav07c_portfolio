@@ -1,27 +1,34 @@
+"use client";
+
 import Link from "next/link";
 import { Github, Twitter, Linkedin, Instagram } from "lucide-react";
 import BlurFade from "@/components/BlurFade";
+import { useEffect, useState } from "react";
 
-const footerlinks = [
-  {
-    title: <Twitter />,
-    href: "https://x.com/gaurav07c",
-  },
-  {
-    title: <Github />,
-    href: "https://github.com/GAURAV07C/",
-  },
-  {
-    title: <Linkedin />,
-    href: "https://www.linkedin.com/in/gaurav07c/",
-  },
-  {
-    title: <Instagram />,
-    href: "https://www.instagram.com/gaurav07cc/",
-  },
-];
+const getIcon = (name: string) => {
+  switch (name) {
+    case "Twitter": return <Twitter />;
+    case "Github": return <Github />;
+    case "Linkedin": return <Linkedin />;
+    case "Instagram": return <Instagram />;
+    default: return null;
+  }
+};
 
 export const Footer = () => {
+  const [socialLinks, setSocialLinks] = useState<{ name: string; href: string }[]>([]);
+
+  useEffect(() => {
+    fetch("/api/settings")
+      .then(res => res.json())
+      .then(settings => {
+        if (settings?.socialLinks) {
+          setSocialLinks(JSON.parse(settings.socialLinks));
+        }
+      })
+      .catch(console.error);
+  }, []);
+
   return (
     <footer className="relative overflow-x-clip z-10">
       {" "}
@@ -33,7 +40,7 @@ export const Footer = () => {
           <div className="border-t border-white/15 py-5 text-sm flex flex-col md:flex-row md:justify-between items-center gap-8 relative">
             <div className="text-white/60">Made with ❤️ by Gaurav</div>
             <nav className="flex flex-row md:flex-row items-center gap-8 z-50 relative">
-              {footerlinks.map((link, id) => (
+              {socialLinks.map((link, id) => (
                 <Link
                   key={id}
                   href={link.href}
@@ -41,7 +48,7 @@ export const Footer = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  {link.title}
+                  {getIcon(link.name)}
                 </Link>
               ))}
             </nav>

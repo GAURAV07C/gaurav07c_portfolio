@@ -4,13 +4,21 @@ import { TypewriterEffect } from "@/components/ui/typewriter-effect";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import React from "react";
+import { useEffect, useState } from "react";
 
 const Introduction = () => {
-  const words = [
-    { text: "Hi", className: "text-white text-6xl" },
-    { text: "I'm", className: "text-white text-6xl" },
-    { text: "Gaurav", className: "text-white text-6xl" },
-  ];
+  const [words, setWords] = useState<{ text: string; className: string }[]>([]);
+
+  useEffect(() => {
+    fetch("/api/settings")
+      .then(res => res.json())
+      .then(settings => {
+        if (settings?.introductionWords) {
+          setWords(JSON.parse(settings.introductionWords));
+        }
+      })
+      .catch(console.error);
+  }, []);
 
   return (
     <div className="container mx-auto flex flex-col items-center justify-center p-6 md:flex-row md:w-[80%] lg:w-[65%]">
