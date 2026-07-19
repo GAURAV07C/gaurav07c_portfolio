@@ -2,7 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import { motion, stagger, useAnimate, useInView } from "framer-motion";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export const TypewriterEffect = ({
   words,
@@ -16,7 +16,6 @@ export const TypewriterEffect = ({
   className?: string;
   cursorClassName?: string;
 }) => {
-  // split text inside of words into array of characters
   const wordsArray = words.map((word) => {
     return {
       ...word,
@@ -26,24 +25,32 @@ export const TypewriterEffect = ({
 
   const [scope, animate] = useAnimate();
   const isInView = useInView(scope);
+  const [hasAnimated, setHasAnimated] = useState(false);
+  const spanRef = useRef<HTMLSpanElement>(null);
+
   useEffect(() => {
-    if (isInView) {
-      animate(
-        "span",
-        {
-          display: "inline-block",
-          opacity: 1,
-          width: "fit-content",
-        },
-        {
-          duration: 0.3,
-          delay: stagger(0.1),
-          ease: "easeInOut",
+    if (isInView && !hasAnimated && wordsArray.length > 0) {
+      const timer = setTimeout(() => {
+        if (spanRef.current && spanRef.current.children.length > 0) {
+          animate(
+            "span",
+            {
+              display: "inline-block",
+              opacity: 1,
+              width: "fit-content",
+            },
+            {
+              duration: 0.3,
+              delay: stagger(0.1),
+              ease: "easeInOut",
+            }
+          );
+          setHasAnimated(true);
         }
-      );
+      }, 50);
+      return () => clearTimeout(timer);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isInView]);
+  }, [isInView, hasAnimated, animate, wordsArray.length]);
 
   const renderWords = () => {
     return (
@@ -53,6 +60,7 @@ export const TypewriterEffect = ({
             <div key={`word-${idx}`} className="inline-block">
               {word.text.map((char, index) => (
                 <motion.span
+                  ref={index === 0 && idx === 0 ? spanRef : undefined}
                   initial={{}}
                   key={`char-${index}`}
                   className={cn(

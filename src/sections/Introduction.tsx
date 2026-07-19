@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 
 const Introduction = () => {
   const [words, setWords] = useState<{ text: string; className: string }[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetch("/api/settings")
@@ -16,9 +17,18 @@ const Introduction = () => {
         if (settings?.introductionWords) {
           setWords(JSON.parse(settings.introductionWords));
         }
+        setLoading(false);
       })
-      .catch(console.error);
+      .catch(() => setLoading(false));
   }, []);
+
+  if (loading) {
+    return (
+      <div className="container mx-auto flex flex-col items-center justify-center p-6 md:flex-row md:w-[80%] lg:w-[65%]">
+        <div className="text-white/40 text-lg">Loading...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto flex flex-col items-center justify-center p-6 md:flex-row md:w-[80%] lg:w-[65%]">

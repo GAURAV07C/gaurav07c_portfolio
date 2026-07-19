@@ -5,7 +5,7 @@ import LeftToRight from "@/components/LeftToRight";
 import { useEffect, useState } from "react";
 
 export const TapeSection = () => {
-  const [words, setWords] = useState<string[]>([]);
+  const [words, setWords] = useState<{ id: string; word: string }[]>([]);
 
   useEffect(() => {
     fetch("/api/tape-words")
@@ -23,13 +23,13 @@ export const TapeSection = () => {
             moveValue="50%"
             className="flex  flex-none gap-4 pr-4 py-3 "
           >
-            {words.map((word, index) => (
-              <div key={word} className="inline-flex gap-4 items-center">
+            {words.map((wordObj, index) => (
+              <div key={wordObj.id} className="inline-flex gap-4 items-center">
                 <BlurFade
                   delay={0.04 + index * 0.5}
                   className="text-gray-900 uppercase font-semibold text-sm"
                 >
-                  {word}
+                  {wordObj.word}
                 </BlurFade>
                 <BlurFade
                   delay={0.04 + index * 0.3}

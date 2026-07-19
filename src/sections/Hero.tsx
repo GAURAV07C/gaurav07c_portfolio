@@ -31,7 +31,13 @@ export const HeroSection = () => {
       .catch(console.error);
   }, []);
 
-  if (!data) return <div className="h-screen bg-gray-950"></div>;
+  if (!data) {
+    return (
+      <div className="h-screen bg-gray-950 flex items-center justify-center">
+        <div className="text-white/40 text-lg">Loading...</div>
+      </div>
+    );
+  }
 
   const { words, description } = data;
 
