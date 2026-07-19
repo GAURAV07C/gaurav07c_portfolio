@@ -3,12 +3,12 @@ import { ReactNode } from "react";
 import BlurFade from "@/components/BlurFade";
 import { ToastProvider } from "@/components/ToastProvider";
 import { ToastContainer } from "@/components/ToastContainer";
+import SignOutButton from "@/components/SignOutButton";
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
   return (
     <ToastProvider>
       <div className="min-h-screen bg-gray-950 text-white flex flex-col md:flex-row font-sans">
-        {/* Sidebar */}
         <aside className="w-full md:w-64 bg-gray-900 border-r border-white/10 p-6 flex flex-col gap-8">
           <div className="font-serif text-2xl tracking-widest text-emerald-300">
             Admin Panel
@@ -27,14 +27,14 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
             <Link href="/admin/tape-words" className="hover:text-emerald-300 transition">Tape Words</Link>
             <Link href="/admin/messages" className="hover:text-emerald-300 transition">Messages</Link>
           </nav>
-          <div className="mt-auto">
+          <div className="mt-auto flex flex-col gap-3">
             <Link href="/" className="text-sm text-white/40 hover:text-white transition">
               &larr; Back to Portfolio
             </Link>
+            <SignOutButton />
           </div>
         </aside>
 
-        {/* Main Content */}
         <main className="flex-1 p-6 md:p-12 overflow-y-auto">
           <BlurFade>
             {children}

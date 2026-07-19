@@ -1,5 +1,7 @@
 "use client";
 
+export const dynamic = "force-dynamic";
+
 import React, { useEffect, useState } from "react";
 import BlurFade from "@/components/BlurFade";
 import { ConfirmDialog } from "@/components/ConfirmDialog";
