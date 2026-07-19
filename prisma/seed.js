@@ -172,6 +172,34 @@ async function main() {
     await prisma.hobby.create({ data: hobby });
   }
 
+  const skills = [
+    { title: "Next.js", iconsType: "NextJs" },
+    { title: "React", iconsType: "ReactIcon" },
+    { title: "JavaScript", iconsType: "JavaScript" },
+    { title: "TypeScript", iconsType: "JavaScript" },
+    { title: "Node.js", iconsType: "Node" },
+    { title: "Git", iconsType: "GitubIcon" },
+    { title: "MongoDB", iconsType: "MongoDb" },
+    { title: "Postgres", iconsType: "PostGress" },
+    { title: "Docker", iconsType: "ChromeIcon" },
+    { title: "Linux", iconsType: "ChromeIcon" },
+    { title: "GitHub Actions", iconsType: "GitubIcon" },
+    { title: "Prisma", iconsType: "Prisma" },
+    { title: "MonoRepo", iconsType: "ChromeIcon" },
+    { title: "WebSocket", iconsType: "WebSocket" },
+    { title: "Redis", iconsType: "Redis" },
+    { title: "GraphQL", iconsType: "ChromeIcon" },
+    { title: "CI/CD", iconsType: "ChromeIcon" },
+  ];
+
+  for (const skill of skills) {
+    await prisma.skill.upsert({
+      where: { title: skill.title },
+      update: {},
+      create: skill
+    });
+  }
+
   const tools = [
     { title: "JavaScript", iconName: "JavaScript" },
     { title: "HTML5", iconName: "HTMLIcon" },

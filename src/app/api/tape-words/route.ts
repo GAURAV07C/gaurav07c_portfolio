@@ -6,7 +6,7 @@ export async function GET() {
     const words = await prisma.tapeWord.findMany({
       orderBy: { createdAt: "asc" }
     });
-    return NextResponse.json(words.map(w => w.word), { status: 200 });
+    return NextResponse.json(words, { status: 200 });
   } catch {
     return NextResponse.json({ error: "Failed to fetch words" }, { status: 500 });
   }

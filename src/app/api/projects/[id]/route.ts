@@ -20,12 +20,31 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
   try {
     const { id } = await params;
     const body = await request.json();
+    const skillTitles = Array.isArray(body.skills) ? body.skills : [];
     
     const updatedProject = await prisma.project.update({
       where: { id },
-      data: body
+      data: {
+        company: body.company,
+        year: body.year,
+        title: body.title,
+        results: body.results,
+        techStack: body.techStack,
+        liveLink: body.liveLink,
+        sourceLink: body.sourceLink,
+        demoLink: body.demoLink,
+        image: body.image,
+        skills: {
+          set: [],
+          connectOrCreate: skillTitles.map((title: string) => ({
+            where: { title },
+            create: { title, iconsType: "JavaScript" }
+          }))
+        }
+      },
+      include: { skills: true }
     });
-    
+
     return NextResponse.json(updatedProject, { status: 200 });
   } catch {
     return NextResponse.json({ error: "Failed to update project" }, { status: 500 });

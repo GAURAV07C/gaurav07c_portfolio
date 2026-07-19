@@ -59,7 +59,7 @@ export default function SettingsPage() {
     { id: "social", label: "Social Links", icon: "🔗" },
   ];
 
-  const parseJson = (json: string): any[] => {
+  const parseJson = (json: string): unknown[] => {
     try {
       const parsed = JSON.parse(json);
       return Array.isArray(parsed) ? parsed : [];
@@ -68,26 +68,8 @@ export default function SettingsPage() {
     }
   };
 
-  const updateIntroWords = (index: number, field: string, value: string) => {
-    const words = parseJson(formData.introductionWords);
-    words[index] = { ...words[index], [field]: value };
-    setFormData({ ...formData, introductionWords: JSON.stringify(words) });
-  };
-
-  const addIntroWord = () => {
-    const words = parseJson(formData.introductionWords);
-    words.push({ text: "New", className: "text-white text-6xl" });
-    setFormData({ ...formData, introductionWords: JSON.stringify(words) });
-  };
-
-  const removeIntroWord = (index: number) => {
-    const words = parseJson(formData.introductionWords);
-    words.splice(index, 1);
-    setFormData({ ...formData, introductionWords: JSON.stringify(words) });
-  };
-
   const updateSocialLink = (index: number, field: string, value: string) => {
-    const links = parseJson(formData.socialLinks);
+    const links = parseJson(formData.socialLinks) as { name: string; href: string }[];
     links[index] = { ...links[index], [field]: value };
     setFormData({ ...formData, socialLinks: JSON.stringify(links) });
   };
@@ -174,7 +156,7 @@ export default function SettingsPage() {
               </p>
             </div>
             <div className="space-y-3">
-              {parseJson(formData.socialLinks).map((link: { name: string; href: string }, index: number) => (
+              {(parseJson(formData.socialLinks) as { name: string; href: string }[]).map((link, index) => (
                 <div key={index} className="flex gap-3 items-start bg-gray-950 border border-white/10 rounded-xl p-4">
                   <div className="flex-1 space-y-3">
                     <input
