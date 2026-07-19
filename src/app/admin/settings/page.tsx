@@ -5,29 +5,69 @@ export const dynamic = "force-dynamic";
 import React, { useEffect, useState } from "react";
 
 export default function SettingsPage() {
-  const [settings, setSettings] = useState<{ aboutMe: string; socialLinks: string; introductionWords: string } | null>(null);
+  const [settings, setSettings] = useState<{ aboutMe: string; socialLinks: string; introductionWords: string; profileImage?: string } | null>(null);
   const [formData, setFormData] = useState({
     aboutMe: "",
     socialLinks: "",
     introductionWords: "",
+    profileImage: "",
   });
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
-  const [activeTab, setActiveTab] = useState("about");
+  const [activeTab, setActiveTab] = useState("profile");
+  const [imagePreview, setImagePreview] = useState<string>("");
+  const [imageError, setImageError] = useState(false);
 
   useEffect(() => {
     fetch("/api/settings")
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) throw new Error("Failed to fetch settings");
+        return res.json();
+      })
       .then(data => {
         setSettings(data);
         setFormData({
           aboutMe: data.aboutMe || "",
           socialLinks: data.socialLinks || "[]",
           introductionWords: data.introductionWords || "[]",
+          profileImage: data.profileImage || "",
         });
+        setImagePreview(data.profileImage || "");
+        setImageError(false);
       })
-      .catch(console.error);
+      .catch(err => {
+        console.error("Settings fetch error:", err);
+      });
   }, []);
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      setMessage({ type: "error", text: "Please select an image file." });
+      return;
+    }
+
+    if (file.size > 2 * 1024 * 1024) {
+      setMessage({ type: "error", text: "Image size should be less than 2MB." });
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const base64 = reader.result as string;
+      setFormData(prev => ({ ...prev, profileImage: base64 }));
+      setImagePreview(base64);
+      setMessage(null);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const removeImage = () => {
+    setFormData(prev => ({ ...prev, profileImage: "" }));
+    setImagePreview("");
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -56,6 +96,7 @@ export default function SettingsPage() {
   if (!settings) return <div className="text-white/50">Loading settings...</div>;
 
   const tabs = [
+    { id: "profile", label: "Profile", icon: "👤" },
     { id: "about", label: "About Me", icon: "📝" },
     { id: "intro", label: "Introduction", icon: "👋" },
     { id: "social", label: "Social Links", icon: "🔗" },
@@ -99,8 +140,8 @@ export default function SettingsPage() {
 
       {message && (
         <div className={`mb-8 p-4 rounded-xl border ${
-          message.type === "success" 
-            ? "bg-emerald-300/10 border-emerald-300/30 text-emerald-300" 
+          message.type === "success"
+            ? "bg-emerald-300/10 border-emerald-300/30 text-emerald-300"
             : "bg-red-300/10 border-red-300/30 text-red-300"
         }`}>
           <div className="flex items-center gap-3">
@@ -110,12 +151,12 @@ export default function SettingsPage() {
         </div>
       )}
 
-      <div className="flex gap-2 mb-8 border-b border-white/10 pb-1">
+      <div className="flex gap-2 mb-8 border-b border-white/10 pb-1 overflow-x-auto">
         {tabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`px-6 py-3 rounded-t-xl font-medium transition-all ${
+            className={`px-6 py-3 rounded-t-xl font-medium transition-all whitespace-nowrap ${
               activeTab === tab.id
                 ? "bg-gray-900 text-emerald-300 border-b-2 border-emerald-300"
                 : "text-white/60 hover:text-white hover:bg-white/5"
@@ -128,6 +169,57 @@ export default function SettingsPage() {
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-8">
+        {activeTab === "profile" && (
+          <div className="bg-gray-900 border border-white/10 rounded-2xl p-8">
+            <div className="mb-6">
+              <h2 className="text-2xl font-semibold text-white mb-2">Profile Picture</h2>
+              <p className="text-white/60 text-sm">
+                Upload a profile picture. This will appear in the About Me section and other areas of your portfolio.
+              </p>
+            </div>
+
+            <div className="flex flex-col md:flex-row gap-8 items-start">
+              <div className="relative w-40 h-40 md:w-48 md:h-48 rounded-2xl overflow-hidden flex-shrink-0 border-2 border-dashed border-white/20 bg-gray-950">
+                {formData.profileImage && !imageError ? (
+                  <img
+                    src={formData.profileImage}
+                    alt="Profile preview"
+                    className="w-full h-full object-cover"
+                    onError={() => setImageError(true)}
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <span className="text-4xl">👤</span>
+                  </div>
+                )}
+              </div>
+
+              <div className="flex-1 space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-white/70 mb-3">Upload Profile Image</label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    className="block w-full text-sm text-white/60 file:mr-4 file:py-3 file:px-6 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-emerald-300 file:text-gray-950 hover:file:bg-emerald-400 file:cursor-pointer cursor-pointer"
+                  />
+                  <p className="text-xs text-white/40 mt-2">Supported formats: JPG, PNG, WEBP. Max size: 2MB</p>
+                </div>
+
+                {imagePreview && (
+                  <button
+                    type="button"
+                    onClick={removeImage}
+                    className="text-sm text-red-400 hover:text-red-300 transition"
+                  >
+                    Remove image
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
         {activeTab === "about" && (
           <div className="bg-gray-900 border border-white/10 rounded-2xl p-8">
             <div className="mb-6">
@@ -220,7 +312,9 @@ export default function SettingsPage() {
                 aboutMe: settings?.aboutMe || "",
                 socialLinks: settings?.socialLinks || "[]",
                 introductionWords: settings?.introductionWords || "[]",
+                profileImage: settings?.profileImage || "",
               });
+              setImagePreview(settings?.profileImage || "");
               setMessage(null);
             }}
             className="bg-gray-800 hover:bg-gray-700 text-white font-medium py-3.5 px-8 rounded-xl transition-all border border-white/10"

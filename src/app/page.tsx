@@ -7,7 +7,7 @@ import { Footer } from "@/sections/Footer";
 import { Header } from "@/sections/Header";
 import { HeroSection } from "@/sections/Hero";
 import Introduction from "@/sections/Introduction";
-import { ProjectsSection } from "@/sections/Projects";
+import { RecentProjects } from "@/sections/RecentProjects";
 import Skill from "@/sections/Skill";
 import { TapeSection } from "@/sections/Tape";
 import { TestimonialsSection } from "@/sections/Testimonials";
@@ -21,7 +21,7 @@ export default function Home() {
       <Skill />
       <Experience />
       <Education />
-      <ProjectsSection />
+      <RecentProjects />
       <TapeSection />
       <TestimonialsSection />
       <Aboutme  />

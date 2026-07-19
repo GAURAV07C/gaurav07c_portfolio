@@ -3,19 +3,25 @@ import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
 import { TypewriterEffect } from "@/components/ui/typewriter-effect";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import React from "react";
 import { useEffect, useState } from "react";
 
 const Introduction = () => {
   const [words, setWords] = useState<{ text: string; className: string }[]>([]);
+  const [profileImage, setProfileImage] = useState<string>("");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetch("/api/settings")
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) throw new Error("Failed to fetch settings");
+        return res.json();
+      })
       .then(settings => {
         if (settings?.introductionWords) {
           setWords(JSON.parse(settings.introductionWords));
+        }
+        if (settings?.profileImage) {
+          setProfileImage(settings.profileImage);
         }
         setLoading(false);
       })
@@ -29,6 +35,8 @@ const Introduction = () => {
       </div>
     );
   }
+
+  const imageSrc = profileImage || "/mypic.png";
 
   return (
     <div className="w-full max-w-5xl mx-auto flex flex-col items-center justify-center px-4 md:px-6 md:flex-row">
@@ -58,7 +66,7 @@ const Introduction = () => {
         transition={{ duration: 0.8 }}
       >
         <Image
-          src="/mypic.png"
+          src={imageSrc}
           alt="my-pic"
           width={150}
           height={200}

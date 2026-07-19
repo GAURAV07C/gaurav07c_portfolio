@@ -14,12 +14,13 @@ model User {
 }
 
 model SiteSettings {
-  id          String @id @default("global") // We'll only have one row
-  heroWords   String // JSON array of {text, className}
-  heroDesc    String
-  aboutMe     String
-  socialLinks String // JSON array of {name, href}
-  introductionWords String @default("[]") // JSON array of {text, className}
+  id                 String  @id @default("global")
+  heroWords          String  // JSON array of {text, className}
+  heroDesc           String
+  aboutMe            String
+  socialLinks        String  // JSON array of {name, href}
+  introductionWords  String  @default("[]")
+  profileImage       String? // base64 encoded profile image
 }
 
 model Project {
@@ -34,16 +35,18 @@ model Project {
   demoLink   String?
   image      String
   skills     Skill[] // Many-to-many relationship with skills
+  createdAt  DateTime @default(now())
 }
 
 model Blog {
-  id      String @id @default(cuid())
-  title   String
-  date    String
-  excerpt String
-  content String
-  link    String
-  image   String
+  id         String    @id @default(cuid())
+  title      String
+  date       String
+  excerpt    String
+  content    String
+  link       String
+  image      String
+  createdAt  DateTime  @default(now())
 }
 
 model Skill {

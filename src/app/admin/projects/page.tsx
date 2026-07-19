@@ -2,7 +2,8 @@
 
 export const dynamic = "force-dynamic";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import BlurFade from "@/components/BlurFade";
 import { Modal } from "@/components/Modal";
 import { ConfirmDialog } from "@/components/ConfirmDialog";
@@ -46,6 +47,8 @@ export default function ProjectsAdminPage() {
   const [loading, setLoading] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const toast = useToast();
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
   const fetchProjects = () => {
     fetch("/api/projects")
@@ -65,6 +68,16 @@ export default function ProjectsAdminPage() {
     fetchProjects();
     fetchSkills();
   }, []);
+
+  useEffect(() => {
+    const editId = searchParams.get("edit");
+    if (editId && projects.length > 0) {
+      const projectToEdit = projects.find(p => p.id === editId);
+      if (projectToEdit) {
+        openEditModal(projectToEdit);
+      }
+    }
+  }, [searchParams, projects]);
 
   const openAddModal = () => {
     setEditingId(null);
@@ -112,6 +125,10 @@ export default function ProjectsAdminPage() {
       demoLink: "",
       image: "",
     });
+  };
+
+  const handleView = (id: string) => {
+    router.push(`/project/${id}`);
   };
 
   const toggleSkill = (skillTitle: string) => {
@@ -210,12 +227,14 @@ export default function ProjectsAdminPage() {
           description="Add your first project to get started."
         />
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="flex flex-col gap-3">
           {projects.map((project, index) => (
             <BlurFade key={project.id} delay={index * 0.05}>
               <AdminItemCard
                 title={project.title}
                 subtitle={`${project.company} • ${project.year}`}
+                image={project.image}
+                onView={() => handleView(project.id)}
                 onEdit={() => openEditModal(project)}
                 onDelete={() => setDeleteId(project.id)}
               />
@@ -251,6 +270,7 @@ export default function ProjectsAdminPage() {
           <FormField label="Title">
             <Input
               type="text"
+              name="title"
               value={formData.title}
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
               required

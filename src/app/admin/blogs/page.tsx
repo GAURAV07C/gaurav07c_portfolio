@@ -3,6 +3,7 @@
 export const dynamic = "force-dynamic";
 
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import BlurFade from "@/components/BlurFade";
 import { Modal } from "@/components/Modal";
 import { ConfirmDialog } from "@/components/ConfirmDialog";
@@ -30,6 +31,7 @@ export default function BlogsAdminPage() {
   const [loading, setLoading] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const toast = useToast();
+  const router = useRouter();
 
   const fetchBlogs = () => {
     fetch("/api/blogs")
@@ -58,6 +60,10 @@ export default function BlogsAdminPage() {
     setShowModal(false);
     setEditingId(null);
     setFormData({ title: "", date: "", excerpt: "", content: "", image: "" });
+  };
+
+  const handleView = (id: string) => {
+    router.push(`/blog/${id}`);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -128,16 +134,18 @@ export default function BlogsAdminPage() {
           description="Add your first blog post to get started."
         />
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="flex flex-col gap-3">
           {blogs.map((blog, index) => (
             <BlurFade key={blog.id} delay={index * 0.05}>
               <AdminItemCard
                 title={blog.title}
                 subtitle={blog.date}
+                image={blog.image}
+                onView={() => handleView(blog.id)}
                 onEdit={() => openEditModal(blog)}
                 onDelete={() => setDeleteId(blog.id)}
               >
-                <p className="text-white/60 text-sm mt-2 line-clamp-2">{blog.excerpt}</p>
+                {blog.excerpt}
               </AdminItemCard>
             </BlurFade>
           ))}

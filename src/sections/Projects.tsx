@@ -43,7 +43,8 @@ export const ProjectsSection = () => {
                 top: `calc(64px + ${index * 20}px)`,
               }}
             >
-              <Card className="px-8 pt-8 md:pt-12 md:px-12 lg:pt-16 lg:px-20 ">
+              <Link href={`/project/${project.id}`}>
+                <Card className="px-8 pt-8 md:pt-12 md:px-12 lg:pt-16 lg:px-20 cursor-pointer hover:border-emerald-300/30 transition-all">
                 <div className="lg:grid lg:grid-cols-2 gap-16">
                   <div className="lg:pb-16">
                     <div className="bg-gradient-to-r from-emerald-300 to-sky-400 inline-flex gap-2 font-bold uppercase tracking-widest text-sm text-transparent bg-clip-text">
@@ -123,6 +124,7 @@ export const ProjectsSection = () => {
                   </div>
                 </div>
               </Card>
+            </Link>
             </div>
           ))}
         </motion.div>

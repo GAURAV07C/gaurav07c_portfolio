@@ -19,16 +19,21 @@ export const HeroSection = () => {
 
   useEffect(() => {
     fetch("/api/settings")
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) throw new Error("Failed to fetch settings");
+        return res.json();
+      })
       .then(settings => {
         if (settings) {
           setData({
             words: JSON.parse(settings.heroWords || "[]"),
-            description: settings.heroDesc
+            description: settings.heroDesc || ""
           });
         }
       })
-      .catch(console.error);
+      .catch(() => {
+        setData({ words: [], description: "" });
+      });
   }, []);
 
   if (!data) {
