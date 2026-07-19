@@ -38,7 +38,7 @@ export const ProjectsSection = () => {
           {projects.map((project, index) => (
             <div
               key={project.id}
-              className="sticky "
+              className="md:sticky"
               style={{
                 top: `calc(64px + ${index * 20}px)`,
               }}
@@ -67,21 +67,15 @@ export const ProjectsSection = () => {
                         </li>
                       ))}
                     </ul>
-                    <div>
-                      <ul className="flex flex-row items-center gap-2 md:px-6 px-0 -ml-6 rounded-full absolute lg:-ml-8 mt-2 py-5 lg:w-[50%] flex-wrap md:flex-wrap">
-                        {JSON.parse(project.techStack || "[]").map((tech: { title: string }, i: number) => (
-                          <li
-                            key={i}
-                            className="inline-flex items-center rounded-lg 
-                            font-semibold font-mono 
-                            px-2
-                            py-0 text-[13px] 
-                            outline outline-2 outline-white/10 text-black bg-white tracking-wider"
-                          >
-                            {tech.title}
-                          </li>
-                        ))}
-                      </ul>
+                    <div className="flex flex-wrap gap-2 mt-4 md:mt-5">
+                      {JSON.parse(project.techStack || "[]").map((tech: { title: string }, i: number) => (
+                        <span
+                          key={i}
+                          className="inline-flex items-center rounded-lg font-semibold font-mono px-2 py-1 text-xs md:text-sm outline outline-2 outline-white/10 text-black bg-white tracking-wider"
+                        >
+                          {tech.title}
+                        </span>
+                      ))}
                     </div>
                     <div className="mt-10 flex flex-wrap gap-4 py-7 -ml-5 sm:-ml-0">
                       {project.liveLink && (

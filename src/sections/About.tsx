@@ -69,7 +69,7 @@ export const AboutSection = () => {
             <div className="md:col-span-2 lg:col-span-1">
             </div>
             <div className="md:col-span-3 lg:col-span-2 ">
-              <Card className="h-[320px] ">
+              <Card className="h-[280px] md:h-[320px]">
                 <CardHeader
                   title="My Toolbox"
                   description="Explore the technologies and tools I use to craft exceptional
@@ -93,7 +93,7 @@ export const AboutSection = () => {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-5 lg:grid-cols-3 gap-8  ">
             <div className="md:col-span-3 lg:col-span-2 ">
-              <Card className="h-[320px] p-0 flex flex-col ">
+              <Card className="h-[280px] md:h-[320px] p-0 flex flex-col">
                 <CardHeader
                   title="Beyond the Code"
                   description=" Explore the my intrests and hobbies beyond the digital realm ."

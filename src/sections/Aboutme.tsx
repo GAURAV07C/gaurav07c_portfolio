@@ -21,7 +21,7 @@ const Aboutme = () => {
   return (
     <div className="pb-16 lg:py-24" id="about">
       <div className="container">
-        <div className="bg-gray-800 rounded-xl p-8 border border-white/20 relative z-0 overflow-hidden text-center md:text-left">
+          <div className="bg-gray-800 rounded-xl p-6 md:p-8 border border-white/20 relative z-0 overflow-hidden text-center md:text-left">
           <SectionHeader
             eyebrow="About Me"
             title="Know who am I"

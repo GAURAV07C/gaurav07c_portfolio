@@ -23,7 +23,7 @@ const Experience = () => {
         <SectionHeader eyebrow="Experience" title="" description="" />
       </div>
 
-      <div className="w-[85%] mx-auto">
+      <div className="w-full max-w-5xl mx-auto px-4 md:px-6">
         <div className="flex flex-col gap-5">
           {experiences.map((work, id) => (
             <BlurFade

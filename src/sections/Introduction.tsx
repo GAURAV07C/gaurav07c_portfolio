@@ -24,14 +24,14 @@ const Introduction = () => {
 
   if (loading) {
     return (
-      <div className="container mx-auto flex flex-col items-center justify-center p-6 md:flex-row md:w-[80%] lg:w-[65%]">
+      <div className="w-full max-w-5xl mx-auto flex flex-col items-center justify-center px-4 md:px-6 md:flex-row">
         <div className="text-white/40 text-lg">Loading...</div>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto flex flex-col items-center justify-center p-6 md:flex-row md:w-[80%] lg:w-[65%]">
+    <div className="w-full max-w-5xl mx-auto flex flex-col items-center justify-center px-4 md:px-6 md:flex-row">
       <motion.div
         className="flex flex-col gap-4 text-center md:text-left"
         initial={{ opacity: 0, y: 50 }}
