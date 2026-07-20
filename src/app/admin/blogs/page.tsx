@@ -20,13 +20,14 @@ interface Blog {
   excerpt: string;
   content: string;
   image: string;
+  tags: string;
 }
 
 export default function BlogsAdminPage() {
   const [blogs, setBlogs] = useState<Blog[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [formData, setFormData] = useState({ title: "", date: "", excerpt: "", content: "", image: "" });
+  const [formData, setFormData] = useState({ title: "", date: "", excerpt: "", content: "", image: "", tags: "" });
   const [loading, setLoading] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const toast = useToast();
@@ -45,20 +46,21 @@ export default function BlogsAdminPage() {
 
   const openAddModal = () => {
     setEditingId(null);
-    setFormData({ title: "", date: "", excerpt: "", content: "", image: "" });
+    setFormData({ title: "", date: "", excerpt: "", content: "", image: "", tags: "" });
     setShowModal(true);
   };
 
   const openEditModal = (item: Blog) => {
     setEditingId(item.id);
-    setFormData({ title: item.title, date: item.date, excerpt: item.excerpt, content: item.content, image: item.image });
+    const tags = item.tags ? JSON.parse(item.tags).join(", ") : "";
+    setFormData({ title: item.title, date: item.date, excerpt: item.excerpt, content: item.content, image: item.image, tags });
     setShowModal(true);
   };
 
   const closeModal = () => {
     setShowModal(false);
     setEditingId(null);
-    setFormData({ title: "", date: "", excerpt: "", content: "", image: "" });
+    setFormData({ title: "", date: "", excerpt: "", content: "", image: "", tags: "" });
   };
 
   const handleView = (id: string) => {
@@ -72,11 +74,15 @@ export default function BlogsAdminPage() {
     try {
       const method = editingId ? "PUT" : "POST";
       const url = editingId ? `/api/blogs/${editingId}` : "/api/blogs";
+      const tagsArray = formData.tags
+        .split(",")
+        .map((t) => t.trim())
+        .filter(Boolean);
 
       const res = await fetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...formData, tags: JSON.stringify(tagsArray) }),
       });
 
       if (res.ok) {
@@ -180,6 +186,15 @@ export default function BlogsAdminPage() {
               onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
               rows={3}
               required
+            />
+          </FormField>
+
+          <FormField label="Tags">
+            <Input
+              type="text"
+              value={formData.tags}
+              onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
+              placeholder="react, nextjs, web development (comma separated)"
             />
           </FormField>
 

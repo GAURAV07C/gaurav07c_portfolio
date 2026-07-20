@@ -2,6 +2,8 @@
 
 import React, { useEffect, useState, use } from "react";
 import { MarkdownPreview } from "@/components/admin/MarkdownPreview";
+import { RelatedBlogs } from "@/components/RelatedBlogs";
+import { CommentSection } from "@/components/CommentSection";
 import { Header } from "@/sections/Header";
 import { Footer } from "@/sections/Footer";
 import Image from "next/image";
@@ -10,7 +12,7 @@ import ArrowLeft from "@/assets/icons/arrow-up-right.svg";
 
 export default function BlogDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = use(params);
-  const [blog, setBlog] = useState<{ id: string; title: string; date: string; content: string; image: string } | null>(null);
+  const [blog, setBlog] = useState<{ id: string; title: string; date: string; content: string; image: string; tags: string } | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -62,10 +64,19 @@ export default function BlogDetailPage({ params }: { params: Promise<{ id: strin
                 />
               </div>
               
-               <div className="text-white/70 text-lg leading-relaxed">
-                 <MarkdownPreview content={blog.content} />
-               </div>
-            </article>
+                <div className="text-white/70 text-lg leading-relaxed">
+                  <MarkdownPreview content={blog.content} />
+                </div>
+
+                <RelatedBlogs currentBlogId={blog.id} currentTags={(() => {
+                  try {
+                    return JSON.parse(blog.tags || "[]");
+                  } catch {
+                    return [];
+                  }
+                })()} />
+                <CommentSection blogId={blog.id} />
+              </article>
           ) : null}
         </div>
       </main>

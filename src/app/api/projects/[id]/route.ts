@@ -6,7 +6,8 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
   try {
     const { id } = await params;
     const project = await prisma.project.findUnique({
-      where: { id }
+      where: { id },
+      include: { skills: true }
     });
     
     if (!project) return NextResponse.json({ error: "Project not found" }, { status: 404 });

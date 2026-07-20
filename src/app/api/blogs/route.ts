@@ -24,6 +24,7 @@ export async function POST(request: Request) {
         content: body.content,
         link: `/blog/${Date.now()}`,
         image: body.image || "/images/default-blog.png",
+        tags: body.tags || "[]",
       }
     });
     return NextResponse.json(newBlog, { status: 201 });

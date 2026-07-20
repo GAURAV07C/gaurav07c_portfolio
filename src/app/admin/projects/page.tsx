@@ -24,6 +24,7 @@ interface Project {
   challenges: string;
   outcomes: string;
   techStack: string;
+  tags: string;
   liveLink?: string;
   sourceLink?: string;
   demoLink?: string;
@@ -47,6 +48,7 @@ function ProjectsInner() {
     challenges: "[]",
     outcomes: "[]",
     techStack: "[]",
+    tags: "[]",
     liveLink: "",
     sourceLink: "",
     demoLink: "",
@@ -100,6 +102,7 @@ function ProjectsInner() {
       challenges: "[]",
       outcomes: "[]",
       techStack: "[]",
+      tags: "[]",
       liveLink: "",
       sourceLink: "",
       demoLink: "",
@@ -121,6 +124,7 @@ function ProjectsInner() {
       challenges: item.challenges || "[]",
       outcomes: item.outcomes || "[]",
       techStack: item.techStack || "[]",
+      tags: item.tags || "[]",
       liveLink: item.liveLink || "",
       sourceLink: item.sourceLink || "",
       demoLink: item.demoLink || "",
@@ -143,6 +147,7 @@ function ProjectsInner() {
       challenges: "[]",
       outcomes: "[]",
       techStack: "[]",
+      tags: "[]",
       liveLink: "",
       sourceLink: "",
       demoLink: "",
@@ -352,6 +357,15 @@ function ProjectsInner() {
                 </div>
               )}
             </div>
+          </FormField>
+
+          <FormField label="Tags">
+            <Input
+              type="text"
+              value={formData.tags}
+              onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
+              placeholder='["react", "nextjs", "web development"]'
+            />
           </FormField>
 
           <div className="grid grid-cols-2 gap-4">

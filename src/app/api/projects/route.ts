@@ -4,7 +4,8 @@ import { prisma } from "@/lib/prisma";
 export async function GET() {
   try {
     const projects = await prisma.project.findMany({
-      orderBy: { year: 'desc' }
+      orderBy: { year: 'desc' },
+      include: { skills: true }
     });
     return NextResponse.json(projects, { status: 200 });
   } catch {
@@ -28,6 +29,7 @@ export async function POST(request: Request) {
         challenges: body.challenges || "[]",
         outcomes: body.outcomes || "[]",
         techStack: body.techStack || "[]",
+        tags: body.tags || "[]",
         liveLink: body.liveLink,
         sourceLink: body.sourceLink,
         demoLink: body.demoLink,
@@ -63,6 +65,7 @@ export async function PUT(request: Request) {
         description: body.description || "",
         results: body.results || "[]",
         techStack: body.techStack || "[]",
+        tags: body.tags || "[]",
         liveLink: body.liveLink,
         sourceLink: body.sourceLink,
         demoLink: body.demoLink,

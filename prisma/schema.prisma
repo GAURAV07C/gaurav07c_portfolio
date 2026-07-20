@@ -40,7 +40,9 @@ model Project {
   description String   @default("")
   features    String   @default("[]")
   outcomes    String   @default("[]")
+  tags        String   @default("[]")
   skills      Skill[]  @relation("ProjectToSkill")
+  comments    Comment[]
 }
 
 model Blog {
@@ -52,6 +54,8 @@ model Blog {
   link      String
   image     String
   createdAt DateTime @default(now())
+  tags      String   @default("[]")
+  comments  Comment[]
 }
 
 model Skill {
@@ -125,6 +129,21 @@ model Testimonial {
   position  String
   text      String
   avatar    String
+  createdAt DateTime @default(now())
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  content   String
+  name      String
+  email     String
+  parentId  String?
+  parent    Comment? @relation("CommentReplies", fields: [parentId], references: [id])
+  replies   Comment[] @relation("CommentReplies")
+  blogId    String?
+  blog      Blog?    @relation(fields: [blogId], references: [id])
+  projectId String?
+  project   Project? @relation(fields: [projectId], references: [id])
   createdAt DateTime @default(now())
 }
 

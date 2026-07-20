@@ -2,6 +2,8 @@
 
 import React, { useEffect, useState, use } from "react";
 import { MarkdownPreview } from "@/components/admin/MarkdownPreview";
+import { RelatedProjects } from "@/components/RelatedProjects";
+import { CommentSection } from "@/components/CommentSection";
 import { Header } from "@/sections/Header";
 import { Footer } from "@/sections/Footer";
 import Image from "next/image";
@@ -18,16 +20,17 @@ interface Project {
   title: string;
   results: string;
   techStack: string;
+  tags: string;
   liveLink?: string;
   sourceLink?: string;
   demoLink?: string;
   image: string;
+  skills?: { title: string }[];
 }
 
 export default function ProjectDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = use(params);
   const [project, setProject] = useState<Project | null>(null);
-  const [recentProjects, setRecentProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [backHref, setBackHref] = useState("/#project");
@@ -44,18 +47,6 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
         setError("Failed to load project");
       } finally {
         setLoading(false);
-      }
-    };
-
-    const fetchRecent = async () => {
-      try {
-        const res = await fetch("/api/projects");
-        const data = await res.json();
-        const all = Array.isArray(data) ? data : [];
-        const filtered = all.filter((p: Project) => p.id !== resolvedParams.id);
-        setRecentProjects(filtered.slice(0, 3));
-      } catch {
-        // ignore
       }
     };
 
@@ -83,7 +74,6 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
     };
 
     fetchProject();
-    fetchRecent();
     determineBackLink();
   }, [resolvedParams.id]);
 
@@ -188,13 +178,6 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
               </div>
             )}
 
-            {results.length > 0 && (
-              <div className="mb-12">
-                <h2 className="text-2xl font-serif text-white mb-6">Key Results</h2>
-                <MarkdownPreview content={project.results} className="text-white/70 text-lg leading-relaxed" />
-              </div>
-            )}
-
             {techStack.length > 0 && (
               <div className="mb-12">
                 <h2 className="text-2xl font-serif text-white mb-6">Tech Stack</h2>
@@ -239,48 +222,8 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
             </div>
           </article>
 
-          {recentProjects.length > 0 && (
-            <div className="mt-20">
-              <div className="flex items-center justify-between mb-8">
-                <h2 className="text-3xl font-serif text-white">Recent Work</h2>
-                <Link
-                  href="/projects"
-                  className="text-emerald-300 hover:text-emerald-400 font-medium inline-flex items-center gap-2 transition-colors"
-                >
-                  View All Projects
-                  <ArrowLeft className="size-4 rotate-180" />
-                </Link>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {recentProjects.map((recentProject) => (
-                  <Link
-                    key={recentProject.id}
-                    href={`/project/${recentProject.id}?from=${backHref === "/admin" ? "admin" : "home"}`}
-                    className="group block bg-gray-900 border border-white/10 rounded-2xl overflow-hidden hover:border-emerald-300/30 transition-all"
-                  >
-                    <div className="relative w-full h-48 overflow-hidden bg-gray-950">
-                      {recentProject.image && (
-                        <Image
-                          src={recentProject.image}
-                          alt={recentProject.title}
-                          fill
-                          className="object-cover group-hover:scale-105 transition-transform duration-500"
-                        />
-                      )}
-                    </div>
-                    <div className="p-5">
-                      <div className="text-xs text-emerald-300 font-mono mb-2">
-                        {recentProject.company} &bull; {recentProject.year}
-                      </div>
-                      <h3 className="text-lg font-semibold text-white group-hover:text-emerald-300 transition-colors line-clamp-2">
-                        {recentProject.title}
-                      </h3>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </div>
-          )}
+          <RelatedProjects currentProjectId={project.id} currentSkills={project.skills} />
+          <CommentSection projectId={project.id} />
         </div>
       </main>
       <Footer />

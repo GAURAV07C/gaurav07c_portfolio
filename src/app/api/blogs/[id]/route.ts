@@ -25,7 +25,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
       where: { id },
       data: body
     });
-    
+
     return NextResponse.json(updatedBlog, { status: 200 });
   } catch {
     return NextResponse.json({ error: "Failed to update blog" }, { status: 500 });
