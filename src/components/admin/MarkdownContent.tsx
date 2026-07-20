@@ -95,6 +95,25 @@ export function MarkdownContent({ content, className = "" }: MarkdownContentProp
         </h3>
       );
       i++;
+    } else if (/^`{3,}/.test(trimmed)) {
+      const backtickCount = trimmed.match(/^(`+)/)?.[1].length || 3;
+      const closingPattern = "^" + "`".repeat(backtickCount);
+      const codeLines: string[] = [];
+      const language = trimmed.slice(backtickCount).trim();
+      i++;
+      while (i < lines.length && !new RegExp(closingPattern).test(lines[i].trim())) {
+        codeLines.push(lines[i]);
+        i++;
+      }
+      elements.push(
+        <pre
+          key={`code-${i}`}
+          className="bg-gray-950 border border-white/10 rounded-xl p-4 mb-6 overflow-x-auto"
+        >
+          <code className="text-sm text-white/80 font-mono">{codeLines.join("\n")}</code>
+        </pre>
+      );
+      i++;
     } else if (trimmed.startsWith("- ")) {
       const items: string[] = [];
       while (i < lines.length && lines[i].trim().startsWith("- ")) {
@@ -126,22 +145,6 @@ export function MarkdownContent({ content, className = "" }: MarkdownContentProp
           ))}
         </ol>
       );
-    } else if (trimmed.startsWith("```")) {
-      const codeLines: string[] = [];
-      i++;
-      while (i < lines.length && !lines[i].trim().startsWith("```")) {
-        codeLines.push(lines[i]);
-        i++;
-      }
-      elements.push(
-        <pre
-          key={`code-${i}`}
-          className="bg-gray-950 border border-white/10 rounded-xl p-4 mb-6 overflow-x-auto"
-        >
-          <code className="text-sm text-white/80 font-mono">{codeLines.join("\n")}</code>
-        </pre>
-      );
-      i++;
     } else if (trimmed.startsWith("> ")) {
       const quoteLines: string[] = [];
       while (i < lines.length && lines[i].trim().startsWith(">")) {

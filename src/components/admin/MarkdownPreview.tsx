@@ -94,6 +94,47 @@ function renderInline(text: string, keyPrefix: string): React.ReactNode[] {
   return parts;
 }
 
+function parseCodeBlock(
+  trimmed: string,
+  lines: string[],
+  i: number
+): { nodes: React.ReactNode[]; nextIndex: number } {
+  const backtickCount = trimmed.match(/^(`+)/)?.[1].length || 3;
+  const closingPattern = "^" + "`".repeat(backtickCount);
+  const mermaidMatch = trimmed.toLowerCase().match(/^`{3,}\s*(\w+)?/);
+  const language = mermaidMatch?.[1]?.trim().toLowerCase() || "";
+
+  const codeLines: string[] = [];
+  let nextIdx = i + 1;
+  while (nextIdx < lines.length && !new RegExp(closingPattern).test(lines[nextIdx].trim())) {
+    codeLines.push(lines[nextIdx]);
+    nextIdx++;
+  }
+
+  if (language === "mermaid") {
+    return {
+      nodes: [<MermaidChart key={`mermaid-${nextIdx}`} code={codeLines.join("\n")} />],
+      nextIndex: nextIdx + 1
+    };
+  }
+
+  const lang = trimmed.slice(backtickCount).trim();
+  const nodes = [
+    <div key={`code-${nextIdx}`} className="my-6">
+      {lang && (
+        <div className="text-xs text-white/40 font-mono mb-2 px-4 pt-2">
+          {lang}
+        </div>
+      )}
+      <pre className="bg-gray-950 border border-white/10 rounded-xl p-4 overflow-x-auto">
+        <code className="text-sm text-white/80 font-mono">{codeLines.join("\n")}</code>
+      </pre>
+    </div>
+  ];
+
+  return { nodes, nextIndex: nextIdx + 1 };
+}
+
 export function MarkdownPreview({ content, className = "" }: MarkdownPreviewProps) {
   const elements = useMemo(() => {
     if (!content) return [];
@@ -134,67 +175,10 @@ export function MarkdownPreview({ content, className = "" }: MarkdownPreviewProp
       } else if (trimmed === "---") {
         items.push(<hr key={i} className="border-white/10 my-8" />);
         i++;
-      } else if (trimmed.toLowerCase().startsWith("```mermaid")) {
-        const codeLines: string[] = [];
-        i++;
-        while (i < lines.length && !lines[i].trim().toLowerCase().startsWith("```")) {
-          codeLines.push(lines[i]);
-          i++;
-        }
-        const mermaidCode = codeLines.join("\n");
-        
-        items.push(
-          <MermaidChart key={`mermaid-${i}`} code={mermaidCode} />
-        );
-        i++;
-      } else if (trimmed.startsWith("<details>")) {
-        const detailsLines: string[] = [trimmed];
-        let summary = "Details";
-        i++;
-        while (i < lines.length && !lines[i].trim().startsWith("</details>")) {
-          detailsLines.push(lines[i].trim());
-          if (lines[i].trim().startsWith("<summary>")) {
-            summary = lines[i].trim().replace(/<\/?summary>/g, "");
-          }
-          i++;
-        }
-        if (i < lines.length) i++;
-        
-        items.push(
-          <details key={`details-${i}`} className="my-6 bg-gray-900 border border-white/10 rounded-xl overflow-hidden">
-            <summary className="px-4 py-3 text-white font-semibold cursor-pointer hover:bg-white/5 transition select-none">
-              {summary}
-            </summary>
-            <div className="px-4 py-3 border-t border-white/10">
-              {detailsLines.slice(2).map((line, idx) => {
-                const trimmedLine = line.trim();
-                if (!trimmedLine) return <div key={idx} className="h-2" />;
-                return <p key={idx} className="text-white/70 text-base leading-relaxed">{trimmedLine}</p>;
-              })}
-            </div>
-          </details>
-        );
-      } else if (trimmed.startsWith("```")) {
-        const codeLines: string[] = [];
-        const language = trimmed.slice(3).trim();
-        i++;
-        while (i < lines.length && !lines[i].trim().startsWith("```")) {
-          codeLines.push(lines[i]);
-          i++;
-        }
-        items.push(
-          <div key={`code-${i}`} className="my-6">
-            {language && (
-              <div className="text-xs text-white/40 font-mono mb-2 px-4 pt-2">
-                {language}
-              </div>
-            )}
-            <pre className="bg-gray-950 border border-white/10 rounded-xl p-4 overflow-x-auto">
-              <code className="text-sm text-white/80 font-mono">{codeLines.join("\n")}</code>
-            </pre>
-          </div>
-        );
-        i++;
+      } else if (/^`{3,}/.test(trimmed.toLowerCase())) {
+        const { nodes, nextIndex } = parseCodeBlock(trimmed, lines, i);
+        items.push(...nodes);
+        i = nextIndex;
       } else if (trimmed.startsWith("| ")) {
         const tableRows: string[] = [trimmed];
         i++;

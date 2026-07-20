@@ -8,6 +8,16 @@ interface MermaidLike {
   render: (id: string, code: string) => Promise<{ svg: string }>;
 }
 
+const normalizeMermaidLabels = (code: string): string => {
+  return code.replace(/\[([^\]]+)\]/g, (match, label) => {
+    const trimmedLabel = label.trim();
+    if (trimmedLabel.includes(' ') && !trimmedLabel.startsWith('"') && !trimmedLabel.startsWith("'")) {
+      return `["${trimmedLabel}"]`;
+    }
+    return match;
+  });
+};
+
 export function MermaidChart({ code }: { code: string }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [svg, setSvg] = useState<string | null>(null);
@@ -60,10 +70,11 @@ export function MermaidChart({ code }: { code: string }) {
     const renderTimer = setTimeout(async () => {
       try {
         const trimmedCode = code.trim();
-        await mermaidLib.parse(trimmedCode);
+        const normalizedCode = normalizeMermaidLabels(trimmedCode);
+        await mermaidLib.parse(normalizedCode);
 
         const renderId = `mermaid-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-        const result = await mermaidLib.render(renderId, trimmedCode);
+        const result = await mermaidLib.render(renderId, normalizedCode);
 
         if (isMounted) {
           if (containerRef.current) {

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState, use } from "react";
+import { MarkdownPreview } from "@/components/admin/MarkdownPreview";
 import { Header } from "@/sections/Header";
 import { Footer } from "@/sections/Footer";
 import Image from "next/image";
@@ -61,12 +62,9 @@ export default function BlogDetailPage({ params }: { params: Promise<{ id: strin
                 />
               </div>
               
-              <div className="prose prose-invert prose-lg max-w-none text-white/70 leading-relaxed">
-                {/* Since we don't have Markdown parsing right now, just rendering content as text */}
-                {blog.content.split('\n').map((paragraph: string, idx: number) => (
-                  <p key={idx} className="mb-6">{paragraph}</p>
-                ))}
-              </div>
+               <div className="text-white/70 text-lg leading-relaxed">
+                 <MarkdownPreview content={blog.content} />
+               </div>
             </article>
           ) : null}
         </div>
