@@ -16,9 +16,17 @@ export const ProjectsSection = () => {
   useEffect(() => {
     fetch("/api/projects")
       .then(res => res.json())
-      .then(data => setProjects(data))
+      .then(data => {
+        const all = Array.isArray(data) ? data : [];
+        const recent = all.filter((p: { isRecent?: boolean }) => p.isRecent === true);
+        setProjects(recent.length > 0 ? recent : all.slice(0, 3));
+      })
       .catch(console.error);
   }, []);
+
+  if (projects.length === 0) {
+    return null;
+  }
 
   return (
     <section id="project" className="pb-16 lg:py-24">
@@ -57,17 +65,34 @@ export const ProjectsSection = () => {
                       {project.title}
                     </h3>
                     <hr className="border-t-2 border-white/5 mt-4 md:mt-5" />
-                    <ul className="flex flex-col gap-4 mt-4 md:mt-5">
-                      {JSON.parse(project.results || "[]").map((result: { title: string }, i: number) => (
-                        <li
-                          key={i}
-                          className="flex gap-2 text-sm md:text-base text-white/50"
-                        >
-                          <CheakCircleIcon className="size-5 md:size-6" />
-                          <span> {result.title}</span>
-                        </li>
-                      ))}
-                    </ul>
+                     <ul className="flex flex-col gap-4 mt-4 md:mt-5">
+                       {(() => {
+                         if (!project.results) return null;
+                         const trimmed = project.results.trim();
+                         if (!trimmed) return null;
+                         if (trimmed.startsWith("[") && trimmed.includes("title")) {
+                           try {
+                             const parsed = JSON.parse(trimmed);
+                             if (Array.isArray(parsed)) {
+                               return parsed.map((result: { title: string }, i: number) => (
+                                 <li key={i} className="flex gap-2 text-sm md:text-base text-white/50">
+                                   <CheakCircleIcon className="size-5 md:size-6" />
+                                   <span> {result.title}</span>
+                                 </li>
+                               ));
+                             }
+                           } catch {
+                             // fall through
+                           }
+                         }
+                         return trimmed.split("\n").filter(line => line.trim()).map((line: string, i: number) => (
+                           <li key={i} className="flex gap-2 text-sm md:text-base text-white/50">
+                             <CheakCircleIcon className="size-5 md:size-6" />
+                             <span> {line.trim().replace(/^- /, "")}</span>
+                           </li>
+                         ));
+                       })()}
+                     </ul>
                     <div className="flex flex-wrap gap-2 mt-4 md:mt-5">
                       {JSON.parse(project.techStack || "[]").map((tech: { title: string }, i: number) => (
                         <span
@@ -128,7 +153,17 @@ export const ProjectsSection = () => {
             </div>
           ))}
         </motion.div>
+
+        <div className="text-center mt-16">
+          <Link
+            href="/projects"
+            className="inline-flex items-center gap-2 bg-white text-gray-950 font-semibold px-8 h-12 rounded-xl hover:bg-white/80 transition-colors"
+          >
+            View All Projects
+          </Link>
+        </div>
       </div>
     </section>
   );
 };
+

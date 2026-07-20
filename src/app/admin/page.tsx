@@ -1,7 +1,5 @@
 "use client";
 
-export const dynamic = "force-dynamic";
-
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
@@ -13,6 +11,7 @@ interface Project {
   company: string;
   year: string;
   createdAt: string;
+  isRecent?: boolean;
 }
 
 export default function AdminDashboard() {
@@ -35,7 +34,7 @@ export default function AdminDashboard() {
         skills: Array.isArray(skills) ? skills.length : 0,
         messages: Array.isArray(messages) ? messages.length : 0,
       });
-      setRecentProjects((Array.isArray(projects) ? projects : []).slice(0, 5));
+      setRecentProjects((Array.isArray(projects) ? projects : []).filter((p: { isRecent?: boolean }) => p.isRecent === true).slice(0, 5));
       setRecentBlogs((Array.isArray(blogs) ? blogs : []).slice(0, 5));
       setRecentMessages((Array.isArray(messages) ? messages : []).slice(0, 5));
       setLoading(false);
@@ -107,6 +106,11 @@ export default function AdminDashboard() {
                       </div>
                       <div className="text-xs text-white/40 font-mono mt-1">
                         {project.company} &bull; {project.year}
+                        {project.isRecent && (
+                          <span className="ml-2 px-2 py-0.5 bg-emerald-300/20 text-emerald-300 rounded-full">
+                            Recent
+                          </span>
+                        )}
                       </div>
                     </div>
                     <div className="text-xs text-white/30 flex-shrink-0 hidden md:block">

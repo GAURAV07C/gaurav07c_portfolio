@@ -5,7 +5,7 @@ import Image from "next/image";
 
 interface AdminItemCardProps {
   title: string;
-  subtitle?: string;
+  subtitle?: string | React.ReactNode;
   image?: string;
   onView?: () => void;
   onEdit?: () => void;

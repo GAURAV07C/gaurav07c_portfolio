@@ -15,6 +15,7 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
+    console.log("POST /api/projects body:", { description: body.description?.slice(0, 50), results: body.results?.slice(0, 50) });
     const skillTitles = Array.isArray(body.skills) ? body.skills : [];
 
     const newProject = await prisma.project.create({
@@ -22,12 +23,17 @@ export async function POST(request: Request) {
         company: body.company,
         year: body.year,
         title: body.title,
-        results: body.results,
-        techStack: body.techStack,
+        description: body.description || "",
+        results: body.results || "[]",
+        features: body.features || "[]",
+        challenges: body.challenges || "[]",
+        outcomes: body.outcomes || "[]",
+        techStack: body.techStack || "[]",
         liveLink: body.liveLink,
         sourceLink: body.sourceLink,
         demoLink: body.demoLink,
         image: body.image,
+        isRecent: body.isRecent === true || body.isRecent === "true",
         skills: {
           connectOrCreate: skillTitles.map((title: string) => ({
             where: { title },
@@ -47,6 +53,7 @@ export async function POST(request: Request) {
 export async function PUT(request: Request) {
   try {
     const body = await request.json();
+    console.log("PUT /api/projects/[id] body:", { id: body.id, description: body.description?.slice(0, 50), results: body.results?.slice(0, 50) });
     const { id, skills, ...updateData } = body;
     const skillTitles = Array.isArray(skills) ? skills : [];
 
@@ -54,6 +61,7 @@ export async function PUT(request: Request) {
       where: { id },
       data: {
         ...updateData,
+        isRecent: body.isRecent === true || body.isRecent === "true",
         skills: {
           set: [],
           connectOrCreate: skillTitles.map((title: string) => ({

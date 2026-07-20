@@ -1,7 +1,5 @@
 "use client";
 
-export const dynamic = "force-dynamic";
-
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import BlurFade from "@/components/BlurFade";

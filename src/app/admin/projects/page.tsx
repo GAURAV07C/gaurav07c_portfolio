@@ -1,7 +1,5 @@
 "use client";
 
-export const dynamic = "force-dynamic";
-
 import React, { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import BlurFade from "@/components/BlurFade";
@@ -12,23 +10,29 @@ import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { AddButton } from "@/components/admin/AddButton";
 import { EmptyState } from "@/components/admin/EmptyState";
 import { AdminItemCard } from "@/components/admin/AdminItemCard";
-import { FormField, Input, TextArea } from "@/components/admin/FormComponents";
+import { FormField, Input } from "@/components/admin/FormComponents";
+import { MarkdownEditor } from "@/components/admin/MarkdownEditor";
 
 interface Project {
   id: string;
   company: string;
   year: string;
   title: string;
+  description: string;
   results: string;
+  features: string;
+  challenges: string;
+  outcomes: string;
   techStack: string;
   liveLink?: string;
   sourceLink?: string;
   demoLink?: string;
   image: string;
   skills?: { title: string }[];
+  isRecent?: boolean;
 }
 
-export default function ProjectsAdminPage() {
+function ProjectsInner() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [skills, setSkills] = useState<{ id: string; title: string }[]>([]);
   const [showModal, setShowModal] = useState(false);
@@ -37,12 +41,17 @@ export default function ProjectsAdminPage() {
     company: "",
     year: "",
     title: "",
+    description: "",
     results: "[]",
+    features: "[]",
+    challenges: "[]",
+    outcomes: "[]",
     techStack: "[]",
     liveLink: "",
     sourceLink: "",
     demoLink: "",
     image: "",
+    isRecent: false,
   });
   const [loading, setLoading] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
@@ -51,7 +60,7 @@ export default function ProjectsAdminPage() {
   const searchParams = useSearchParams();
 
   const fetchProjects = () => {
-    fetch("/api/projects")
+    return fetch("/api/projects")
       .then(res => res.json())
       .then(data => setProjects(Array.isArray(data) ? data : []))
       .catch(console.error);
@@ -85,12 +94,17 @@ export default function ProjectsAdminPage() {
       company: "",
       year: "",
       title: "",
+      description: "",
       results: "[]",
+      features: "[]",
+      challenges: "[]",
+      outcomes: "[]",
       techStack: "[]",
       liveLink: "",
       sourceLink: "",
       demoLink: "",
       image: "",
+      isRecent: false,
     });
     setShowModal(true);
   };
@@ -101,12 +115,17 @@ export default function ProjectsAdminPage() {
       company: item.company || "",
       year: item.year || "",
       title: item.title || "",
+      description: item.description || "",
       results: item.results || "[]",
+      features: item.features || "[]",
+      challenges: item.challenges || "[]",
+      outcomes: item.outcomes || "[]",
       techStack: item.techStack || "[]",
       liveLink: item.liveLink || "",
       sourceLink: item.sourceLink || "",
       demoLink: item.demoLink || "",
       image: item.image || "",
+      isRecent: item.isRecent || false,
     });
     setShowModal(true);
   };
@@ -118,12 +137,17 @@ export default function ProjectsAdminPage() {
       company: "",
       year: "",
       title: "",
+      description: "",
       results: "[]",
+      features: "[]",
+      challenges: "[]",
+      outcomes: "[]",
       techStack: "[]",
       liveLink: "",
       sourceLink: "",
       demoLink: "",
       image: "",
+      isRecent: false,
     });
   };
 
@@ -159,10 +183,13 @@ export default function ProjectsAdminPage() {
       const method = editingId ? "PUT" : "POST";
       const url = editingId ? `/api/projects/${editingId}` : "/api/projects";
 
+      const payload = { ...formData };
+      console.log("Submitting project:", { method, url, payload: { ...payload, description: payload.description?.slice(0, 50) } });
+
       const res = await fetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       });
 
       if (res.ok) {
@@ -232,7 +259,16 @@ export default function ProjectsAdminPage() {
             <BlurFade key={project.id} delay={index * 0.05}>
               <AdminItemCard
                 title={project.title}
-                subtitle={`${project.company} • ${project.year}`}
+                subtitle={
+                  <span className="flex items-center gap-2 flex-wrap">
+                    <span>{project.company} • {project.year}</span>
+                    {project.isRecent && (
+                      <span className="px-2 py-0.5 bg-emerald-300/20 text-emerald-300 text-xs rounded-full font-mono">
+                        Recent
+                      </span>
+                    )}
+                  </span>
+                }
                 image={project.image}
                 onView={() => handleView(project.id)}
                 onEdit={() => openEditModal(project)}
@@ -277,14 +313,19 @@ export default function ProjectsAdminPage() {
             />
           </FormField>
 
-          <FormField label="Results">
-            <TextArea
-              value={formData.results}
-              onChange={(e) => setFormData({ ...formData, results: e.target.value })}
-              rows={3}
-              required
-            />
-          </FormField>
+          <MarkdownEditor
+            label="Description"
+            value={formData.description}
+            onChange={(value) => setFormData({ ...formData, description: value })}
+            placeholder="Add project description..."
+          />
+
+          <MarkdownEditor
+            label="Results"
+            value={formData.results}
+            onChange={(value) => setFormData({ ...formData, results: value })}
+            placeholder="Add key results..."
+          />
 
           <FormField label="Tech Stack / Skills">
             <div className="space-y-3">
@@ -343,6 +384,19 @@ export default function ProjectsAdminPage() {
             />
           </FormField>
 
+          <div className="flex items-center gap-3 p-4 bg-gray-950 border border-white/10 rounded-xl">
+            <input
+              type="checkbox"
+              id="isRecent"
+              checked={formData.isRecent}
+              onChange={(e) => setFormData({ ...formData, isRecent: e.target.checked })}
+              className="w-5 h-5 rounded border-white/20 bg-gray-900 text-emerald-300 focus:ring-emerald-300 focus:ring-offset-gray-900"
+            />
+            <label htmlFor="isRecent" className="text-sm text-white/70 cursor-pointer">
+              Show as <span className="text-emerald-300 font-semibold">Recent Project</span> on homepage
+            </label>
+          </div>
+
           <div className="flex gap-3 pt-3 border-t border-white/10">
             <button
               type="submit"
@@ -379,5 +433,13 @@ export default function ProjectsAdminPage() {
         confirmText="Delete"
       />
     </div>
+  );
+}
+
+export default function ProjectsAdminPage() {
+  return (
+    <Suspense fallback={<div className="text-white/50">Loading projects...</div>}>
+      <ProjectsInner />
+    </Suspense>
   );
 }

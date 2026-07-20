@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState, use } from "react";
+import { MarkdownPreview } from "@/components/admin/MarkdownPreview";
 import { Header } from "@/sections/Header";
 import { Footer } from "@/sections/Footer";
 import Image from "next/image";
@@ -8,9 +9,9 @@ import Link from "next/link";
 import ArrowLeft from "@/assets/icons/arrow-up-right.svg";
 import SourceIcon from "@/assets/icons/source.svg";
 import GithubIcon from "@/assets/icons/github.svg";
-import CheakCircleIcon from "@/assets/icons/check-circle.svg";
 
 interface Project {
+  description: string;
   id: string;
   company: string;
   year: string;
@@ -119,11 +120,18 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
   }
 
   const results = (() => {
-    try {
-      return JSON.parse(project.results || "[]");
-    } catch {
-      return [];
+    if (!project.results) return [];
+    const trimmed = project.results.trim();
+    if (!trimmed) return [];
+    if (trimmed.startsWith("[") && trimmed.includes("title")) {
+      try {
+        const parsed = JSON.parse(trimmed);
+        if (Array.isArray(parsed)) return parsed;
+      } catch {
+        // fall through
+      }
     }
+    return trimmed.split("\n").filter(line => line.trim());
   })();
 
   const techStack = (() => {
@@ -166,17 +174,17 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
               </div>
             )}
 
+            {project.description && (
+              <div className="mb-12">
+                <h2 className="text-2xl font-serif text-white mb-6">Description</h2>
+                <MarkdownPreview content={project.description} className="text-white/70 text-lg leading-relaxed" />
+              </div>
+            )}
+
             {results.length > 0 && (
               <div className="mb-12">
                 <h2 className="text-2xl font-serif text-white mb-6">Key Results</h2>
-                <ul className="space-y-4">
-                  {results.map((result: { title: string }, i: number) => (
-                    <li key={i} className="flex gap-3 text-white/70 text-lg">
-                      <CheakCircleIcon className="size-6 text-emerald-300 flex-shrink-0 mt-1" />
-                      <span>{result.title}</span>
-                    </li>
-                  ))}
-                </ul>
+                <MarkdownPreview content={project.results} className="text-white/70 text-lg leading-relaxed" />
               </div>
             )}
 

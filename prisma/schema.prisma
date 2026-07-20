@@ -1,10 +1,10 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-}
-
-generator client {
-  provider = "prisma-client-js"
 }
 
 model User {
@@ -14,46 +14,51 @@ model User {
 }
 
 model SiteSettings {
-  id                 String  @id @default("global")
-  heroWords          String  // JSON array of {text, className}
-  heroDesc           String
-  aboutMe            String
-  socialLinks        String  // JSON array of {name, href}
-  introductionWords  String  @default("[]")
-  profileImage       String? // base64 encoded profile image
+  id                String  @id @default("global")
+  heroWords         String
+  heroDesc          String
+  aboutMe           String
+  socialLinks       String
+  introductionWords String  @default("[]")
+  profileImage      String?
 }
 
 model Project {
-  id         String @id @default(cuid())
-  company    String
-  year       String
-  title      String
-  results    String // JSON array of {title}
-  techStack  String // JSON array of {title}
-  liveLink   String?
-  sourceLink String?
-  demoLink   String?
-  image      String
-  skills     Skill[] // Many-to-many relationship with skills
-  createdAt  DateTime @default(now())
+  id          String   @id @default(cuid())
+  company     String
+  year        String
+  title       String
+  results     String   @default("[]")
+  techStack   String   @default("[]")
+  liveLink    String?
+  sourceLink  String?
+  demoLink    String?
+  image       String
+  createdAt   DateTime @default(now())
+  isRecent    Boolean  @default(false)
+  challenges  String   @default("[]")
+  description String   @default("")
+  features    String   @default("[]")
+  outcomes    String   @default("[]")
+  skills      Skill[]  @relation("ProjectToSkill")
 }
 
 model Blog {
-  id         String    @id @default(cuid())
-  title      String
-  date       String
-  excerpt    String
-  content    String
-  link       String
-  image      String
-  createdAt  DateTime  @default(now())
+  id        String   @id @default(cuid())
+  title     String
+  date      String
+  excerpt   String
+  content   String
+  link      String
+  image     String
+  createdAt DateTime @default(now())
 }
 
 model Skill {
-  id        String @id @default(cuid())
-  title     String @unique
+  id        String    @id @default(cuid())
+  title     String    @unique
   iconsType String
-  projects  Project[] // Many-to-many relationship with projects
+  projects  Project[] @relation("ProjectToSkill")
 }
 
 model TapeWord {
@@ -63,14 +68,14 @@ model TapeWord {
 }
 
 model HeroOrbit {
-  id            String   @id @default(cuid())
-  size          Int
-  rotation      Int
-  spinDuration  String
-  starType      String
-  starDuration  String
-  className     String
-  createdAt     DateTime @default(now())
+  id           String   @id @default(cuid())
+  size         Int
+  rotation     Int
+  spinDuration String
+  starType     String
+  starDuration String
+  className    String
+  createdAt    DateTime @default(now())
 }
 
 model Hobby {
@@ -101,17 +106,17 @@ model Education {
 }
 
 model Experience {
-  id         String   @id @default(cuid())
-  company    String
-  href       String
-  badges     String
-  location   String
-  title      String
-  logoUrl    String
-  start      String
-  end        String
+  id          String   @id @default(cuid())
+  company     String
+  href        String
+  badges      String
+  location    String
+  title       String
+  logoUrl     String
+  start       String
+  end         String
   description String
-  createdAt  DateTime @default(now())
+  createdAt   DateTime @default(now())
 }
 
 model Testimonial {
