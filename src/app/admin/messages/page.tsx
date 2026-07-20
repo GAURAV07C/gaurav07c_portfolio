@@ -7,6 +7,7 @@ import { useToast } from "@/components/ToastProvider";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { EmptyState } from "@/components/admin/EmptyState";
 import { Modal } from "@/components/Modal";
+import { Eye, Trash2, Mail, Search } from "lucide-react";
 
 interface Message {
   id: string;
@@ -126,13 +127,13 @@ export default function MessagesAdminPage() {
 
       {messages.length === 0 ? (
         <EmptyState
-          icon="📬"
+          icon={<Mail className="size-12 text-emerald-300" />}
           title="No messages yet"
           description="Messages from your contact form will appear here."
         />
       ) : filtered.length === 0 ? (
         <EmptyState
-          icon="🔍"
+          icon={<Search className="size-12 text-emerald-300" />}
           title="No matches found"
           description="Try adjusting your search query."
         />
@@ -168,17 +169,17 @@ export default function MessagesAdminPage() {
                         <div className="flex gap-1.5 shrink-0">
                           <button
                             onClick={() => setViewMessage(message)}
-                            className="bg-white/10 hover:bg-white/20 text-white p-2 rounded-lg transition text-sm"
+                            className="text-white/60 hover:text-emerald-300 p-2 rounded-lg transition-all hover:drop-shadow-[0_0_8px_rgba(16,185,129,0.8)]"
                             title="View message"
                           >
-                            👁️
+                            <Eye className="size-4" />
                           </button>
                           <button
                             onClick={() => setDeleteId(message.id)}
-                            className="bg-red-500/20 hover:bg-red-500/30 text-red-300 p-2 rounded-lg transition text-sm"
+                            className="text-white/60 hover:text-red-400 p-2 rounded-lg transition-all hover:drop-shadow-[0_0_8px_rgba(248,113,113,0.8)]"
                             title="Delete message"
                           >
-                            🗑️
+                            <Trash2 className="size-4" />
                           </button>
                         </div>
                       </div>

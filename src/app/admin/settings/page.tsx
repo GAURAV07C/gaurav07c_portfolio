@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
+import { User, FileText, Hand, Link2, Check, X } from "lucide-react";
 
 export default function SettingsPage() {
   const [settings, setSettings] = useState<{ aboutMe: string; socialLinks: string; introductionWords: string; introductionText: string; profileImage?: string; resume?: string } | null>(null);
@@ -99,10 +100,10 @@ export default function SettingsPage() {
   if (!settings) return <div className="text-white/50">Loading settings...</div>;
 
   const tabs = [
-    { id: "profile", label: "Profile", icon: "👤" },
-    { id: "about", label: "About Me", icon: "📝" },
-    { id: "intro", label: "Introduction", icon: "👋" },
-    { id: "social", label: "Social Links", icon: "🔗" },
+    { id: "profile", label: "Profile", icon: <User className="size-4" /> },
+    { id: "about", label: "About Me", icon: <FileText className="size-4" /> },
+    { id: "intro", label: "Introduction", icon: <Hand className="size-4" /> },
+    { id: "social", label: "Social Links", icon: <Link2 className="size-4" /> },
   ];
 
   const parseJson = (json: string): unknown[] => {
@@ -148,7 +149,11 @@ export default function SettingsPage() {
             : "bg-red-300/10 border-red-300/30 text-red-300"
         }`}>
           <div className="flex items-center gap-3">
-            <span className="text-xl">{message.type === "success" ? "✓" : "✕"}</span>
+            {message.type === "success" ? (
+              <Check className="size-5 text-emerald-300" />
+            ) : (
+              <X className="size-5 text-red-300" />
+            )}
             <span className="font-medium">{message.text}</span>
             </div>
 
@@ -205,9 +210,9 @@ export default function SettingsPage() {
                     className="object-cover"
                     onError={() => setImageError(true)}
                   />
-                ) : (
+                 ) : (
                   <div className="w-full h-full flex items-center justify-center">
-                    <span className="text-4xl">👤</span>
+                    <User className="size-16 text-white/20" />
                   </div>
                 )}
               </div>
@@ -360,7 +365,10 @@ export default function SettingsPage() {
           >
             {loading ? (
               <span className="flex items-center gap-2">
-                <span className="animate-spin">⏳</span>
+                <svg className="animate-spin size-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
                 Saving...
               </span>
             ) : (

@@ -2,6 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
+import { Eye, Pencil, Trash2 } from "lucide-react";
 
 interface AdminItemCardProps {
   title: string;
@@ -42,28 +43,28 @@ export function AdminItemCard({ title, subtitle, image, onView, onEdit, onDelete
           {onView && (
             <button
               onClick={onView}
-              className="bg-white/10 hover:bg-white/20 text-white p-2 rounded-lg transition text-sm"
+              className="text-white/60 hover:text-emerald-300 p-2 rounded-lg transition-all hover:drop-shadow-[0_0_8px_rgba(16,185,129,0.8)]"
               title="View"
             >
-              👁️
+              <Eye className="size-4" />
             </button>
           )}
           {onEdit && (
             <button
               onClick={onEdit}
-              className="bg-white/10 hover:bg-white/20 text-white p-2 rounded-lg transition text-sm"
+              className="text-white/60 hover:text-emerald-300 p-2 rounded-lg transition-all hover:drop-shadow-[0_0_8px_rgba(16,185,129,0.8)]"
               title="Edit"
             >
-              ✏️
+              <Pencil className="size-4" />
             </button>
           )}
           {onDelete && (
             <button
               onClick={onDelete}
-              className="bg-red-500/20 hover:bg-red-500/30 text-red-300 p-2 rounded-lg transition text-sm"
+              className="text-white/60 hover:text-red-400 p-2 rounded-lg transition-all hover:drop-shadow-[0_0_8px_rgba(248,113,113,0.8)]"
               title="Delete"
             >
-              🗑️
+              <Trash2 className="size-4" />
             </button>
           )}
         </div>

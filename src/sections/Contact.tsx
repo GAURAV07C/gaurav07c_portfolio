@@ -1,9 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import ArrowUpRightIcon from "@/assets/icons/arrow-up-right.svg";
 import grainImage from "@/assets/images/grain.jpg";
-import Link from "next/link";
 import BlurFade from "@/components/BlurFade";
 import { MarkdownEditor } from "@/components/admin/MarkdownEditor";
 import { CommentUserModal } from "@/components/CommentUserModal";

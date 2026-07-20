@@ -5,10 +5,9 @@ import { Header } from "@/sections/Header";
 import { Footer } from "@/sections/Footer";
 import Image from "next/image";
 import Link from "next/link";
-import ArrowLeft from "@/assets/icons/arrow-up-right.svg";
-import ArrowUpRightIcon from "@/assets/icons/arrow-up-right.svg";
-import CheakCircleIcon from "@/assets/icons/check-circle.svg";
+
 import BlurFade from "@/components/BlurFade";
+import { ArrowLeft, ArrowUpRightIcon } from "lucide-react";
 
 interface Project {
   id: string;

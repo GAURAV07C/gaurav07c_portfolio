@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useRef, useEffect } from "react";
 import { ToolbarButton, ToolbarSeparator } from "@/components/admin/MarkdownToolbar";
 import { MarkdownPreview } from "@/components/admin/MarkdownPreview";
+import { Link, ImageIcon } from "lucide-react";
 
 interface MarkdownEditorProps {
   value: string;
@@ -154,13 +155,13 @@ export function MarkdownEditor({
             </ToolbarButton>
             <ToolbarSeparator />
             <ToolbarButton onClick={() => wrap("[", "](url)")} title="Link">
-              🔗
+              <Link className="size-4" />
             </ToolbarButton>
             <ToolbarButton 
               onClick={() => fileInputRef.current?.click()} 
               title="Upload Image"
             >
-              🖼️
+              <ImageIcon className="size-4" />
             </ToolbarButton>
             <input
               ref={fileInputRef}

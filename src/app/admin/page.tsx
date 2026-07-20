@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { Eye, Pencil } from "lucide-react";
 
 interface Project {
   id: string;
@@ -120,17 +121,17 @@ export default function AdminDashboard() {
                   <div className="flex gap-2 flex-shrink-0">
                     <Link
                       href={`/project/${project.id}?from=admin`}
-                      className="bg-white/10 hover:bg-white/20 text-white p-2 rounded-lg transition text-sm"
+                      className="text-white/60 hover:text-emerald-300 p-2 rounded-lg transition-all hover:drop-shadow-[0_0_8px_rgba(16,185,129,0.8)]"
                       title="View"
                     >
-                      👁️
+                      <Eye className="size-4" />
                     </Link>
                     <Link
                       href={`/admin/projects?edit=${project.id}`}
-                      className="bg-white/10 hover:bg-white/20 text-white p-2 rounded-lg transition text-sm"
+                      className="text-white/60 hover:text-emerald-300 p-2 rounded-lg transition-all hover:drop-shadow-[0_0_8px_rgba(16,185,129,0.8)]"
                       title="Edit"
                     >
-                      ✏️
+                      <Pencil className="size-4" />
                     </Link>
                   </div>
                 </div>
