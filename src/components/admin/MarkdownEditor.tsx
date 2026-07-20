@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useRef, useEffect } from "react";
 import { ToolbarButton, ToolbarSeparator } from "@/components/admin/MarkdownToolbar";
 import { MarkdownPreview } from "@/components/admin/MarkdownPreview";
 
@@ -12,7 +12,7 @@ interface MarkdownEditorProps {
   minHeight?: string;
 }
 
-type TabMode = "edit" | "split" | "preview";
+type TabMode = "write" | "preview" | "split";
 
 function insertMarkdown(text: string, before: string, after: string = ""): string {
   if (typeof document === "undefined") return text;
@@ -35,6 +35,10 @@ function insertMarkdown(text: string, before: string, after: string = ""): strin
   return newText;
 }
 
+function insertTaskList(): string {
+  return "- [ ] Task 1\n- [ ] Task 2\n- [ ] Task 3";
+}
+
 export function MarkdownEditor({
   value,
   onChange,
@@ -42,7 +46,17 @@ export function MarkdownEditor({
   placeholder,
   minHeight = "300px",
 }: MarkdownEditorProps) {
-  const [mode, setMode] = useState<TabMode>("edit");
+  const [mode, setMode] = useState<TabMode>("write");
+  const [dragOver, setDragOver] = useState(false);
+  const [previewValue, setPreviewValue] = useState(value);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setPreviewValue(value);
+    }, 150);
+    return () => clearTimeout(timer);
+  }, [value]);
 
   const wrap = useCallback(
     (before: string, after: string = "") => {
@@ -52,6 +66,39 @@ export function MarkdownEditor({
     [value, onChange]
   );
 
+  const handleFileUpload = (file: File) => {
+    if (!file.type.startsWith("image/")) return;
+    
+    const reader = new FileReader();
+    reader.onload = () => {
+      const base64 = reader.result as string;
+      const markdown = `![${file.name}](${base64})`;
+      onChange(value + "\n\n" + markdown);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDragOver(false);
+    
+    const files = Array.from(e.dataTransfer.files);
+    const imageFile = files.find(file => file.type.startsWith("image/"));
+    
+    if (imageFile) {
+      handleFileUpload(imageFile);
+    }
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDragOver(true);
+  };
+
+  const handleDragLeave = () => {
+    setDragOver(false);
+  };
+
   return (
     <div>
       {label && (
@@ -60,9 +107,9 @@ export function MarkdownEditor({
         </label>
       )}
 
-      <div className="bg-gray-900 border border-white/10 rounded-xl overflow-hidden">
-        <div className="flex items-center justify-between border-b border-white/10 bg-gray-950/50">
-          <div className="flex items-center gap-1 p-2 flex-wrap">
+      <div className={`bg-gray-900 border rounded-xl overflow-hidden ${dragOver ? "border-emerald-300/50" : "border-white/10"}`}>
+        <div className="flex items-center justify-between border-b border-white/10 bg-gray-950/50 flex-wrap gap-2">
+          <div className="flex items-center gap-0.5 p-2 flex-wrap">
             <ToolbarButton onClick={() => wrap("# ", "")} title="Heading 1">
               H1
             </ToolbarButton>
@@ -74,13 +121,13 @@ export function MarkdownEditor({
             </ToolbarButton>
             <ToolbarSeparator />
             <ToolbarButton onClick={() => wrap("**", "**")} title="Bold">
-              B
+              <span className="font-bold">B</span>
             </ToolbarButton>
             <ToolbarButton onClick={() => wrap("*", "*")} title="Italic">
-              I
+              <span className="italic">I</span>
             </ToolbarButton>
             <ToolbarButton onClick={() => wrap("~~", "~~")} title="Strikethrough">
-              S
+              <span className="line-through">S</span>
             </ToolbarButton>
             <ToolbarSeparator />
             <ToolbarButton onClick={() => wrap("- ", "")} title="Bullet List">
@@ -89,20 +136,43 @@ export function MarkdownEditor({
             <ToolbarButton onClick={() => wrap("1. ", "")} title="Numbered List">
               1.
             </ToolbarButton>
-            <ToolbarSeparator />
-            <ToolbarButton onClick={() => wrap("[", "](url)")} title="Link">
-              🔗
-            </ToolbarButton>
-            <ToolbarButton onClick={() => wrap("`", "`")} title="Inline Code">
-              &lt;/&gt;
-            </ToolbarButton>
-            <ToolbarButton onClick={() => wrap("```\n", "\n```")} title="Code Block">
-              {"{ }"}
+            <ToolbarButton onClick={() => wrap(insertTaskList(), "")} title="Task List">
+              ☑
             </ToolbarButton>
             <ToolbarSeparator />
             <ToolbarButton onClick={() => wrap("> ", "")} title="Quote">
               &quot;
             </ToolbarButton>
+            <ToolbarButton onClick={() => wrap("```\n", "\n```")} title="Code Block">
+              {"{ }"}
+            </ToolbarButton>
+            <ToolbarButton onClick={() => wrap("| Header 1 | Header 2 | Header 3 |\n| -------- | -------- | -------- |\n| Cell 1   | Cell 2   | Cell 3   |\n| Cell 4   | Cell 5   | Cell 6   |", "")} title="Table">
+              #
+            </ToolbarButton>
+            <ToolbarButton onClick={() => wrap("```mermaid\n", "\n```")} title="Mermaid Diagram">
+              ◈
+            </ToolbarButton>
+            <ToolbarSeparator />
+            <ToolbarButton onClick={() => wrap("[", "](url)")} title="Link">
+              🔗
+            </ToolbarButton>
+            <ToolbarButton 
+              onClick={() => fileInputRef.current?.click()} 
+              title="Upload Image"
+            >
+              🖼️
+            </ToolbarButton>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) handleFileUpload(file);
+              }}
+            />
+            <ToolbarSeparator />
             <ToolbarButton onClick={() => wrap("---\n", "")} title="Horizontal Rule">
               —
             </ToolbarButton>
@@ -110,11 +180,11 @@ export function MarkdownEditor({
 
           <div className="flex items-center gap-1 p-2">
             <ToolbarButton
-              onClick={() => setMode("edit")}
-              title="Edit"
-              active={mode === "edit"}
+              onClick={() => setMode("write")}
+              title="Write"
+              active={mode === "write"}
             >
-              Edit
+              Write
             </ToolbarButton>
             <ToolbarButton
               onClick={() => setMode("split")}
@@ -139,13 +209,16 @@ export function MarkdownEditor({
             gridTemplateColumns:
               mode === "split" ? "1fr 1fr" : "1fr",
           }}
+          onDrop={handleDrop}
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
         >
-          {(mode === "edit" || mode === "split") && (
+          {(mode === "write" || mode === "split") && (
             <textarea
               data-md-editor="true"
               value={value}
               onChange={(e) => onChange(e.target.value)}
-              placeholder={placeholder || "Write markdown here..."}
+              placeholder={placeholder || "Write markdown here... You can drag & drop images"}
               className="w-full bg-gray-900 text-white px-4 py-3 text-sm leading-relaxed resize-y focus:outline-none focus:ring-2 focus:ring-emerald-300/20 font-mono border-r border-white/10"
               style={{ minHeight }}
             />
@@ -159,7 +232,7 @@ export function MarkdownEditor({
                 maxHeight: "600px",
               }}
             >
-              <MarkdownPreview content={value} className="text-white/70 text-base leading-relaxed" />
+              <MarkdownPreview content={previewValue} className="text-white/70 text-base leading-relaxed" />
             </div>
           )}
         </div>

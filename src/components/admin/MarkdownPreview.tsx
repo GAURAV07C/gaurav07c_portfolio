@@ -1,45 +1,11 @@
 "use client";
 
 import React, { useMemo } from "react";
+import { MermaidChart } from "@/components/admin/MermaidChart";
 
 interface MarkdownPreviewProps {
   content: string;
   className?: string;
-}
-
-const BLOCK_RE = /^(#{1,3})\s+(.+)$/;
-const LIST_RE = /^(\s*)[-*]\s+(.+)$/;
-const NUMBERED_RE = /^(\s*)\d+\.\s+(.+)$/;
-const CODE_FENCE_RE = /^```/;
-const QUOTE_RE = /^>\s?(.*)$/;
-const HR_RE = /^---$/;
-
-function parseBlock(line: string) {
-  const trimmed = line.trim();
-  if (!trimmed) return null;
-
-  const headingMatch = trimmed.match(BLOCK_RE);
-  if (headingMatch) {
-    const level = headingMatch[1].length;
-    const text = headingMatch[2];
-    if (level === 1) return { type: "h1", text };
-    if (level === 2) return { type: "h2", text };
-    return { type: "h3", text };
-  }
-
-  if (CODE_FENCE_RE.test(trimmed)) return { type: "code-fence", text: trimmed };
-  if (HR_RE.test(trimmed)) return { type: "hr" };
-
-  const quoteMatch = trimmed.match(QUOTE_RE);
-  if (quoteMatch) return { type: "quote", text: quoteMatch[1] };
-
-  const listMatch = trimmed.match(LIST_RE);
-  if (listMatch) return { type: "list", text: listMatch[2], indent: listMatch[1].length };
-
-  const numberedMatch = trimmed.match(NUMBERED_RE);
-  if (numberedMatch) return { type: "numbered", text: numberedMatch[2], indent: numberedMatch[1].length };
-
-  return { type: "paragraph", text: trimmed };
 }
 
 function renderInline(text: string, keyPrefix: string): React.ReactNode[] {
@@ -50,15 +16,35 @@ function renderInline(text: string, keyPrefix: string): React.ReactNode[] {
   while (remaining.length > 0) {
     const boldMatch = remaining.match(/^\*\*(.+?)\*\*/);
     const italicMatch = remaining.match(/^\*(.+?)\*/);
+    const strikeMatch = remaining.match(/^~~(.+?)~~/);
     const codeMatch = remaining.match(/^`(.+?)`/);
+    const linkMatch = remaining.match(/^\[([^\]]+)\]\(([^)]+)\)/);
+    const imgMatch = remaining.match(/^!\[([^\]]*)\]\(([^)]+)\)/);
 
-    if (boldMatch) {
+    if (imgMatch) {
+      parts.push(
+        <img
+          key={`${keyPrefix}-${partIndex++}`}
+          src={imgMatch[2]}
+          alt={imgMatch[1] || "image"}
+          className="max-w-full h-auto rounded-lg my-4"
+        />
+      );
+      remaining = remaining.slice(imgMatch[0].length);
+    } else if (boldMatch) {
       parts.push(
         <strong key={`${keyPrefix}-${partIndex++}`} className="font-semibold text-white">
           {boldMatch[1]}
         </strong>
       );
       remaining = remaining.slice(boldMatch[0].length);
+    } else if (strikeMatch) {
+      parts.push(
+        <del key={`${keyPrefix}-${partIndex++}`} className="line-through text-white/50">
+          {strikeMatch[1]}
+        </del>
+      );
+      remaining = remaining.slice(strikeMatch[0].length);
     } else if (italicMatch) {
       parts.push(
         <em key={`${keyPrefix}-${partIndex++}`} className="italic">
@@ -76,14 +62,32 @@ function renderInline(text: string, keyPrefix: string): React.ReactNode[] {
         </code>
       );
       remaining = remaining.slice(codeMatch[0].length);
+    } else if (linkMatch) {
+      parts.push(
+        <a
+          key={`${keyPrefix}-${partIndex++}`}
+          href={linkMatch[2]}
+          className="text-emerald-300 hover:underline"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {linkMatch[1]}
+        </a>
+      );
+      remaining = remaining.slice(linkMatch[0].length);
     } else {
-      const nextSpecial = remaining.search(/[*`]/);
+      const nextSpecial = remaining.search(/[*`!\[\]]/);
       if (nextSpecial === -1) {
         parts.push(remaining);
         break;
       }
-      parts.push(remaining.slice(0, nextSpecial));
-      remaining = remaining.slice(nextSpecial);
+      if (nextSpecial === 0) {
+        parts.push(remaining[0]);
+        remaining = remaining.slice(1);
+      } else {
+        parts.push(remaining.slice(0, nextSpecial));
+        remaining = remaining.slice(nextSpecial);
+      }
     }
   }
 
@@ -106,54 +110,132 @@ export function MarkdownPreview({ content, className = "" }: MarkdownPreviewProp
         continue;
       }
 
-      const block = parseBlock(lines[i]);
-      if (!block) {
-        i++;
-        continue;
-      }
-
-      if (block.type === "h1") {
+      if (trimmed.startsWith("# ")) {
         items.push(
           <h1 key={i} className="text-3xl font-serif text-white mt-8 mb-4">
-            {block.text}
+            {trimmed.slice(2)}
           </h1>
         );
         i++;
-      } else if (block.type === "h2") {
+      } else if (trimmed.startsWith("## ")) {
         items.push(
           <h2 key={i} className="text-2xl font-serif text-white mt-8 mb-4">
-            {block.text}
+            {trimmed.slice(3)}
           </h2>
         );
         i++;
-      } else if (block.type === "h3") {
+      } else if (trimmed.startsWith("### ")) {
         items.push(
           <h3 key={i} className="text-xl font-semibold text-white mt-6 mb-3">
-            {block.text}
+            {trimmed.slice(4)}
           </h3>
         );
         i++;
-      } else if (block.type === "hr") {
+      } else if (trimmed === "---") {
         items.push(<hr key={i} className="border-white/10 my-8" />);
         i++;
-      } else if (block.type === "code-fence") {
+      } else if (trimmed.toLowerCase().startsWith("```mermaid")) {
         const codeLines: string[] = [];
         i++;
-        while (i < lines.length && !CODE_FENCE_RE.test(lines[i].trim())) {
+        while (i < lines.length && !lines[i].trim().toLowerCase().startsWith("```")) {
+          codeLines.push(lines[i]);
+          i++;
+        }
+        const mermaidCode = codeLines.join("\n");
+        
+        items.push(
+          <MermaidChart key={`mermaid-${i}`} code={mermaidCode} />
+        );
+        i++;
+      } else if (trimmed.startsWith("<details>")) {
+        const detailsLines: string[] = [trimmed];
+        let summary = "Details";
+        i++;
+        while (i < lines.length && !lines[i].trim().startsWith("</details>")) {
+          detailsLines.push(lines[i].trim());
+          if (lines[i].trim().startsWith("<summary>")) {
+            summary = lines[i].trim().replace(/<\/?summary>/g, "");
+          }
+          i++;
+        }
+        if (i < lines.length) i++;
+        
+        items.push(
+          <details key={`details-${i}`} className="my-6 bg-gray-900 border border-white/10 rounded-xl overflow-hidden">
+            <summary className="px-4 py-3 text-white font-semibold cursor-pointer hover:bg-white/5 transition select-none">
+              {summary}
+            </summary>
+            <div className="px-4 py-3 border-t border-white/10">
+              {detailsLines.slice(2).map((line, idx) => {
+                const trimmedLine = line.trim();
+                if (!trimmedLine) return <div key={idx} className="h-2" />;
+                return <p key={idx} className="text-white/70 text-base leading-relaxed">{trimmedLine}</p>;
+              })}
+            </div>
+          </details>
+        );
+      } else if (trimmed.startsWith("```")) {
+        const codeLines: string[] = [];
+        const language = trimmed.slice(3).trim();
+        i++;
+        while (i < lines.length && !lines[i].trim().startsWith("```")) {
           codeLines.push(lines[i]);
           i++;
         }
         items.push(
-          <pre
-            key={`code-${i}`}
-            className="bg-gray-950 border border-white/10 rounded-xl p-4 mb-6 overflow-x-auto"
-          >
-            <code className="text-sm text-white/80 font-mono">{codeLines.join("\n")}</code>
-          </pre>
+          <div key={`code-${i}`} className="my-6">
+            {language && (
+              <div className="text-xs text-white/40 font-mono mb-2 px-4 pt-2">
+                {language}
+              </div>
+            )}
+            <pre className="bg-gray-950 border border-white/10 rounded-xl p-4 overflow-x-auto">
+              <code className="text-sm text-white/80 font-mono">{codeLines.join("\n")}</code>
+            </pre>
+          </div>
         );
         i++;
-      } else if (block.type === "quote") {
-        const quoteLines: string[] = [block.text ?? ""];
+      } else if (trimmed.startsWith("| ")) {
+        const tableRows: string[] = [trimmed];
+        i++;
+        while (i < lines.length && lines[i].trim().startsWith("|")) {
+          tableRows.push(lines[i].trim());
+          i++;
+        }
+        const rows = tableRows.map(row => 
+          row.split("|").filter(cell => cell.trim()).map(cell => cell.trim())
+        );
+        const header = rows[0] || [];
+        const body = rows.slice(2);
+        
+        items.push(
+          <div key={`table-${i}`} className="overflow-x-auto my-6">
+            <table className="w-full border-collapse">
+              <thead>
+                <tr>
+                  {header.map((cell, idx) => (
+                    <th key={idx} className="border border-white/10 bg-white/5 px-4 py-2 text-left text-white font-semibold">
+                      {renderInline(cell, `th-${i}-${idx}`)}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {body.map((row, rowIdx) => (
+                  <tr key={rowIdx}>
+                    {row.map((cell, cellIdx) => (
+                      <td key={cellIdx} className="border border-white/10 px-4 py-2 text-white/70">
+                        {renderInline(cell, `td-${i}-${rowIdx}-${cellIdx}`)}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        );
+      } else if (trimmed.startsWith("> ")) {
+        const quoteLines: string[] = [trimmed.slice(2)];
         i++;
         while (i < lines.length && lines[i].trim().startsWith(">")) {
           quoteLines.push(lines[i].trim().slice(2));
@@ -162,45 +244,74 @@ export function MarkdownPreview({ content, className = "" }: MarkdownPreviewProp
         items.push(
           <blockquote
             key={`quote-${i}`}
-            className="border-l-4 border-emerald-300/50 pl-4 italic text-white/60 mb-6"
+            className="border-l-4 border-emerald-300/50 pl-4 italic text-white/60 my-6"
           >
             {quoteLines.join("\n")}
           </blockquote>
         );
-      } else if (block.type === "list" || block.type === "numbered") {
-        const listItems: string[] = [block.text ?? ""];
-        const listType = block.type;
-        i++;
+      } else if (trimmed.startsWith("- [ ] ") || trimmed.startsWith("* [ ] ")) {
+        const taskItems: { text: string; checked: boolean }[] = [];
+        
         while (i < lines.length) {
-          const next = parseBlock(lines[i]);
-          if (next && (next.type === listType)) {
-            listItems.push(next.text ?? "");
+          const line = lines[i].trim();
+          if (line.startsWith("- [ ] ")) {
+            taskItems.push({ text: line.slice(6), checked: false });
+            i++;
+          } else if (line.startsWith("- [x] ")) {
+            taskItems.push({ text: line.slice(6), checked: true });
             i++;
           } else {
             break;
           }
         }
-        if (listType === "list") {
-          items.push(
-            <ul key={`list-${i}`} className="space-y-2 mb-6 list-disc list-inside">
-              {listItems.map((item, idx) => (
-                <li key={idx} className="text-white/70 text-lg">
-                  {renderInline(item, `li-${i}-${idx}`)}
-                </li>
-              ))}
-            </ul>
-          );
-        } else {
-          items.push(
-            <ol key={`ol-${i}`} className="space-y-2 mb-6 list-decimal list-inside">
-              {listItems.map((item, idx) => (
-                <li key={idx} className="text-white/70 text-lg">
-                  {renderInline(item, `ol-${i}-${idx}`)}
-                </li>
-              ))}
-            </ol>
-          );
+        
+        items.push(
+          <ul key={`tasks-${i}`} className="space-y-2 mb-6 list-none">
+            {taskItems.map((task, idx) => (
+              <li key={idx} className="flex items-start gap-3 text-white/70 text-lg">
+                <input
+                  type="checkbox"
+                  checked={task.checked}
+                  readOnly
+                  className="mt-1.5 w-5 h-5 rounded border-white/20 bg-gray-950 text-emerald-300 focus:ring-emerald-300 focus:ring-offset-gray-900"
+                />
+                <span className={task.checked ? "line-through text-white/40" : ""}>
+                  {renderInline(task.text, `task-${i}-${idx}`)}
+                </span>
+              </li>
+            ))}
+          </ul>
+        );
+      } else if (trimmed.startsWith("- ") || trimmed.startsWith("* ")) {
+        const listItems: string[] = [];
+        while (i < lines.length && (lines[i].trim().startsWith("- ") || lines[i].trim().startsWith("* "))) {
+          listItems.push(lines[i].trim().replace(/^[-*]\s/, ""));
+          i++;
         }
+        items.push(
+          <ul key={`list-${i}`} className="space-y-2 mb-6 list-disc list-inside">
+            {listItems.map((item, idx) => (
+              <li key={idx} className="text-white/70 text-lg">
+                {renderInline(item, `li-${i}-${idx}`)}
+              </li>
+            ))}
+          </ul>
+        );
+      } else if (/^\d+\.\s/.test(trimmed)) {
+        const listItems: string[] = [];
+        while (i < lines.length && /^\d+\.\s/.test(lines[i].trim())) {
+          listItems.push(lines[i].trim().replace(/^\d+\.\s/, ""));
+          i++;
+        }
+        items.push(
+          <ol key={`ol-${i}`} className="space-y-2 mb-6 list-decimal list-inside">
+            {listItems.map((item, idx) => (
+              <li key={idx} className="text-white/70 text-lg">
+                {renderInline(item, `ol-${i}-${idx}`)}
+              </li>
+            ))}
+          </ol>
+        );
       } else {
         items.push(
           <p key={i} className="text-white/70 text-lg leading-relaxed mb-4">
@@ -224,4 +335,3 @@ export function MarkdownPreview({ content, className = "" }: MarkdownPreviewProp
 
   return <div className={className}>{elements}</div>;
 }
-

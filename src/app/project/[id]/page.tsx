@@ -188,6 +188,13 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
               </div>
             )}
 
+            {results.length > 0 && (
+              <div className="mb-12">
+                <h2 className="text-2xl font-serif text-white mb-6">Key Results</h2>
+                <MarkdownPreview content={project.results} className="text-white/70 text-lg leading-relaxed" />
+              </div>
+            )}
+
             {techStack.length > 0 && (
               <div className="mb-12">
                 <h2 className="text-2xl font-serif text-white mb-6">Tech Stack</h2>
