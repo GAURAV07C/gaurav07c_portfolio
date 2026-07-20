@@ -183,13 +183,10 @@ function ProjectsInner() {
       const method = editingId ? "PUT" : "POST";
       const url = editingId ? `/api/projects/${editingId}` : "/api/projects";
 
-      const payload = { ...formData };
-      console.log("Submitting project:", { method, url, payload: { ...payload, description: payload.description?.slice(0, 50) } });
-
       const res = await fetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(formData),
       });
 
       if (res.ok) {
