@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect,  useState } from "react";
 import { motion, stagger, useAnimate } from "framer-motion";
 import { cn } from "@/lib/utils";
 
@@ -18,22 +18,33 @@ export const TextGenerateEffect = ({
   const [scope, animate] = useAnimate();
   const safeWords = typeof words === "string" ? words : "";
   const wordsArray = safeWords.split(" ");
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    if (scope.current) {
-      animate(
-        "span",
-        {
-          opacity: 1,
-          filter: filter ? "blur(0px)" : "none",
-        },
-        {
-          duration: duration || 1,
-          delay: stagger(0.15),
-        }
-      );
-    }
-  }, [animate, scope.current, filter, duration]);
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
+
+    const timer = setTimeout(() => {
+      if (scope.current) {
+        animate(
+          "span",
+          {
+            opacity: 1,
+            filter: filter ? "blur(0px)" : "none",
+          },
+          {
+            duration: duration || 1,
+            delay: stagger(0.15),
+          }
+        );
+      }
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, [animate, filter, duration, mounted, scope]);
 
   return (
     <div className={cn("font-bold", className)}>

@@ -99,7 +99,6 @@ export function MarkdownContent({ content, className = "" }: MarkdownContentProp
       const backtickCount = trimmed.match(/^(`+)/)?.[1].length || 3;
       const closingPattern = "^" + "`".repeat(backtickCount);
       const codeLines: string[] = [];
-      const language = trimmed.slice(backtickCount).trim();
       i++;
       while (i < lines.length && !new RegExp(closingPattern).test(lines[i].trim())) {
         codeLines.push(lines[i]);

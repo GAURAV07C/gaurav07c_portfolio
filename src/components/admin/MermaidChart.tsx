@@ -80,7 +80,8 @@ export function MermaidChart({ code }: { code: string }) {
           if (containerRef.current) {
             containerRef.current.innerHTML = "";
           }
-          const svg = (result as { svg?: string } | undefined)?.svg || (result as string | undefined) || "";
+          const raw = result as unknown as { svg?: string } | string | undefined;
+          const svg = typeof raw === "string" ? raw : raw?.svg || "";
           setSvg(svg);
           setLoading(false);
         }

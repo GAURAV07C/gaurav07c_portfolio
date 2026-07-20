@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useMemo } from "react";
+import Image from "next/image";
 import { MermaidChart } from "@/components/admin/MermaidChart";
 
 interface MarkdownPreviewProps {
@@ -23,10 +24,12 @@ function renderInline(text: string, keyPrefix: string): React.ReactNode[] {
 
     if (imgMatch) {
       parts.push(
-        <img
+        <Image
           key={`${keyPrefix}-${partIndex++}`}
           src={imgMatch[2]}
           alt={imgMatch[1] || "image"}
+          width={800}
+          height={400}
           className="max-w-full h-auto rounded-lg my-4"
         />
       );

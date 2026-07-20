@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import Image from "next/image";
 
 export default function SettingsPage() {
   const [settings, setSettings] = useState<{ aboutMe: string; socialLinks: string; introductionWords: string; introductionText: string; profileImage?: string } | null>(null);
@@ -181,10 +182,11 @@ export default function SettingsPage() {
             <div className="flex flex-col md:flex-row gap-8 items-start">
               <div className="relative w-40 h-40 md:w-48 md:h-48 rounded-2xl overflow-hidden flex-shrink-0 border-2 border-dashed border-white/20 bg-gray-950">
                 {formData.profileImage && !imageError ? (
-                  <img
+                  <Image
                     src={formData.profileImage}
                     alt="Profile preview"
-                    className="w-full h-full object-cover"
+                    fill
+                    className="object-cover"
                     onError={() => setImageError(true)}
                   />
                 ) : (

@@ -29,11 +29,6 @@ function getStoredUser() {
   }
 }
 
-function setStoredUser(name: string, email: string) {
-  if (typeof window === "undefined") return;
-  localStorage.setItem("commentUser", JSON.stringify({ name, email }));
-}
-
 function CommentItem({
   comment,
   depth = 0,

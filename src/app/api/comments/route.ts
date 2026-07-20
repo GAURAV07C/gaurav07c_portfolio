@@ -1,9 +1,20 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
-function buildCommentTree(comments: any[]): any[] {
-  const commentMap = new Map<string, any>();
-  const roots: any[] = [];
+interface CommentRow {
+  id: string;
+  content: string;
+  name: string;
+  email: string;
+  parentId: string | null;
+  blogId: string | null;
+  projectId: string | null;
+  createdAt: string;
+}
+
+function buildCommentTree(comments: CommentRow[]): CommentRow[] {
+  const commentMap = new Map<string, CommentRow & { replies: CommentRow[] }>();
+  const roots: CommentRow[] = [];
 
   for (const comment of comments) {
     commentMap.set(comment.id, { ...comment, replies: [] });
@@ -13,10 +24,10 @@ function buildCommentTree(comments: any[]): any[] {
     if (comment.parentId) {
       const parent = commentMap.get(comment.parentId);
       if (parent) {
-        parent.replies.push(commentMap.get(comment.id));
+        parent.replies.push(commentMap.get(comment.id)!);
       }
     } else {
-      roots.push(commentMap.get(comment.id));
+      roots.push(commentMap.get(comment.id)!);
     }
   }
 
@@ -37,14 +48,14 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: "Provide either blogId or projectId, not both" }, { status: 400 });
     }
 
-    const where: any = {};
+    const where: { blogId?: string; projectId?: string } = {};
     if (blogId) where.blogId = blogId;
     if (projectId) where.projectId = projectId;
 
-    const comments = await prisma.comment.findMany({
+    const comments = (await prisma.comment.findMany({
       where,
       orderBy: { createdAt: "asc" },
-    });
+    })).map((c) => ({ ...c, createdAt: c.createdAt.toISOString() })) as CommentRow[];
 
     const commentTree = buildCommentTree(comments);
 
