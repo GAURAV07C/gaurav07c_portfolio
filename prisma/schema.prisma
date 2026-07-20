@@ -20,6 +20,7 @@ model SiteSettings {
   aboutMe           String
   socialLinks       String
   introductionWords String  @default("[]")
+  introductionText  String  @default("")
   profileImage      String?
 }
 

@@ -16,6 +16,7 @@ export async function GET() {
           aboutMe: "",
           socialLinks: "[]",
           introductionWords: "[]",
+          introductionText: "",
         },
       });
     }
@@ -47,11 +48,12 @@ export async function PUT(request: Request) {
           aboutMe: "",
           socialLinks: "[]",
           introductionWords: "[]",
+          introductionText: "",
         },
       });
     }
 
-    const allowedFields = ["aboutMe", "socialLinks", "introductionWords", "profileImage", "heroWords", "heroDesc"];
+    const allowedFields = ["aboutMe", "socialLinks", "introductionWords", "profileImage", "heroWords", "heroDesc", "introductionText"];
     const updateData: Record<string, unknown> = {};
     for (const field of allowedFields) {
       if (body[field] !== undefined) {

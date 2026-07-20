@@ -8,17 +8,21 @@ import { useEffect, useState } from "react";
 const Introduction = () => {
   const [words, setWords] = useState<{ text: string; className: string }[]>([]);
   const [profileImage, setProfileImage] = useState<string>("");
+  const [introductionText, setIntroductionText] = useState<string>("");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetch("/api/settings")
-      .then(res => {
+      .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch settings");
         return res.json();
       })
-      .then(settings => {
+      .then((settings) => {
         if (settings?.introductionWords) {
           setWords(JSON.parse(settings.introductionWords));
+        }
+        if (settings?.introductionText) {
+          setIntroductionText(settings.introductionText);
         }
         if (settings?.profileImage) {
           setProfileImage(settings.profileImage);
@@ -55,7 +59,7 @@ const Introduction = () => {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5, duration: 1 }}
         >
-          <TextGenerateEffect words="Tech Enthusiast turned Software Engineer. I love building things and helping people. Very active on Twitter." />
+          <TextGenerateEffect words={introductionText || "Tech Enthusiast turned Software Engineer. I love building things and helping people. Very active on Twitter."} />
         </motion.div>
       </motion.div>
 

@@ -3,11 +3,12 @@
 import React, { useEffect, useState } from "react";
 
 export default function SettingsPage() {
-  const [settings, setSettings] = useState<{ aboutMe: string; socialLinks: string; introductionWords: string; profileImage?: string } | null>(null);
+  const [settings, setSettings] = useState<{ aboutMe: string; socialLinks: string; introductionWords: string; introductionText: string; profileImage?: string } | null>(null);
   const [formData, setFormData] = useState({
     aboutMe: "",
     socialLinks: "",
     introductionWords: "",
+    introductionText: "",
     profileImage: "",
   });
   const [loading, setLoading] = useState(false);
@@ -28,6 +29,7 @@ export default function SettingsPage() {
           aboutMe: data.aboutMe || "",
           socialLinks: data.socialLinks || "[]",
           introductionWords: data.introductionWords || "[]",
+          introductionText: data.introductionText || "",
           profileImage: data.profileImage || "",
         });
         setImagePreview(data.profileImage || "");
@@ -239,6 +241,50 @@ export default function SettingsPage() {
           </div>
         )}
 
+        {activeTab === "intro" && (
+          <div className="bg-gray-900 border border-white/10 rounded-2xl p-8">
+            <div className="mb-6">
+              <h2 className="text-2xl font-semibold text-white mb-2">Introduction</h2>
+              <p className="text-white/60 text-sm">
+                Configure your homepage introduction section. Add typewriter words and a short bio text.
+              </p>
+            </div>
+
+            <div className="space-y-6">
+              <div>
+                <label className="block text-sm font-medium text-white/70 mb-2">
+                  Typewriter Words
+                  <span className="text-white/40 text-xs ml-2">(JSON format)</span>
+                </label>
+                <textarea
+                  value={formData.introductionWords}
+                  onChange={(e) => setFormData({ ...formData, introductionWords: e.target.value })}
+                  className="w-full bg-gray-950 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-emerald-300 focus:ring-2 focus:ring-emerald-300/20 transition font-mono text-sm"
+                  rows={4}
+                  placeholder='[{"text":"Hi","className":"text-white text-6xl"},{"text":"I am","className":"text-white text-6xl"},{"text":"Gaurav","className":"text-white text-6xl"}]'
+                />
+                <p className="text-xs text-white/40 mt-2">
+                  This will appear as animated typewriter text on the homepage. Use JSON format with text and className properties.
+                </p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-white/70 mb-2">Introduction Bio</label>
+                <textarea
+                  value={formData.introductionText}
+                  onChange={(e) => setFormData({ ...formData, introductionText: e.target.value })}
+                  className="w-full bg-gray-950 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-emerald-300 focus:ring-2 focus:ring-emerald-300/20 transition"
+                  rows={4}
+                  placeholder="e.g. Tech Enthusiast turned Software Engineer. I love building things and helping people."
+                />
+                <p className="text-xs text-white/40 mt-2">
+                  This text appears below the typewriter text on the homepage.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
         {activeTab === "social" && (
           <div className="bg-gray-900 border border-white/10 rounded-2xl p-8">
             <div className="mb-6">
@@ -306,12 +352,13 @@ export default function SettingsPage() {
           <button
             type="button"
             onClick={() => {
-              setFormData({
-                aboutMe: settings?.aboutMe || "",
-                socialLinks: settings?.socialLinks || "[]",
-                introductionWords: settings?.introductionWords || "[]",
-                profileImage: settings?.profileImage || "",
-              });
+            setFormData({
+              aboutMe: settings?.aboutMe || "",
+              socialLinks: settings?.socialLinks || "[]",
+              introductionWords: settings?.introductionWords || "[]",
+              introductionText: settings?.introductionText || "",
+              profileImage: settings?.profileImage || "",
+            });
               setImagePreview(settings?.profileImage || "");
               setMessage(null);
             }}
