@@ -11,6 +11,7 @@ import { AddButton } from "@/components/admin/AddButton";
 import { EmptyState } from "@/components/admin/EmptyState";
 import { AdminItemCard } from "@/components/admin/AdminItemCard";
 import { FormField, Input, TextArea } from "@/components/admin/FormComponents";
+import { MarkdownEditor } from "@/components/admin/MarkdownEditor";
 
 interface Blog {
   id: string;
@@ -183,11 +184,11 @@ export default function BlogsAdminPage() {
           </FormField>
 
           <FormField label="Content">
-            <TextArea
+            <MarkdownEditor
               value={formData.content}
-              onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-              rows={6}
-              required
+              onChange={(value) => setFormData({ ...formData, content: value })}
+              placeholder="Write your blog content in markdown..."
+              minHeight="400px"
             />
           </FormField>
 
