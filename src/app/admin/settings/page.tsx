@@ -4,13 +4,14 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 
 export default function SettingsPage() {
-  const [settings, setSettings] = useState<{ aboutMe: string; socialLinks: string; introductionWords: string; introductionText: string; profileImage?: string } | null>(null);
+  const [settings, setSettings] = useState<{ aboutMe: string; socialLinks: string; introductionWords: string; introductionText: string; profileImage?: string; resume?: string } | null>(null);
   const [formData, setFormData] = useState({
     aboutMe: "",
     socialLinks: "",
     introductionWords: "",
     introductionText: "",
     profileImage: "",
+    resume: "",
   });
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
@@ -32,6 +33,7 @@ export default function SettingsPage() {
           introductionWords: data.introductionWords || "[]",
           introductionText: data.introductionText || "",
           profileImage: data.profileImage || "",
+          resume: data.resume || "",
         });
         setImagePreview(data.profileImage || "");
         setImageError(false);
@@ -148,9 +150,23 @@ export default function SettingsPage() {
           <div className="flex items-center gap-3">
             <span className="text-xl">{message.type === "success" ? "✓" : "✕"}</span>
             <span className="font-medium">{message.text}</span>
+            </div>
+
+            <div className="mt-8 pt-6 border-t border-white/10">
+              <label className="block text-sm font-medium text-white/70 mb-2">Resume URL</label>
+              <input
+                type="text"
+                value={formData.resume}
+                onChange={(e) => setFormData({ ...formData, resume: e.target.value })}
+                className="w-full bg-gray-950 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-emerald-300 focus:ring-2 focus:ring-emerald-300/20 transition"
+                placeholder="https://resume-lemon-rho.vercel.app/"
+              />
+              <p className="text-xs text-white/40 mt-2">
+                This link will appear as a Resume button in the header and footer.
+              </p>
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
       <div className="flex gap-2 mb-8 border-b border-white/10 pb-1 overflow-x-auto">
         {tabs.map((tab) => (
@@ -360,6 +376,7 @@ export default function SettingsPage() {
               introductionWords: settings?.introductionWords || "[]",
               introductionText: settings?.introductionText || "",
               profileImage: settings?.profileImage || "",
+              resume: settings?.resume || "",
             });
               setImagePreview(settings?.profileImage || "");
               setMessage(null);

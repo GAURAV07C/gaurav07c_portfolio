@@ -377,14 +377,23 @@ function ProjectsInner() {
               />
             </FormField>
 
-            <FormField label="Source Link">
+            <FormField label="Demo Link (YouTube)">
               <Input
                 type="text"
-                value={formData.sourceLink}
-                onChange={(e) => setFormData({ ...formData, sourceLink: e.target.value })}
+                value={formData.demoLink}
+                onChange={(e) => setFormData({ ...formData, demoLink: e.target.value })}
+                placeholder="https://youtube.com/watch?v=..."
               />
             </FormField>
           </div>
+
+          <FormField label="Source Link (GitHub)">
+            <Input
+              type="text"
+              value={formData.sourceLink}
+              onChange={(e) => setFormData({ ...formData, sourceLink: e.target.value })}
+            />
+          </FormField>
 
           <FormField label="Image Path">
             <Input

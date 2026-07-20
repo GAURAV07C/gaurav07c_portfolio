@@ -36,8 +36,8 @@ async function main() {
         { name: "Twitter", href: "https://x.com/gaurav07c" },
         { name: "Github", href: "https://github.com/GAURAV07C/" },
         { name: "Linkedin", href: "https://www.linkedin.com/in/gaurav07c/" },
-        { name: "Instagram", href: "https://www.instagram.com/gaurav07cc/" },
       ]),
+      resume: "https://resume-lemon-rho.vercel.app/",
       introductionWords: JSON.stringify([
         { text: "Hi", className: "text-white text-6xl" },
         { text: "I'm", className: "text-white text-6xl" },

@@ -24,10 +24,10 @@ export async function GET() {
     return NextResponse.json(settings, { status: 200 });
   } catch (error) {
     console.error("Settings GET error:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch settings", aboutMe: "", heroDesc: "", socialLinks: "[]", introductionWords: "[]", profileImage: "" },
-      { status: 500 }
-    );
+      return NextResponse.json(
+        { error: "Failed to fetch settings", aboutMe: "", heroDesc: "", socialLinks: "[]", introductionWords: "[]", profileImage: "", resume: "" },
+        { status: 500 }
+      );
   }
 }
 
@@ -53,7 +53,7 @@ export async function PUT(request: Request) {
       });
     }
 
-    const allowedFields = ["aboutMe", "socialLinks", "introductionWords", "profileImage", "heroWords", "heroDesc", "introductionText"];
+    const allowedFields = ["aboutMe", "socialLinks", "introductionWords", "profileImage", "heroWords", "heroDesc", "introductionText", "resume"];
     const updateData: Record<string, unknown> = {};
     for (const field of allowedFields) {
       if (body[field] !== undefined) {

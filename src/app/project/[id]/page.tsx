@@ -214,8 +214,7 @@ export default function ProjectDetailPage({ params }: { params: Promise<{ id: st
               {project.demoLink && (
                 <Link href={project.demoLink} target="_blank" rel="noopener noreferrer">
                   <button className="bg-white text-gray-950 h-12 px-6 rounded-xl font-semibold inline-flex items-center justify-center gap-3 hover:bg-white/80 transition">
-                    <SourceIcon className="size-4" />
-                    <span>Demo</span>
+                    <span>▶ Watch Demo</span>
                   </button>
                 </Link>
               )}

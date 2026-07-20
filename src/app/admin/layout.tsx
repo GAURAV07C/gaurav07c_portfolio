@@ -18,6 +18,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
           <nav className="flex flex-col gap-4 text-white/70">
             <Link href="/admin" className="hover:text-emerald-300 transition">Dashboard</Link>
             <Link href="/admin/settings" className="hover:text-emerald-300 transition">Site Settings</Link>
+            <Link href="/admin/account" className="hover:text-emerald-300 transition">Account</Link>
             <Link href="/admin/hero" className="hover:text-emerald-300 transition">Hero</Link>
             <Link href="/admin/projects" className="hover:text-emerald-300 transition">Projects</Link>
             <Link href="/admin/blogs" className="hover:text-emerald-300 transition">Blogs</Link>

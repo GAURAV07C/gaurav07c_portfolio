@@ -22,6 +22,7 @@ model SiteSettings {
   introductionWords String  @default("[]")
   introductionText  String  @default("")
   profileImage      String?
+  resume            String?
 }
 
 model Project {
