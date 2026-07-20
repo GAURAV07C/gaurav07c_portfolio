@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { ok, serverError } from "@/lib/api";
 
 
 export async function GET() {
@@ -23,8 +24,8 @@ export async function POST(request: Request) {
         message: body.message,
       }
     });
-    return NextResponse.json(newMessage, { status: 201 });
+    return ok(newMessage, 201);
   } catch {
-    return NextResponse.json({ error: "Failed to create message" }, { status: 500 });
+    return serverError("Failed to create message");
   }
 }

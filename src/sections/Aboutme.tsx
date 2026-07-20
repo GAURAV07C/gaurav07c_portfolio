@@ -1,23 +1,16 @@
 "use client";
 import SectionHeader from "@/components/SectionHeader";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useCachedFetch } from "@/hooks/useCachedFetch";
 
 const Aboutme = () => {
-  const [aboutMe, setAboutMe] = useState<string>("");
-  const [profileImage, setProfileImage] = useState<string>("");
+  const { data: settings } = useCachedFetch<{ aboutMe: string; profileImage?: string }>({
+    key: "settings",
+    fetchFn: () => fetch("/api/settings").then(res => res.json()),
+  });
 
-  useEffect(() => {
-    fetch("/api/settings")
-      .then(res => res.json())
-      .then(settings => {
-        if (settings) {
-          setAboutMe(settings.aboutMe);
-          setProfileImage(settings.profileImage || "");
-        }
-      })
-      .catch(console.error);
-  }, []);
+  const aboutMe = settings?.aboutMe || "";
+  const profileImage = settings?.profileImage || "";
 
   if (!aboutMe && !profileImage) return null;
 

@@ -4,19 +4,17 @@ import memojiAvatar1 from "@/assets/images/memoji-avatar-1.png";
 import SectionHeader from "@/components/SectionHeader";
 import Image from "next/image";
 import Card from "@/components/Card";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment } from "react";
 import BlurFade from "@/components/BlurFade";
+import { useCachedFetch } from "@/hooks/useCachedFetch";
 
 export const TestimonialsSection = () => {
   const controls = useAnimation();
-  const [testimonials, setTestimonials] = useState<{ id: string; name: string; position: string; text: string; avatar: string }[]>([]);
-
-  useEffect(() => {
-    fetch("/api/testimonials")
-      .then(res => res.json())
-      .then(data => setTestimonials(Array.isArray(data) ? data : []))
-      .catch(console.error);
-  }, []);
+  const { data: testimonialsRaw = [] } = useCachedFetch<{ id: string; name: string; position: string; text: string; avatar: string }[]>({
+    key: "testimonials",
+    fetchFn: () => fetch("/api/testimonials").then(res => res.json()),
+  });
+  const testimonials = Array.isArray(testimonialsRaw) ? testimonialsRaw : [];
 
   return (
     <div className="py-16 lg:py-24">

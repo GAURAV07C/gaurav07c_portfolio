@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import Card from "@/components/Card";
 import CardHeader from "@/components/CardHeader";
 import ToolBoxItem from "@/components/ToolBoxItem";
-import { useRef, useEffect, useState } from "react";
+import { useRef } from "react";
 
 import JavaScriptIcon from "@/assets/icons/square-js.svg";
 import HTMLIcon from "@/assets/icons/html5.svg";
@@ -21,6 +21,7 @@ import Redux from "@/assets/icons/redux.svg";
 import Redis from "@/assets/icons/redis.svg";
 import PrismaIcon from "@/assets/icons/prisma.svg";
 import WebSocketIcon from "@/assets/icons/websocket.svg";
+import { useCachedFetch } from "@/hooks/useCachedFetch";
 
 const iconMap: Record<string, React.ElementType> = {
   "JavaScript": JavaScriptIcon,
@@ -42,19 +43,17 @@ const iconMap: Record<string, React.ElementType> = {
 
 export const AboutSection = () => {
   const constraintRef = useRef(null);
-  const [tools, setTools] = useState<{ title: string; iconName: string }[]>([]);
-  const [hobbies, setHobbies] = useState<{ id: string; title: string; emoji: string; left: string; top: string }[]>([]);
+  const { data: toolsRaw = [] } = useCachedFetch<{ title: string; iconName: string }[]>({
+    key: "tools",
+    fetchFn: () => fetch("/api/tools").then(res => res.json()),
+  });
+  const { data: hobbiesRaw = [] } = useCachedFetch<{ id: string; title: string; emoji: string; left: string; top: string }[]>({
+    key: "hobbies",
+    fetchFn: () => fetch("/api/hobbies").then(res => res.json()),
+  });
 
-  useEffect(() => {
-    fetch("/api/tools")
-      .then(res => res.json())
-      .then(data => setTools(Array.isArray(data) ? data : []))
-      .catch(console.error);
-    fetch("/api/hobbies")
-      .then(res => res.json())
-      .then(data => setHobbies(Array.isArray(data) ? data : []))
-      .catch(console.error);
-  }, []);
+  const tools = Array.isArray(toolsRaw) ? toolsRaw : [];
+  const hobbies = Array.isArray(hobbiesRaw) ? hobbiesRaw : [];
 
   const mappedTools = tools.map((tool: { title: string; iconName: string }) => ({
     title: tool.title,

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Eye, Pencil } from "lucide-react";
+import { useCachedFetch } from "@/hooks/useCachedFetch";
 
 interface Project {
   id: string;
@@ -22,25 +23,40 @@ export default function AdminDashboard() {
   const [recentMessages, setRecentMessages] = useState<{ id: string; name: string; message: string; createdAt: string }[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const { data: projectsRaw } = useCachedFetch({
+    key: "admin_projects",
+    fetchFn: () => fetch("/api/projects").then(res => res.json()),
+  });
+  const { data: blogsRaw } = useCachedFetch({
+    key: "admin_blogs",
+    fetchFn: () => fetch("/api/blogs").then(res => res.json()),
+  });
+  const { data: skillsRaw } = useCachedFetch({
+    key: "admin_skills",
+    fetchFn: () => fetch("/api/skills").then(res => res.json()),
+  });
+  const { data: messagesRaw } = useCachedFetch({
+    key: "admin_messages",
+    fetchFn: () => fetch("/api/messages").then(res => res.json()),
+  });
+
   useEffect(() => {
-    Promise.all([
-      fetch("/api/projects").then(res => res.json()),
-      fetch("/api/blogs").then(res => res.json()),
-      fetch("/api/skills").then(res => res.json()),
-      fetch("/api/messages").then(res => res.json()),
-    ]).then(([projects, blogs, skills, messages]) => {
-      setStats({
-        projects: Array.isArray(projects) ? projects.length : 0,
-        blogs: Array.isArray(blogs) ? blogs.length : 0,
-        skills: Array.isArray(skills) ? skills.length : 0,
-        messages: Array.isArray(messages) ? messages.length : 0,
-      });
-      setRecentProjects((Array.isArray(projects) ? projects : []).filter((p: { isRecent?: boolean }) => p.isRecent === true).slice(0, 5));
-      setRecentBlogs((Array.isArray(blogs) ? blogs : []).slice(0, 5));
-      setRecentMessages((Array.isArray(messages) ? messages : []).slice(0, 5));
-      setLoading(false);
-    }).catch(() => setLoading(false));
-  }, []);
+    const projects = Array.isArray(projectsRaw) ? projectsRaw : [];
+    const blogs = Array.isArray(blogsRaw) ? blogsRaw : [];
+    const skills = Array.isArray(skillsRaw) ? skillsRaw : [];
+    const messages = Array.isArray(messagesRaw) ? messagesRaw : [];
+
+    setStats({
+      projects: projects.length,
+      blogs: blogs.length,
+      skills: skills.length,
+      messages: messages.length,
+    });
+    setRecentProjects(projects.filter((p: { isRecent?: boolean }) => p.isRecent === true).slice(0, 5));
+    setRecentBlogs(blogs.slice(0, 5));
+    setRecentMessages(messages.slice(0, 5));
+    setLoading(false);
+  }, [projectsRaw, blogsRaw, skillsRaw, messagesRaw]);
 
   if (loading) {
     return <div className="text-white/50">Loading dashboard...</div>;

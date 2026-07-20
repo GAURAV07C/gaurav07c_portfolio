@@ -12,39 +12,27 @@ import SparkleIcon from "@/assets/icons/sparkle.svg";
 import BlurFade from "@/components/BlurFade";
 import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
 import { TypewriterEffect } from "@/components/ui/typewriter-effect";
-import { useEffect, useState } from "react";
+import { useCachedFetch } from "@/hooks/useCachedFetch";
 
 export const HeroSection = () => {
-  const [data, setData] = useState<{ words: { text: string; className: string }[]; description: string } | null>(null);
+  const { data: settings } = useCachedFetch<{ heroWords: string; heroDesc: string }>({
+    key: "settings",
+    fetchFn: () => fetch("/api/settings").then(res => {
+      if (!res.ok) throw new Error("Failed to fetch settings");
+      return res.json();
+    }),
+  });
 
-  useEffect(() => {
-    fetch("/api/settings")
-      .then(res => {
-        if (!res.ok) throw new Error("Failed to fetch settings");
-        return res.json();
-      })
-      .then(settings => {
-        if (settings) {
-          setData({
-            words: JSON.parse(settings.heroWords || "[]"),
-            description: settings.heroDesc || ""
-          });
-        }
-      })
-      .catch(() => {
-        setData({ words: [], description: "" });
-      });
-  }, []);
+  const words = settings?.heroWords ? JSON.parse(settings.heroWords) : [];
+  const description = settings?.heroDesc || "";
 
-  if (!data) {
+  if (!settings) {
     return (
       <div className="h-screen bg-gray-950 flex items-center justify-center">
         <div className="text-white/40 text-lg">Loading...</div>
       </div>
     );
   }
-
-  const { words, description } = data;
 
   return (
     <BlurFade>

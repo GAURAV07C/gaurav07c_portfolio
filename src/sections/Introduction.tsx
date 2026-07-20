@@ -3,36 +3,19 @@ import { TextGenerateEffect } from "@/components/ui/text-generate-effect";
 import { TypewriterEffect } from "@/components/ui/typewriter-effect";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useCachedFetch } from "@/hooks/useCachedFetch";
 
 const Introduction = () => {
-  const [words, setWords] = useState<{ text: string; className: string }[]>([]);
-  const [profileImage, setProfileImage] = useState<string>("");
-  const [introductionText, setIntroductionText] = useState<string>("");
-  const [loading, setLoading] = useState(true);
+  const { data: settings } = useCachedFetch<{ introductionWords: string; introductionText: string; profileImage?: string }>({
+    key: "settings",
+    fetchFn: () => fetch("/api/settings").then(res => res.json()),
+  });
 
-  useEffect(() => {
-    fetch("/api/settings")
-      .then((res) => {
-        if (!res.ok) throw new Error("Failed to fetch settings");
-        return res.json();
-      })
-      .then((settings) => {
-        if (settings?.introductionWords) {
-          setWords(JSON.parse(settings.introductionWords));
-        }
-        if (settings?.introductionText) {
-          setIntroductionText(settings.introductionText);
-        }
-        if (settings?.profileImage) {
-          setProfileImage(settings.profileImage);
-        }
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
-  }, []);
+  const words = settings?.introductionWords ? JSON.parse(settings.introductionWords) : [];
+  const profileImage = settings?.profileImage || "";
+  const introductionText = settings?.introductionText || "";
 
-  if (loading) {
+  if (!settings) {
     return (
       <div className="w-full max-w-5xl mx-auto flex flex-col items-center justify-center px-4 md:px-6 md:flex-row">
         <div className="text-white/40 text-lg">Loading...</div>

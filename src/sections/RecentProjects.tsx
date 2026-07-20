@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCachedFetch } from "@/hooks/useCachedFetch";
 import Image from "next/image";
 import Link from "next/link";
 import SectionHeader from "@/components/SectionHeader";
@@ -14,17 +14,11 @@ interface Project {
 }
 
 export const RecentProjects = () => {
-  const [projects, setProjects] = useState<Project[]>([]);
-
-  useEffect(() => {
-    fetch("/api/projects")
-      .then(res => res.json())
-      .then(data => {
-        const all = Array.isArray(data) ? data : [];
-        setProjects(all.slice(0, 3));
-      })
-      .catch(console.error);
-  }, []);
+  const { data: projectsRaw = [] } = useCachedFetch<Project[]>({
+    key: "projects",
+    fetchFn: () => fetch("/api/projects").then(res => res.json()),
+  });
+  const projects = Array.isArray(projectsRaw) ? projectsRaw.slice(0, 3) : [];
 
   return (
     <section className="py-16 lg:py-24">

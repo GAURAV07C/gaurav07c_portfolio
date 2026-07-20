@@ -3,6 +3,7 @@ import { Inter, Calistoga } from "next/font/google";
 import "./globals.css";
 import { twMerge } from "tailwind-merge";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { PageLoader } from "@/components/PageLoader";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const calistoga = Calistoga({
@@ -67,7 +68,9 @@ export default function RootLayout({
         )}
       >
         <ErrorBoundary>
-          {children}
+          <PageLoader>
+            {children}
+          </PageLoader>
         </ErrorBoundary>
       </body>
     </html>

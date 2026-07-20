@@ -2,17 +2,14 @@
 import StarIcon from "@/assets/icons/star.svg";
 import BlurFade from "@/components/BlurFade";
 import LeftToRight from "@/components/LeftToRight";
-import { useEffect, useState } from "react";
+import { useCachedFetch } from "@/hooks/useCachedFetch";
 
 export const TapeSection = () => {
-  const [words, setWords] = useState<{ id: string; word: string }[]>([]);
-
-  useEffect(() => {
-    fetch("/api/tape-words")
-      .then(res => res.json())
-      .then(data => setWords(Array.isArray(data) ? data : []))
-      .catch(console.error);
-  }, []);
+  const { data: wordsRaw = [] } = useCachedFetch<{ id: string; word: string }[]>({
+    key: "tape-words",
+    fetchFn: () => fetch("/api/tape-words").then(res => res.json()),
+  });
+  const words = Array.isArray(wordsRaw) ? wordsRaw : [];
 
   return (
     <div className="py-16 lg:py-24 overflow-x-clip">

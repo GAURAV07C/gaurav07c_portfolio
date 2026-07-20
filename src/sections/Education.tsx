@@ -5,17 +5,14 @@ import { ResumeCard } from "@/components/resume-card";
 import SectionHeader from "@/components/SectionHeader";
 import { BLUR_FADE_DELAY } from "@/data/data";
 import React from "react";
-import { useEffect, useState } from "react";
+import { useCachedFetch } from "@/hooks/useCachedFetch";
 
 const Education = () => {
-  const [education, setEducation] = useState<{ id: string; school: string; href: string; degree: string; logoUrl: string; start: string; end: string }[]>([]);
-
-  useEffect(() => {
-    fetch("/api/education")
-      .then(res => res.json())
-      .then(data => setEducation(Array.isArray(data) ? data : []))
-      .catch(console.error);
-  }, []);
+  const { data: educationRaw = [] } = useCachedFetch<{ id: string; school: string; href: string; degree: string; logoUrl: string; start: string; end: string }[]>({
+    key: "education",
+    fetchFn: () => fetch("/api/education").then(res => res.json()),
+  });
+  const education = Array.isArray(educationRaw) ? educationRaw : [];
 
   return (
     <div className="-mt-16 py-16" id='education'>

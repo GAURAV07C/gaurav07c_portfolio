@@ -2,19 +2,16 @@
 
 import BlurFade from "@/components/BlurFade";
 import SectionHeader from "@/components/SectionHeader";
-import { useEffect, useState } from "react";
+import { useCachedFetch } from "@/hooks/useCachedFetch";
 
 const BLUR_FADE_DELAY = 0.04;
 
 const Skill = () => {
-  const [skills, setSkills] = useState<{ id: string; title: string }[]>([]);
-
-  useEffect(() => {
-    fetch("/api/skills")
-      .then(res => res.json())
-      .then(data => setSkills(data))
-      .catch(console.error);
-  }, []);
+  const { data: skillsRaw = [] } = useCachedFetch<{ id: string; title: string }[]>({
+    key: "skills",
+    fetchFn: () => fetch("/api/skills").then(res => res.json()),
+  });
+  const skills = Array.isArray(skillsRaw) ? skillsRaw : [];
 
   return (
     <div className="w-full max-w-5xl mx-auto py-16 px-4 md:px-6" id="skill">

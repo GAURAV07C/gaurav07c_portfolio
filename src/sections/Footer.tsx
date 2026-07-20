@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { Github, Twitter, Linkedin, FileText } from "lucide-react";
 import BlurFade from "@/components/BlurFade";
-import { useEffect, useState } from "react";
+import { useCachedFetch } from "@/hooks/useCachedFetch";
 
 const iconMap: Record<string, React.ElementType> = {
   Twitter,
@@ -13,22 +13,13 @@ const iconMap: Record<string, React.ElementType> = {
 };
 
 export const Footer = () => {
-  const [socialLinks, setSocialLinks] = useState<{ name: string; href: string }[]>([]);
-  const [resume, setResume] = useState("");
+  const { data: settings } = useCachedFetch<{ socialLinks: string; resume?: string }>({
+    key: "settings",
+    fetchFn: () => fetch("/api/settings").then(res => res.json()),
+  });
 
-  useEffect(() => {
-    fetch("/api/settings")
-      .then(res => res.json())
-      .then(settings => {
-        if (settings?.socialLinks) {
-          setSocialLinks(JSON.parse(settings.socialLinks));
-        }
-        if (settings?.resume) {
-          setResume(settings.resume);
-        }
-      })
-      .catch(console.error);
-  }, []);
+  const socialLinks = (settings?.socialLinks ? JSON.parse(settings.socialLinks) : []) as { name: string; href: string }[];
+  const resume = settings?.resume || "";
 
   return (
     <footer className="relative overflow-x-clip">

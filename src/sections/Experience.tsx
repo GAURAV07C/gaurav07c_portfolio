@@ -5,17 +5,14 @@ import { ResumeCard } from "@/components/resume-card";
 import SectionHeader from "@/components/SectionHeader";
 import { BLUR_FADE_DELAY } from "@/data/data";
 import React from "react";
-import { useEffect, useState } from "react";
+import { useCachedFetch } from "@/hooks/useCachedFetch";
 
 const Experience = () => {
-  const [experiences, setExperiences] = useState<{ id: string; company: string; href: string; badges: string; location: string; title: string; logoUrl: string; start: string; end: string; description: string }[]>([]);
-
-  useEffect(() => {
-    fetch("/api/experience")
-      .then(res => res.json())
-      .then(data => setExperiences(Array.isArray(data) ? data : []))
-      .catch(console.error);
-  }, []);
+  const { data: experiencesRaw = [] } = useCachedFetch<{ id: string; company: string; href: string; badges: string; location: string; title: string; logoUrl: string; start: string; end: string; description: string }[]>({
+    key: "experience",
+    fetchFn: () => fetch("/api/experience").then(res => res.json()),
+  });
+  const experiences = Array.isArray(experiencesRaw) ? experiencesRaw : [];
 
   return (
     <div className="py-24">

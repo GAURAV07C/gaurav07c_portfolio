@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { ok, serverError } from "@/lib/api";
 
 export async function GET() {
   try {
@@ -45,9 +46,9 @@ export async function POST(request: Request) {
       include: { skills: true }
     });
 
-    return NextResponse.json(newProject, { status: 201 });
+    return ok(newProject, 201);
   } catch {
-    return NextResponse.json({ error: "Failed to create project" }, { status: 500 });
+    return serverError("Failed to create project");
   }
 }
 
@@ -82,9 +83,9 @@ export async function PUT(request: Request) {
       include: { skills: true }
     });
 
-    return NextResponse.json(updatedProject, { status: 200 });
+    return ok(updatedProject, 200);
   } catch (error) {
     console.error("PUT /api/projects/[id] error:", error);
-    return NextResponse.json({ error: "Failed to update project" }, { status: 500 });
+    return serverError("Failed to update project");
   }
 }

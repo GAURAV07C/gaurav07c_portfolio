@@ -7,23 +7,18 @@ import ArrowUpRightIcon from "@/assets/icons/arrow-up-right.svg";
 import CheakCircleIcon from "@/assets/icons/check-circle.svg";
 import SectionHeader from "@/components/SectionHeader";
 import Card from "@/components/Card";
-import { useEffect, useState } from "react";
+import { useCachedFetch } from "@/hooks/useCachedFetch";
 
 export const ProjectsSection = () => {
-  const [projects, setProjects] = useState<{ id: string; company: string; year: string; title: string; results: string; techStack: string; liveLink?: string; sourceLink?: string; demoLink?: string; image: string; description?: string }[]>([]);
+  const { data: projects = [] } = useCachedFetch<{ id: string; company: string; year: string; title: string; results: string; techStack: string; liveLink?: string; sourceLink?: string; demoLink?: string; image: string; description?: string; isRecent?: boolean }[]>({
+    key: "projects",
+    fetchFn: () => fetch("/api/projects").then(res => res.json()),
+  });
 
-  useEffect(() => {
-    fetch("/api/projects")
-      .then(res => res.json())
-      .then(data => {
-        const all = Array.isArray(data) ? data : [];
-        const recent = all.filter((p: { isRecent?: boolean }) => p.isRecent === true);
-        setProjects(recent.length > 0 ? recent : all.slice(0, 3));
-      })
-      .catch(console.error);
-  }, []);
+  const recent = Array.isArray(projects) ? projects.filter((p) => p.isRecent === true) : [];
+  const displayProjects = recent.length > 0 ? recent : (Array.isArray(projects) ? projects.slice(0, 3) : []);
 
-  if (projects.length === 0) {
+  if (displayProjects.length === 0) {
     return null;
   }
 
@@ -42,7 +37,7 @@ export const ProjectsSection = () => {
           }}
           className="flex flex-col mt-10 md:mt-20 gap-10 md:gap-16"
         >
-          {projects.map((project, index) => (
+          {displayProjects.map((project, index) => (
             <div
               key={project.id}
               className="md:sticky"
