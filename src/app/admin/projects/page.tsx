@@ -31,6 +31,7 @@ interface Project {
   image: string;
   skills?: { title: string }[];
   isRecent?: boolean;
+  slug?: string;
 }
 
 function ProjectsInner() {
@@ -42,6 +43,7 @@ function ProjectsInner() {
     company: "",
     year: "",
     title: "",
+    slug: "",
     description: "",
     results: "[]",
     features: "[]",
@@ -54,6 +56,7 @@ function ProjectsInner() {
     demoLink: "",
     image: "",
     isRecent: false,
+  
   });
   const [loading, setLoading] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
@@ -96,6 +99,7 @@ function ProjectsInner() {
       company: "",
       year: "",
       title: "",
+      slug: "",
       description: "",
       results: "[]",
       features: "[]",
@@ -118,6 +122,7 @@ function ProjectsInner() {
       company: item.company || "",
       year: item.year || "",
       title: item.title || "",
+      slug: item.slug || "",
       description: item.description || "",
       results: item.results || "[]",
       features: item.features || "[]",
@@ -141,6 +146,7 @@ function ProjectsInner() {
       company: "",
       year: "",
       title: "",
+      slug: "",
       description: "",
       results: "[]",
       features: "[]",
@@ -310,8 +316,24 @@ function ProjectsInner() {
               type="text"
               name="title"
               value={formData.title}
-              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+              onChange={(e) => {
+                const title = e.target.value;
+                setFormData({ 
+                  ...formData, 
+                  title,
+                  slug: editingId ? formData.slug : title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")
+                });
+              }}
               required
+            />
+          </FormField>
+
+          <FormField label="Slug">
+            <Input
+              type="text"
+              value={formData.slug}
+              onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
+              placeholder="auto-generated from title"
             />
           </FormField>
 
