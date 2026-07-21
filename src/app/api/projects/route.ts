@@ -23,12 +23,33 @@ export async function POST(request: Request) {
     const body = await request.json();
     const skillTitles = Array.isArray(body.skills) ? body.skills : [];
 
+    let baseSlug = (body.slug || body.title || "")
+      .toLowerCase()
+      .trim()
+      .replace(/[^\w\s-]/g, "")
+      .replace(/\s+/g, "-")
+      .replace(/--+/g, "-");
+    if (!baseSlug) {
+      baseSlug = `project-${Date.now()}`;
+    }
+
+    const existing = await prisma.project.findFirst({
+      where: { slug: { equals: baseSlug, mode: "insensitive" } },
+      select: { id: true },
+    });
+
+    let slug = baseSlug;
+    if (existing) {
+      const suffix = Math.floor(Math.random() * 9000 + 1000);
+      slug = `${baseSlug}-${suffix}`;
+    }
+
     const newProject = await prisma.project.create({
       data: {
         company: body.company,
         year: body.year,
         title: body.title,
-        slug: body.slug || body.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, ""),
+        slug,
         description: body.description || "",
         results: body.results || "[]",
         features: body.features || "[]",
@@ -52,8 +73,10 @@ export async function POST(request: Request) {
     });
 
     return ok(newProject, 201);
-  } catch {
-    return serverError("Failed to create project");
+  } catch (error) {
+    console.error("POST /api/projects error:", error);
+    const message = error instanceof Error ? error.message : "Failed to create project";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
 
