@@ -1,12 +1,28 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useMemo, useEffect, useRef } from "react";
 import Image from "next/image";
 import { MermaidChart } from "@/components/admin/MermaidChart";
 
 interface MarkdownPreviewProps {
   content: string;
   className?: string;
+  onHeadingsChange?: (headings: { id: string; text: string; level: number }[]) => void;
+}
+
+export interface TocItem {
+  id: string;
+  text: string;
+  level: number;
+}
+
+function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/--+/g, "-");
 }
 
 function renderInline(text: string, keyPrefix: string): React.ReactNode[] {
@@ -138,12 +154,16 @@ function parseCodeBlock(
   return { nodes, nextIndex: nextIdx + 1 };
 }
 
-export function MarkdownPreview({ content, className = "" }: MarkdownPreviewProps) {
-  const elements = useMemo(() => {
-    if (!content) return [];
+export function MarkdownPreview({ content, className = "", onHeadingsChange }: MarkdownPreviewProps) {
+  const onHeadingsChangeRef = useRef(onHeadingsChange);
+  onHeadingsChangeRef.current = onHeadingsChange;
+
+  const { items, headings } = useMemo(() => {
+    if (!content) return { items: [], headings: [] };
 
     const lines = content.split("\n");
     const items: React.ReactNode[] = [];
+    const headings: TocItem[] = [];
     let i = 0;
 
     while (i < lines.length) {
@@ -155,23 +175,32 @@ export function MarkdownPreview({ content, className = "" }: MarkdownPreviewProp
       }
 
       if (trimmed.startsWith("# ")) {
+        const text = trimmed.slice(2);
+        const id = slugify(text);
+        headings.push({ id, text, level: 1 });
         items.push(
-          <h1 key={i} className="text-3xl font-serif text-white mt-8 mb-4">
-            {trimmed.slice(2)}
+          <h1 key={i} id={id} className="text-3xl font-serif text-white mt-8 mb-4 scroll-mt-28">
+            {text}
           </h1>
         );
         i++;
       } else if (trimmed.startsWith("## ")) {
+        const text = trimmed.slice(3);
+        const id = slugify(text);
+        headings.push({ id, text, level: 2 });
         items.push(
-          <h2 key={i} className="text-2xl font-serif text-white mt-8 mb-4">
-            {trimmed.slice(3)}
+          <h2 key={i} id={id} className="text-2xl font-serif text-white mt-8 mb-4 scroll-mt-28">
+            {text}
           </h2>
         );
         i++;
       } else if (trimmed.startsWith("### ")) {
+        const text = trimmed.slice(4);
+        const id = slugify(text);
+        headings.push({ id, text, level: 3 });
         items.push(
-          <h3 key={i} className="text-xl font-semibold text-white mt-6 mb-3">
-            {trimmed.slice(4)}
+          <h3 key={i} id={id} className="text-xl font-semibold text-white mt-6 mb-3 scroll-mt-28">
+            {text}
           </h3>
         );
         i++;
@@ -309,8 +338,14 @@ export function MarkdownPreview({ content, className = "" }: MarkdownPreviewProp
       }
     }
 
-    return items;
+    return { items, headings };
   }, [content]);
+
+  useEffect(() => {
+    if (onHeadingsChangeRef.current) {
+      onHeadingsChangeRef.current(headings);
+    }
+  }, [headings]);
 
   if (!content) {
     return (
@@ -320,5 +355,5 @@ export function MarkdownPreview({ content, className = "" }: MarkdownPreviewProp
     );
   }
 
-  return <div className={className}>{elements}</div>;
+  return <div className={className}>{items}</div>;
 }

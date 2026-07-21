@@ -13,6 +13,7 @@ async function main() {
   await prisma.education.deleteMany();
   await prisma.experience.deleteMany();
   await prisma.testimonial.deleteMany();
+  await prisma.docTopic.deleteMany();
 
   await prisma.user.create({
     data: {
@@ -304,7 +305,103 @@ async function main() {
     await prisma.testimonial.create({ data: testimonial });
   }
 
-  console.log("Seeded all data successfully");
+  const reactTopic = await prisma.docTopic.create({
+    data: {
+      title: "React",
+      slug: "react",
+      description: "A comprehensive guide to React.js - from basics to advanced patterns and best practices.",
+      icon: "⚛️",
+      order: 1,
+      pages: {
+        create: [
+          {
+            title: "Introduction to React",
+            slug: "introduction",
+            content: "# Introduction to React\n\nReact is a **JavaScript library** for building user interfaces. It lets you compose complex UIs from small and isolated pieces of code called *components*.\n\n## Why React?\n\n- **Component-based**: Build encapsulated components that manage their own state\n- **Declarative**: Design simple views for each state in your application\n- **Learn Once, Write Anywhere**: You can use React for web, mobile, and desktop\n\n## Quick Start\n\n```bash\nnpm create vite@latest my-react-app -- --template react\ncd my-react-app\nnpm install\nnpm run dev\n```\n\n## Your First Component\n\n```jsx\nimport React from 'react';\n\nfunction Welcome() {\n  return <h1>Hello, World!</h1>;\n}\n\nexport default Welcome;\n```\n\n## Key Concepts\n\n1. **JSX**: A syntax extension that allows you to write HTML-like code in JavaScript\n2. **Components**: Reusable building blocks of your UI\n3. **Props**: Read-only data passed from parent to child components\n4. **State**: Mutable data that affects rendering\n5. **Effects**: Side effects like data fetching, subscriptions, or DOM manipulation",
+            order: 1,
+          },
+          {
+            title: "Components & Props",
+            slug: "components-and-props",
+            content: "# Components & Props\n\nComponents are the building blocks of React applications. They accept inputs called *props* and return React elements describing what should appear on screen.\n\n## Functional Components\n\nFunctional components are the simplest way to define a component in React.\n\n```jsx\nfunction Greeting({ name }) {\n  return <p>Hello, {name}!</p>;\n}\n\n// Using the component\n<Greeting name=\"Gaurav\" />\n```\n\n## Props\n\nProps are read-only and help you pass data from parent to child components.\n\n```jsx\nfunction UserCard({ user, age }) {\n  return (\n    <div>\n      <h2>{user}</h2>\n      <p>Age: {age}</p>\n    </div>\n  );\n}\n\n<UserCard user=\"Gaurav\" age={22} />\n```\n\n## Component Composition\n\nComponents can include other components for powerful composition.\n\n```jsx\nfunction App() {\n  return (\n    <div>\n      <Header />\n      <MainContent />\n      <Footer />\n    </div>\n  );\n}\n```\n\n## Best Practices\n\n- Keep components small and focused\n- Use meaningful names\n- Extract reusable logic into custom hooks\n- Avoid deep nesting of components",
+            order: 2,
+          },
+          {
+            title: "Hooks in React",
+            slug: "hooks",
+            content: "# Hooks in React\n\nHooks let you use state and other React features without writing a class. They were introduced in React 16.8.\n\n## useState\n\n```jsx\nimport { useState } from 'react';\n\nfunction Counter() {\n  const [count, setCount] = useState(0);\n  \n  return (\n    <button onClick={() => setCount(count + 1)}>\n      Count: {count}\n    </button>\n  );\n}\n```\n\n## useEffect\n\n```jsx\nimport { useEffect, useState } from 'react';\n\nfunction Example() {\n  const [width, setWidth] = useState(window.innerWidth);\n\n  useEffect(() => {\n    const handleResize = () => setWidth(window.innerWidth);\n    window.addEventListener('resize', handleResize);\n    \n    // Cleanup\n    return () => window.removeEventListener('resize', handleResize);\n  }, []);\n\n  return <p>Window width: {width}px</p>;\n}\n```\n\n## useContext\n\n```jsx\nimport { createContext, useContext } from 'react';\n\nconst ThemeContext = createContext('light');\n\nfunction ThemedButton() {\n  const theme = useContext(ThemeContext);\n  return <button className={theme}>I am styled thematically!</button>;\n}\n```\n\n## Custom Hooks\n\n```jsx\nfunction useWindowSize() {\n  const [size, setSize] = useState([window.innerWidth, window.innerHeight]);\n  \n  useEffect(() => {\n    const handleResize = () => setSize([window.innerWidth, window.innerHeight]);\n    window.addEventListener('resize', handleResize);\n    return () => window.removeEventListener('resize', handleResize);\n  }, []);\n  \n  return size;\n}\n```",
+            order: 3,
+          },
+        ],
+      },
+    },
+  });
+
+  const nextjsTopic = await prisma.docTopic.create({
+    data: {
+      title: "Next.js",
+      slug: "nextjs",
+      description: "Learn Next.js framework - React framework for production with hybrid static & server rendering, TypeScript support, and more.",
+      icon: "▲",
+      order: 2,
+      pages: {
+        create: [
+          {
+            title: "Getting Started with Next.js",
+            slug: "getting-started",
+            content: "# Getting Started with Next.js\n\nNext.js is a **React framework** that gives you building blocks to create web applications. It handles the tooling and configuration needed for React, and provides additional structure, features, and optimizations.\n\n## Installation\n\n```bash\nnpx create-next-app@latest my-app\ncd my-app\nnpm run dev\n```\n\n## Features\n\n- **File-system routing**: Define routes using folders and files\n- **Server-side rendering (SSR)**: Render pages on each request\n- **Static site generation (SSG)**: Render pages at build time\n- **API routes**: Build API endpoints as Node.js serverless functions\n- **Built-in CSS support**: Import CSS files and use CSS Modules\n- **Code splitting**: Automatically split code by pages\n\n## Project Structure\n\n```\nmy-app/\n├── app/\n│   ├── layout.tsx\n│   ├── page.tsx\n│   └── globals.css\n├── public/\n│   └── favicon.ico\n├── next.config.ts\n└── package.json\n```\n\n## Your First Page\n\n```tsx\n// app/page.tsx\nexport default function Home() {\n  return (\n    <main>\n      <h1>Hello, Next.js!</h1>\n      <p>Welcome to your new Next.js application.</p>\n    </main>\n  );\n}\n```\n\n## Development Workflow\n\n1. Edit `app/page.tsx` and save\n2. The page automatically updates in the browser\n3. Navigate to `http://localhost:3000`\n\n## Production Build\n\n```bash\nnpm run build\nnpm run start\n```\n\nThis creates an optimized production build of your application.",
+            order: 1,
+          },
+          {
+            title: "Routing in Next.js",
+            slug: "routing",
+            content: "# Routing in Next.js\n\nNext.js uses a file-system based router where folders are used to define routes.\n\n## Basic Routing\n\n```\napp/\n  page.tsx       → /\n  about/\n    page.tsx     → /about\n  blog/\n    [slug]/\n      page.tsx   → /blog/:slug\n```\n\n## Dynamic Routes\n\nYou can create dynamic routes by wrapping the folder name in square brackets.\n\n```tsx\n// app/blog/[slug]/page.tsx\nexport default function BlogPost({ params }: { params: { slug: string } }) {\n  return <h1>Blog Post: {params.slug}</h1>;\n}\n```\n\n## Parallel Routes\n\nRender multiple pages in the same layout using parallel routes.\n\n```\napp/\n  @modal/\n    default.tsx\n    (.)login/\n      page.tsx\n  page.tsx\n```\n\n## Intercepting Routes\n\nIntercept routes allow you to load a route from another part of your application inside the current layout.\n\n```\napp/\n  feed/\n    page.tsx\n    @modal/\n      (.)photo/[id]/\n        page.tsx\n```\n\n## Navigation\n\nUse the `Link` component for client-side navigation:\n\n```tsx\nimport Link from 'next/link';\n\n<Link href=\"/about\">About</Link>\n```\n\n## Route Groups\n\nOrganize routes without affecting the URL structure:\n\n```\n(app)/\n  (marketing)/\n    about/\n      page.tsx\n    contact/\n      page.tsx\n  (shop)/\n    products/\n      page.tsx\n```",
+            order: 2,
+          },
+          {
+            title: "Data Fetching",
+            slug: "data-fetching",
+            content: "# Data Fetching in Next.js\n\nNext.js provides several ways to fetch data depending on your use case.\n\n## Server Components\n\nBy default, all components in the App Router are Server Components. You can fetch data directly in them:\n\n```tsx\nasync function getPosts() {\n  const res = await fetch('https://api.example.com/posts', {\n    next: { revalidate: 60 }\n  });\n  return res.json();\n}\n\nexport default async function Blog() {\n  const posts = await getPosts();\n  return posts.map(post => <Post key={post.id} {...post} />);\n}\n```\n\n## Caching Strategies\n\n- **force-static**: Always static, cached forever\n- **force-dynamic**: Always dynamic, never cached\n- **revalidate**: Revalidate after a time period\n\n```tsx\nfetch('https://api.example.com/data', {\n  cache: 'force-cache' // default\n})\n\nfetch('https://api.example.com/data', {\n  cache: 'no-store' // dynamic\n})\n\nfetch('https://api.example.com/data', {\n  next: { revalidate: 3600 } // revalidate every hour\n})\n```\n\n## Loading States\n\nUse loading files for instant loading states:\n\n```tsx\n// app/blog/loading.tsx\nexport default function Loading() {\n  return <div>Loading...</div>;\n}\n```\n\n## Error Handling\n\nUse error.tsx to handle errors in a route segment:\n\n```tsx\n// app/blog/error.tsx\n'use client';\n\nexport default function Error({ error, reset }) {\n  return (\n    <div>\n      <h2>Something went wrong!</h2>\n      <button onClick={() => reset()}>Try again</button>\n    </div>\n  );\n}\n```",
+            order: 3,
+          },
+        ],
+      },
+    },
+  });
+
+  const nodejsTopic = await prisma.docTopic.create({
+    data: {
+      title: "Node.js",
+      slug: "nodejs",
+      description: "Node.js tutorial - build scalable network applications with JavaScript on the server. Learn the basics, Express.js, and advanced patterns.",
+      icon: "🟢",
+      order: 3,
+      pages: {
+        create: [
+          {
+            title: "Introduction to Node.js",
+            slug: "introduction",
+            content: "# Introduction to Node.js\n\nNode.js is an open-source, cross-platform JavaScript runtime environment. It allows you to run JavaScript outside of a web browser, enabling server-side scripting and building scalable network applications.\n\n## Key Features\n\n- **Asynchronous and Event-Driven**: Node.js never waits for an API to return data\n- **Single Threaded but Highly Scalable**: Uses event-driven, non-blocking I/O model\n- **Cross-platform**: Runs on Windows, Linux, Unix, Mac OS X, etc.\n- **NPM Ecosystem**: Access to thousands of reusable packages\n\n## Installation\n\n```bash\n# Using nvm (recommended)\nnvm install --lts\n\n# Verify installation\nnode --version\nnpm --version\n```\n\n## Your First Server\n\n```javascript\nconst http = require('http');\n\nconst server = http.createServer((req, res) => {\n  res.statusCode = 200;\n  res.setHeader('Content-Type', 'text/plain');\n  res.end('Hello from Node.js!');\n});\n\nconst PORT = process.env.PORT || 3000;\nserver.listen(PORT, () => {\n  console.log(`Server running at http://localhost:${PORT}/`);\n});\n```\n\n## Modules\n\nNode.js uses CommonJS modules by default:\n\n```javascript\n// math.js - export functionality\nfunction add(a, b) {\n  return a + b;\n}\n\nmodule.exports = { add };\n\n// app.js - import functionality\nconst { add } = require('./math.js');\nconsole.log(add(2, 3)); // 5\n```\n\n## Event Loop\n\nNode.js is single-threaded but uses an event loop to handle concurrent operations efficiently.",
+            order: 1,
+          },
+          {
+            title: "Express.js Framework",
+            slug: "expressjs",
+            content: "# Express.js Framework\n\nExpress.js is a minimal and flexible Node.js web application framework that provides a robust set of features for web and mobile applications.\n\n## Installation\n\n```bash\nnpm install express\n```\n\n## Basic Server\n\n```javascript\nconst express = require('express');\nconst app = express();\nconst PORT = process.env.PORT || 3000;\n\napp.get('/', (req, res) => {\n  res.send('Hello World!');\n});\n\napp.listen(PORT, () => {\n  console.log(`Server is running on port ${PORT}`);\n});\n```\n\n## Routing\n\n```javascript\n// Route with parameters\napp.get('/users/:id', (req, res) => {\n  res.send(`User ID: ${req.params.id}`);\n});\n\n// Query parameters\napp.get('/search', (req, res) => {\n  const { q } = req.query;\n  res.send(`Search results for: ${q}`);\n});\n```\n\n## Middleware\n\n```javascript\n// Built-in middleware\napp.use(express.json());\napp.use(express.urlencoded({ extended: true }));\n\n// Custom middleware\napp.use((req, res, next) => {\n  console.log(`${req.method} ${req.url}`);\n  next();\n});\n```\n\n## Error Handling\n\n```javascript\napp.use((err, req, res, next) => {\n  console.error(err.stack);\n  res.status(500).json({ error: 'Something went wrong!' });\n});\n```",
+            order: 2,
+          },
+          {
+            title: "Middleware in Express",
+            slug: "middleware",
+            content: "# Middleware in Express\n\nMiddleware functions have access to the request object (req), response object (res), and the next middleware function in the application's request-response cycle.\n\n## Types of Middleware\n\n- **Application-level**: Bound to `app` object\n- **Router-level**: Bound to `express.Router()`\n- **Error-handling**: Takes four arguments\n- **Built-in**: Like `express.static`, `express.json()`\n- **Third-party**: Like `cors`, `helmet`, `morgan`\n\n## Basic Middleware\n\n```javascript\nconst express = require('express');\nconst app = express();\n\n// Logging middleware\napp.use((req, res, next) => {\n  console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);\n  next();\n});\n```\n\n## Authentication Middleware\n\n```javascript\nfunction authMiddleware(req, res, next) {\n  const token = req.headers.authorization;\n  \n  if (!token) {\n    return res.status(401).json({ error: 'No token provided' });\n  }\n  \n  try {\n    const decoded = verifyToken(token);\n    req.user = decoded;\n    next();\n  } catch (err) {\n    return res.status(401).json({ error: 'Invalid token' });\n  }\n}\n\n// Protect routes\napp.get('/api/profile', authMiddleware, (req, res) => {\n  res.json({ user: req.user });\n});\n```\n\n## CORS Middleware\n\n```javascript\nconst cors = require('cors');\n\napp.use(cors());\napp.use(cors({ origin: 'https://example.com' }));\n```\n\n## Morgan (Logging)\n\n```javascript\nconst morgan = require('morgan');\napp.use(morgan('combined'));\n```\n\n## Best Practices\n\n- Keep middleware focused and single-purpose\n- Always call `next()` to pass control\n- Handle errors in error-handling middleware\n- Order matters - middleware runs in the order it's defined",
+            order: 3,
+          },
+        ],
+      },
+    },
+  });
+
+  console.log("Seeded all data including docs successfully");
 }
 
 main()

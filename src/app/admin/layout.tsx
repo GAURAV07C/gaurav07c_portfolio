@@ -22,6 +22,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
             <Link href="/admin/hero" className="hover:text-emerald-300 transition">Hero</Link>
             <Link href="/admin/projects" className="hover:text-emerald-300 transition">Projects</Link>
             <Link href="/admin/blogs" className="hover:text-emerald-300 transition">Blogs</Link>
+            <Link href="/admin/docs" className="hover:text-emerald-300 transition">Docs</Link>
             <Link href="/admin/skills" className="hover:text-emerald-300 transition">Skills</Link>
             <Link href="/admin/education" className="hover:text-emerald-300 transition">Education</Link>
             <Link href="/admin/experience" className="hover:text-emerald-300 transition">Experience</Link>

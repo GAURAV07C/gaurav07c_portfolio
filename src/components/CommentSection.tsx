@@ -17,6 +17,7 @@ interface Comment {
 interface CommentSectionProps {
   blogId?: string;
   projectId?: string;
+  docPageId?: string;
 }
 
 function getStoredUser() {
@@ -158,7 +159,7 @@ function CommentItem({
   );
 }
 
-export function CommentSection({ blogId, projectId }: CommentSectionProps) {
+export function CommentSection({ blogId, projectId, docPageId }: CommentSectionProps) {
   const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState(true);
   const [content, setContent] = useState("");
@@ -178,12 +179,13 @@ export function CommentSection({ blogId, projectId }: CommentSectionProps) {
   }, []);
 
   const fetchComments = useCallback(async () => {
-    if (!blogId && !projectId) return;
+    if (!blogId && !projectId && !docPageId) return;
     setLoading(true);
     try {
       const url = new URL("/api/comments", window.location.origin);
       if (blogId) url.searchParams.set("blogId", blogId);
       if (projectId) url.searchParams.set("projectId", projectId);
+      if (docPageId) url.searchParams.set("docPageId", docPageId);
       const res = await fetch(url.toString());
       if (res.ok) {
         const data = await res.json();
@@ -194,7 +196,7 @@ export function CommentSection({ blogId, projectId }: CommentSectionProps) {
     } finally {
       setLoading(false);
     }
-  }, [blogId, projectId]);
+  }, [blogId, projectId, docPageId]);
 
   useEffect(() => {
     fetchComments();
@@ -219,6 +221,7 @@ export function CommentSection({ blogId, projectId }: CommentSectionProps) {
           email: currentUser.email,
           blogId,
           projectId,
+          docPageId,
         }),
       });
       if (res.ok) {
@@ -240,6 +243,7 @@ export function CommentSection({ blogId, projectId }: CommentSectionProps) {
         email: replyEmailText,
         blogId,
         projectId,
+        docPageId,
         parentId,
       }),
     });

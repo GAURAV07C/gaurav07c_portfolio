@@ -9,6 +9,7 @@ interface CommentRow {
   parentId: string | null;
   blogId: string | null;
   projectId: string | null;
+  docPageId: string | null;
   createdAt: string;
 }
 
@@ -39,18 +40,20 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const blogId = searchParams.get("blogId");
     const projectId = searchParams.get("projectId");
+    const docPageId = searchParams.get("docPageId");
 
-    if (!blogId && !projectId) {
-      return NextResponse.json({ error: "blogId or projectId required" }, { status: 400 });
+    const provided = [blogId, projectId, docPageId].filter(Boolean);
+    if (provided.length === 0) {
+      return NextResponse.json({ error: "blogId, projectId or docPageId required" }, { status: 400 });
+    }
+    if (provided.length > 1) {
+      return NextResponse.json({ error: "Provide only one of blogId, projectId or docPageId" }, { status: 400 });
     }
 
-    if (blogId && projectId) {
-      return NextResponse.json({ error: "Provide either blogId or projectId, not both" }, { status: 400 });
-    }
-
-    const where: { blogId?: string; projectId?: string } = {};
+    const where: { blogId?: string; projectId?: string; docPageId?: string } = {};
     if (blogId) where.blogId = blogId;
     if (projectId) where.projectId = projectId;
+    if (docPageId) where.docPageId = docPageId;
 
     const comments = (await prisma.comment.findMany({
       where,
@@ -68,18 +71,18 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { content, name, email, blogId, projectId, parentId } = body;
+    const { content, name, email, blogId, projectId, docPageId, parentId } = body;
 
     if (!content || !name || !email) {
       return NextResponse.json({ error: "content, name and email are required" }, { status: 400 });
     }
 
-    if (!blogId && !projectId) {
-      return NextResponse.json({ error: "blogId or projectId required" }, { status: 400 });
+    const provided = [blogId, projectId, docPageId].filter(Boolean);
+    if (provided.length === 0) {
+      return NextResponse.json({ error: "blogId, projectId or docPageId required" }, { status: 400 });
     }
-
-    if (blogId && projectId) {
-      return NextResponse.json({ error: "Provide either blogId or projectId, not both" }, { status: 400 });
+    if (provided.length > 1) {
+      return NextResponse.json({ error: "Provide only one of blogId, projectId or docPageId" }, { status: 400 });
     }
 
     const comment = await prisma.comment.create({
@@ -89,6 +92,7 @@ export async function POST(request: Request) {
         email,
         blogId,
         projectId,
+        docPageId,
         parentId,
       },
     });

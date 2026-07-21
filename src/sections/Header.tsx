@@ -27,6 +27,7 @@ export const Header = () => {
       { title: "Project", href: "/#project" },
       { title: "About", href: "/#about" },
       { title: "Blog", href: "/blog" },
+      { title: "Docs", href: "/docs" },
       { title: "Contact", href: "/#contact" },
     ],
     []

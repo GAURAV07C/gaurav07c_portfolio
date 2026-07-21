@@ -14,10 +14,17 @@ interface AdminItemCardProps {
   children?: React.ReactNode;
 }
 
+function isImageSrc(src?: string): boolean {
+  if (!src) return false;
+  return src.startsWith("/") || src.startsWith("http://") || src.startsWith("https://");
+}
+
 export function AdminItemCard({ title, subtitle, image, onView, onEdit, onDelete, children }: AdminItemCardProps) {
+  const showImage = isImageSrc(image);
+
   return (
     <div className="bg-gray-900 border border-white/10 rounded-2xl p-4 hover:border-emerald-300/30 transition-all group flex gap-4">
-      {image && (
+      {showImage && image ? (
         <div className="relative w-20 h-20 md:w-24 md:h-24 rounded-xl overflow-hidden flex-shrink-0 border border-white/10">
           <Image
             src={image}
@@ -26,7 +33,11 @@ export function AdminItemCard({ title, subtitle, image, onView, onEdit, onDelete
             className="object-cover"
           />
         </div>
-      )}
+      ) : image ? (
+        <div className="w-20 h-20 md:w-24 md:h-24 rounded-xl overflow-hidden flex-shrink-0 border border-white/10 bg-gray-950 flex items-center justify-center text-3xl">
+          {image}
+        </div>
+      ) : null}
       <div className="flex-1 min-w-0">
         <div className="text-lg font-semibold text-white group-hover:text-emerald-300 transition-colors truncate">
           {title}
