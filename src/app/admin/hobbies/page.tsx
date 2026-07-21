@@ -27,7 +27,7 @@ export default function HobbiesAdminPage() {
   const toast = useToast();
 
   const fetchHobbies = () => {
-    fetch("/api/hobbies")
+    fetch("/api/hobbies", { cache: "no-store" })
       .then(res => res.json())
       .then(data => setHobbies(Array.isArray(data) ? data : []))
       .catch(console.error);

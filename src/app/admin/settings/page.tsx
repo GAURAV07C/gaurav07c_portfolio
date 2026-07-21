@@ -21,7 +21,7 @@ export default function SettingsPage() {
   const [imageError, setImageError] = useState(false);
 
   useEffect(() => {
-    fetch("/api/settings")
+    fetch("/api/settings", { cache: "no-store" })
       .then(res => {
         if (!res.ok) throw new Error("Failed to fetch settings");
         return res.json();

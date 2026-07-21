@@ -44,7 +44,7 @@ export default function AdminDocsTopicPage({ params }: AdminDocsTopicPageProps) 
   const router = useRouter();
 
   const fetchTopic = useCallback(() => {
-    fetch(`/api/docs/${resolvedParams.topicSlug}`)
+    fetch(`/api/docs/${resolvedParams.topicSlug}`, { cache: "no-store" })
       .then((res) => {
         if (!res.ok) throw new Error("Topic not found");
         return res.json();

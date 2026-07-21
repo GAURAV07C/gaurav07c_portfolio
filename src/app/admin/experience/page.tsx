@@ -30,7 +30,7 @@ export default function ExperienceAdminPage() {
   const toast = useToast();
 
   const fetchExperiences = () => {
-    fetch("/api/experience")
+    fetch("/api/experience", { cache: "no-store" })
       .then(res => res.json())
       .then(data => setExperiences(Array.isArray(data) ? data : []))
       .catch(console.error);

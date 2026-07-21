@@ -50,7 +50,7 @@ export default function MessagesAdminPage() {
   const toast = useToast();
 
   const fetchMessages = () => {
-    fetch("/api/messages")
+    fetch("/api/messages", { cache: "no-store" })
       .then((res) => res.json())
       .then((data) => setMessages(Array.isArray(data) ? data : []))
       .catch(console.error);

@@ -26,7 +26,7 @@ export default function TapeWordsAdminPage() {
   const toast = useToast();
 
   const fetchWords = () => {
-    fetch("/api/tape-words")
+    fetch("/api/tape-words", { cache: "no-store" })
       .then(res => res.json())
       .then(data => setWords(Array.isArray(data) ? data : []))
       .catch(console.error);

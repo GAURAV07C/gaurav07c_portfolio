@@ -28,7 +28,7 @@ export default function SkillsAdminPage() {
   const toast = useToast();
 
   const fetchSkills = () => {
-    fetch("/api/skills")
+    fetch("/api/skills", { cache: "no-store" })
       .then(res => res.json())
       .then(data => setSkills(Array.isArray(data) ? data : []))
       .catch(console.error);

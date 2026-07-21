@@ -40,7 +40,7 @@ export default function DocsAdminPage() {
   const router = useRouter();
 
   const fetchTopics = () => {
-    fetch("/api/docs")
+    fetch("/api/docs", { cache: "no-store" })
       .then((res) => res.json())
       .then((data) => setTopics(Array.isArray(data) ? data : []))
       .catch(console.error);

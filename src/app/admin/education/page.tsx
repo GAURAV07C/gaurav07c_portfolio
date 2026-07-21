@@ -31,7 +31,7 @@ export default function EducationAdminPage() {
   const toast = useToast();
 
   const fetchEducation = () => {
-    fetch("/api/education")
+    fetch("/api/education", { cache: "no-store" })
       .then(res => res.json())
       .then(data => setEducation(Array.isArray(data) ? data : []))
       .catch(console.error);

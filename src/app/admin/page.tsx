@@ -25,19 +25,19 @@ export default function AdminDashboard() {
 
   const { data: projectsRaw } = useCachedFetch({
     key: "admin_projects",
-    fetchFn: () => fetch("/api/projects").then(res => res.json()),
+    fetchFn: () => fetch("/api/projects", { cache: "no-store" }).then(res => res.json()),
   });
   const { data: blogsRaw } = useCachedFetch({
     key: "admin_blogs",
-    fetchFn: () => fetch("/api/blogs").then(res => res.json()),
+    fetchFn: () => fetch("/api/blogs", { cache: "no-store" }).then(res => res.json()),
   });
   const { data: skillsRaw } = useCachedFetch({
     key: "admin_skills",
-    fetchFn: () => fetch("/api/skills").then(res => res.json()),
+    fetchFn: () => fetch("/api/skills", { cache: "no-store" }).then(res => res.json()),
   });
   const { data: messagesRaw } = useCachedFetch({
     key: "admin_messages",
-    fetchFn: () => fetch("/api/messages").then(res => res.json()),
+    fetchFn: () => fetch("/api/messages", { cache: "no-store" }).then(res => res.json()),
   });
 
   useEffect(() => {

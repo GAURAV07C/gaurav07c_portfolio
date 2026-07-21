@@ -12,7 +12,7 @@ export default function HeroAdminPage() {
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
   useEffect(() => {
-    fetch("/api/settings")
+    fetch("/api/settings", { cache: "no-store" })
       .then(res => res.json())
       .then(data => {
         setSettings(data);

@@ -10,7 +10,7 @@ import { ProjectContent } from "@/components/project/ProjectContent";
 import { ProjectLinks } from "@/components/project/ProjectLinks";
 import { RelatedProjectsWrapper } from "@/components/project/RelatedProjectsWrapper";
 
-export const revalidate = 3600;
+export const revalidate = 60;
 
 interface ProjectDetailPageProps {
   params: Promise<{ id: string }>;

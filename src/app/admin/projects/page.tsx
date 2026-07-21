@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, Suspense } from "react";
+import React, { useEffect, useMemo, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import BlurFade from "@/components/BlurFade";
 import { Modal } from "@/components/Modal";
@@ -12,6 +12,7 @@ import { EmptyState } from "@/components/admin/EmptyState";
 import { AdminItemCard } from "@/components/admin/AdminItemCard";
 import { FormField, Input } from "@/components/admin/FormComponents";
 import { MarkdownEditor } from "@/components/admin/MarkdownEditor";
+import { useCachedFetch, useInvalidateCache } from "@/hooks/useCachedFetch";
 
 interface Project {
   id: string;
@@ -35,8 +36,6 @@ interface Project {
 }
 
 function ProjectsInner() {
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [skills, setSkills] = useState<{ id: string; title: string }[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [formData, setFormData] = useState({
@@ -56,42 +55,36 @@ function ProjectsInner() {
     demoLink: "",
     image: "",
     isRecent: false,
-  
   });
   const [loading, setLoading] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const toast = useToast();
   const router = useRouter();
   const searchParams = useSearchParams();
+  const invalidateCache = useInvalidateCache();
 
-  const fetchProjects = () => {
-    return fetch("/api/projects")
-      .then(res => res.json())
-      .then(data => setProjects(Array.isArray(data) ? data : []))
-      .catch(console.error);
-  };
+  const { data: projects = [], refetch: refetchProjects } = useCachedFetch<Project[]>({
+    key: "admin_projects",
+    fetchFn: () => fetch("/api/projects", { cache: "no-store" }).then(res => res.json()),
+  });
 
-  const fetchSkills = () => {
-    fetch("/api/skills")
-      .then(res => res.json())
-      .then(data => setSkills(Array.isArray(data) ? data : []))
-      .catch(console.error);
-  };
+  const { data: skills = [], refetch: refetchSkills } = useCachedFetch<{ id: string; title: string }[]>({
+    key: "admin_skills",
+    fetchFn: () => fetch("/api/skills", { cache: "no-store" }).then(res => res.json()),
+  });
 
-  useEffect(() => {
-    fetchProjects();
-    fetchSkills();
-  }, []);
+  const projectsList = useMemo(() => Array.isArray(projects) ? projects : [], [projects]);
+  const skillsList = useMemo(() => Array.isArray(skills) ? skills : [], [skills]);
 
   useEffect(() => {
     const editId = searchParams.get("edit");
-    if (editId && projects.length > 0) {
-      const projectToEdit = projects.find(p => p.id === editId);
+    if (editId && projectsList.length > 0) {
+      const projectToEdit = projectsList.find(p => p.id === editId);
       if (projectToEdit) {
         openEditModal(projectToEdit);
       }
     }
-  }, [searchParams, projects]);
+  }, [searchParams, projectsList]);
 
   const openAddModal = () => {
     setEditingId(null);
@@ -203,7 +196,9 @@ function ProjectsInner() {
       if (res.ok) {
         toast.addToast({ type: "success", message: editingId ? "Project updated successfully!" : "Project added successfully!" });
         closeModal();
-        fetchProjects();
+        invalidateCache();
+        refetchProjects();
+        refetchSkills();
       } else {
         toast.addToast({ type: "error", message: "Failed to save project" });
       }
@@ -221,7 +216,9 @@ function ProjectsInner() {
       const res = await fetch(`/api/projects/${deleteId}`, { method: "DELETE" });
       if (res.ok) {
         toast.addToast({ type: "success", message: "Project deleted successfully!" });
-        fetchProjects();
+        invalidateCache();
+        refetchProjects();
+        refetchSkills();
       } else {
         toast.addToast({ type: "error", message: "Failed to delete project" });
       }
@@ -251,11 +248,11 @@ function ProjectsInner() {
       <div className="mb-6">
         <h2 className="text-2xl font-semibold text-white mb-2">All Projects</h2>
         <p className="text-white/60 text-sm">
-          {projects.length} {projects.length === 1 ? "project" : "projects"} in your portfolio
+          {projectsList.length} {projectsList.length === 1 ? "project" : "projects"} in your portfolio
         </p>
       </div>
 
-      {projects.length === 0 ? (
+      {projectsList.length === 0 ? (
         <EmptyState
           icon="🚀"
           title="No projects yet"
@@ -263,7 +260,7 @@ function ProjectsInner() {
         />
       ) : (
         <div className="flex flex-col gap-3">
-          {projects.map((project, index) => (
+          {projectsList.map((project, index) => (
             <BlurFade key={project.id} delay={index * 0.05}>
               <AdminItemCard
                 title={project.title}
@@ -354,7 +351,7 @@ function ProjectsInner() {
           <FormField label="Tech Stack / Skills">
             <div className="space-y-3">
               <div className="flex flex-wrap gap-2">
-                {skills.map(skill => {
+                 {skillsList.map(skill => {
                   const isSelected = selectedSkills.includes(skill.title);
                   return (
                     <button

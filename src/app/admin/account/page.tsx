@@ -13,7 +13,7 @@ export default function AdminAccountPage() {
   const toast = useToast();
 
   useEffect(() => {
-    fetch("/api/admin/account")
+    fetch("/api/admin/account", { cache: "no-store" })
       .then(res => {
         if (res.status === 401) {
           window.location.href = "/auth/login";

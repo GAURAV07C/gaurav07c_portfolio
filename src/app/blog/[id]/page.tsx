@@ -9,7 +9,7 @@ import Link from "next/link";
 import ArrowLeft from "@/assets/icons/arrow-up-right.svg";
 import { RelatedBlogsWrapper } from "@/components/blog/RelatedBlogsWrapper";
 
-export const revalidate = 3600;
+export const revalidate = 60;
 
 interface BlogDetailPageProps {
   params: Promise<{ id: string }>;

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import BlurFade from "@/components/BlurFade";
 import { Modal } from "@/components/Modal";
@@ -12,6 +12,7 @@ import { EmptyState } from "@/components/admin/EmptyState";
 import { AdminItemCard } from "@/components/admin/AdminItemCard";
 import { FormField, Input, TextArea } from "@/components/admin/FormComponents";
 import { MarkdownEditor } from "@/components/admin/MarkdownEditor";
+import { useCachedFetch, useInvalidateCache } from "@/hooks/useCachedFetch";
 
 interface Blog {
   id: string;
@@ -25,7 +26,6 @@ interface Blog {
 }
 
 export default function BlogsAdminPage() {
-  const [blogs, setBlogs] = useState<Blog[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [formData, setFormData] = useState({ title: "", slug: "", date: "", excerpt: "", content: "", image: "", tags: "" });
@@ -33,17 +33,14 @@ export default function BlogsAdminPage() {
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const toast = useToast();
   const router = useRouter();
+  const invalidateCache = useInvalidateCache();
 
-  const fetchBlogs = () => {
-    fetch("/api/blogs")
-      .then(res => res.json())
-      .then(data => setBlogs(Array.isArray(data) ? data : []))
-      .catch(console.error);
-  };
+  const { data: blogs = [], refetch: refetchBlogs } = useCachedFetch<Blog[]>({
+    key: "admin_blogs",
+    fetchFn: () => fetch("/api/blogs", { cache: "no-store" }).then(res => res.json()),
+  });
 
-  useEffect(() => {
-    fetchBlogs();
-  }, []);
+  const blogsList = Array.isArray(blogs) ? blogs : [];
 
   const generateSlug = (title: string) => {
     return title
@@ -100,7 +97,8 @@ export default function BlogsAdminPage() {
       if (res.ok) {
         toast.addToast({ type: "success", message: editingId ? "Blog updated successfully!" : "Blog added successfully!" });
         closeModal();
-        fetchBlogs();
+        invalidateCache();
+        refetchBlogs();
       } else {
         toast.addToast({ type: "error", message: "Failed to save blog" });
       }
@@ -118,7 +116,8 @@ export default function BlogsAdminPage() {
       const res = await fetch(`/api/blogs/${deleteId}`, { method: "DELETE" });
       if (res.ok) {
         toast.addToast({ type: "success", message: "Blog deleted successfully!" });
-        fetchBlogs();
+        invalidateCache();
+        refetchBlogs();
       } else {
         toast.addToast({ type: "error", message: "Failed to delete blog" });
       }
@@ -140,11 +139,11 @@ export default function BlogsAdminPage() {
       <div className="mb-6">
         <h2 className="text-2xl font-semibold text-white mb-2">All Blogs</h2>
         <p className="text-white/60 text-sm">
-          {blogs.length} {blogs.length === 1 ? "blog" : "blogs"} in your portfolio
+          {blogsList.length} {blogsList.length === 1 ? "blog" : "blogs"} in your portfolio
         </p>
       </div>
 
-      {blogs.length === 0 ? (
+      {blogsList.length === 0 ? (
         <EmptyState
           icon="📝"
           title="No blogs yet"
@@ -152,13 +151,13 @@ export default function BlogsAdminPage() {
         />
       ) : (
         <div className="flex flex-col gap-3">
-          {blogs.map((blog, index) => (
+          {blogsList.map((blog, index) => (
             <BlurFade key={blog.id} delay={index * 0.05}>
               <AdminItemCard
                 title={blog.title}
                 subtitle={blog.date}
                 image={blog.image}
-                onView={() => handleView(blog.id)}
+                onView={() => handleView(blog.slug || blog.id)}
                 onEdit={() => openEditModal(blog)}
                 onDelete={() => setDeleteId(blog.id)}
               >

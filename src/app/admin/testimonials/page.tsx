@@ -29,7 +29,7 @@ export default function TestimonialsAdminPage() {
   const toast = useToast();
 
   const fetchTestimonials = () => {
-    fetch("/api/testimonials")
+    fetch("/api/testimonials", { cache: "no-store" })
       .then(res => res.json())
       .then(data => setTestimonials(Array.isArray(data) ? data : []))
       .catch(console.error);
