@@ -76,9 +76,6 @@ export default async function ProjectDetailPage({
     );
   }
 
-  const backHref = `/projects`;
-  const backLabel = "Back to Projects";
-
   return (
     <div className="min-h-screen bg-gray-900 flex flex-col">
       <Header />

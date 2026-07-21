@@ -3,7 +3,6 @@
 import React from "react";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { ProjectLinks } from "@/components/project/ProjectLinks";
 
 interface SectionItem {
   id: string;

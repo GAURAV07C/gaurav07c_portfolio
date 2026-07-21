@@ -19,6 +19,7 @@ export function ProjectPageClient({
   project,
 }: {
   project: {
+    id: string;
     company: string;
     year: string;
     title: string;
@@ -32,9 +33,9 @@ export function ProjectPageClient({
     techStack: string;
     tagsField?: string;
     skills: { title: string }[];
-    liveLink?: string;
-    sourceLink?: string;
-    demoLink?: string;
+    liveLink?: string | null;
+    sourceLink?: string | null;
+    demoLink?: string | null;
   };
 }) {
   const hasDescription = !!project.description;
@@ -58,7 +59,7 @@ export function ProjectPageClient({
     ...sections.map(s => ({ id: s.id, text: s.text, level: 2 })),
   ];
 
-  const { activeId, scrollTo } = useTableOfContents(allHeadings);
+  const { activeId } = useTableOfContents(allHeadings);
 
   return (
     <main className="flex-grow pt-32 pb-16 lg:py-40">

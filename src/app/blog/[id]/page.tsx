@@ -75,9 +75,6 @@ export default async function BlogDetailPage({
     );
   }
 
-  const blogSlug = blog.slug || blog.id;
-  const blogLink = `/blog/${blogSlug}`;
-
   let tags: string[] = [];
   try {
     tags = JSON.parse(blog.tags || "[]");
