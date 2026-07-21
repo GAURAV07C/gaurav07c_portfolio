@@ -89,7 +89,7 @@ export default async function BlogDetailPage({
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 flex flex-col">
+    <div className="min-h-screen bg-[#0a111f] flex flex-col">
       <Header />
       <main className="flex-grow pt-32 pb-16 lg:py-40">
         <div className="container max-w-3xl">
@@ -105,9 +105,22 @@ export default async function BlogDetailPage({
             <div className="text-emerald-300 text-sm font-semibold tracking-wider uppercase mb-4">
               {blog.date}
             </div>
-            <h1 className="font-serif text-3xl md:text-5xl lg:text-6xl mb-8 leading-tight">
+            <h1 className="font-serif text-3xl md:text-5xl lg:text-6xl mb-8 leading-tight text-white">
               {blog.title}
             </h1>
+
+            {tags.length > 0 && (
+              <div className="flex flex-wrap gap-2 mb-8">
+                {tags.map((tag: string, index: number) => (
+                  <span
+                    key={index}
+                    className="inline-flex items-center rounded-full border border-emerald-300/20 bg-emerald-300/10 px-3 py-1 text-xs font-semibold text-emerald-300 tracking-wide"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
 
             <div className="relative w-full h-64 md:h-96 rounded-3xl overflow-hidden mb-12 border border-white/10">
               <Image
@@ -118,7 +131,7 @@ export default async function BlogDetailPage({
               />
             </div>
 
-            <div className="text-white/70 text-lg leading-relaxed">
+            <div className="prose prose-invert prose-lg text-white/70 leading-relaxed max-w-none">
               <MarkdownPreview content={blog.content} />
             </div>
 
