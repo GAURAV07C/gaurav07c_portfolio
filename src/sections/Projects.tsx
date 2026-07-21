@@ -10,7 +10,7 @@ import Card from "@/components/Card";
 import { useCachedFetch } from "@/hooks/useCachedFetch";
 
 export const ProjectsSection = () => {
-  const { data: projects = [] } = useCachedFetch<{ id: string; company: string; year: string; title: string; results: string; techStack: string; liveLink?: string; sourceLink?: string; demoLink?: string; image: string; description?: string; isRecent?: boolean }[]>({
+  const { data: projects = [] } = useCachedFetch<{ id: string; company: string; year: string; title: string; results: string; techStack: string; liveLink?: string; sourceLink?: string; demoLink?: string; image: string; description?: string; isRecent?: boolean; slug?: string }[]>({
     key: "projects",
     fetchFn: () => fetch("/api/projects").then(res => res.json()),
   });
@@ -45,7 +45,7 @@ export const ProjectsSection = () => {
                 top: `calc(64px + ${index * 20}px)`,
               }}
             >
-              <Link href={`/project/${project.id}`} className="block">
+              <Link href={`/project/${project.slug || project.id}`} className="block">
                 <Card className="overflow-hidden cursor-pointer hover:border-emerald-300/30 transition-all group">
                   <div className="lg:grid lg:grid-cols-2 gap-0">
                     <div className="p-6 md:p-8 lg:p-10 lg:py-12 flex flex-col justify-center">
