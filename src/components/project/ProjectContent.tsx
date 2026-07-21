@@ -71,14 +71,14 @@ export function ProjectContent({
   return (
     <>
       {description && (
-        <div className="mb-10">
+        <div id="description" className="mb-10">
           <h2 className="text-2xl font-serif text-white mb-4">Description</h2>
           <MarkdownPreview content={description} className="text-white/70 text-lg leading-relaxed" />
         </div>
       )}
 
       {parsedFeatures.length > 0 && (
-        <div className="mb-10">
+        <div id="features" className="mb-10">
           <h2 className="text-2xl font-serif text-white mb-4">Key Features</h2>
           <ul className="flex flex-col gap-1">
             {parsedFeatures.map((item: any, i: number) => (
@@ -91,7 +91,7 @@ export function ProjectContent({
       )}
 
       {parsedChallenges.length > 0 && (
-        <div className="mb-10">
+        <div id="challenges" className="mb-10">
           <h2 className="text-2xl font-serif text-white mb-4">Challenges</h2>
           <ul className="flex flex-col gap-1">
             {parsedChallenges.map((item: any, i: number) => (
@@ -104,7 +104,7 @@ export function ProjectContent({
       )}
 
       {parsedOutcomes.length > 0 && (
-        <div className="mb-10">
+        <div id="outcomes" className="mb-10">
           <h2 className="text-2xl font-serif text-white mb-4">Outcomes</h2>
           <ul className="flex flex-col gap-1">
             {parsedOutcomes.map((item: any, i: number) => (
@@ -117,7 +117,7 @@ export function ProjectContent({
       )}
 
       {parsedResults.length > 0 && (
-        <div className="mb-10">
+        <div id="results" className="mb-10">
           <h2 className="text-2xl font-serif text-white mb-4">Key Results</h2>
           <ul className="flex flex-col gap-1">
             {parsedResults.map((item: any, i: number) => (
@@ -130,7 +130,7 @@ export function ProjectContent({
       )}
 
       {allTechItems.length > 0 && (
-        <div className="mb-10">
+        <div id="tech-stack" className="mb-10">
           <h2 className="text-2xl font-serif text-white mb-4">Tech Stack</h2>
           <div className="flex flex-wrap gap-3">
             {allTechItems.map((title, i) => (
@@ -146,7 +146,7 @@ export function ProjectContent({
       )}
 
       {parsedTags.length > 0 && (
-        <div className="mb-10">
+        <div id="tags" className="mb-10">
           <h2 className="text-2xl font-serif text-white mb-4">Tags</h2>
           <div className="flex flex-wrap gap-2">
             {parsedTags.map((tag: string, i: number) => (

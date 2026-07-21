@@ -2,13 +2,9 @@ import { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
 import { Header } from "@/sections/Header";
 import { Footer } from "@/sections/Footer";
-import { CommentSection } from "@/components/CommentSection";
 import Link from "next/link";
 import ArrowLeft from "@/assets/icons/arrow-up-right.svg";
-import { ProjectHeader } from "@/components/project/ProjectHeader";
-import { ProjectContent } from "@/components/project/ProjectContent";
-import { ProjectLinks } from "@/components/project/ProjectLinks";
-import { RelatedProjectsWrapper } from "@/components/project/RelatedProjectsWrapper";
+import { ProjectPageClient } from "./pageClient";
 
 export const revalidate = 60;
 
@@ -86,44 +82,25 @@ export default async function ProjectDetailPage({
   return (
     <div className="min-h-screen bg-gray-900 flex flex-col">
       <Header />
-      <main className="flex-grow pt-32 pb-16 lg:py-40">
-        <div className="container max-w-4xl">
-          <ProjectHeader
-            backHref={backHref}
-            backLabel={backLabel}
-            project={{
-              company: project.company,
-              year: project.year,
-              title: project.title,
-              image: project.image,
-              tags: project.tags,
-            }}
-          />
-
-          <ProjectContent
-            description={project.description}
-            results={project.results}
-            techStack={project.techStack}
-            features={project.features}
-            challenges={project.challenges}
-            outcomes={project.outcomes}
-            tags={project.tags}
-            skills={project.skills}
-          />
-
-          <ProjectLinks
-            liveLink={project.liveLink}
-            sourceLink={project.sourceLink}
-            demoLink={project.demoLink}
-          />
-
-          <RelatedProjectsWrapper
-            currentProjectId={project.id}
-            currentSkills={project.skills}
-          />
-          <CommentSection projectId={project.id} />
-        </div>
-      </main>
+      <ProjectPageClient project={{
+        id: project.id,
+        company: project.company,
+        year: project.year,
+        title: project.title,
+        image: project.image,
+        tags: project.tags,
+        description: project.description,
+        results: project.results,
+        features: project.features,
+        challenges: project.challenges,
+        outcomes: project.outcomes,
+        techStack: project.techStack,
+        tagsField: project.tags,
+        skills: project.skills,
+        liveLink: project.liveLink,
+        sourceLink: project.sourceLink,
+        demoLink: project.demoLink,
+      }} />
       <Footer />
     </div>
   );

@@ -2,12 +2,9 @@ import { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
 import { Header } from "@/sections/Header";
 import { Footer } from "@/sections/Footer";
-import { MarkdownPreview } from "@/components/admin/MarkdownPreview";
-import { CommentSection } from "@/components/CommentSection";
-import Image from "next/image";
 import Link from "next/link";
 import ArrowLeft from "@/assets/icons/arrow-up-right.svg";
-import { RelatedBlogsWrapper } from "@/components/blog/RelatedBlogsWrapper";
+import { BlogPageClient } from "./blogPageClient";
 
 export const revalidate = 60;
 
@@ -91,55 +88,17 @@ export default async function BlogDetailPage({
   return (
     <div className="min-h-screen bg-[#0a111f] flex flex-col">
       <Header />
-      <main className="flex-grow pt-32 pb-16 lg:py-40">
-        <div className="container max-w-3xl">
-          <Link
-            href={blogLink}
-            className="inline-flex items-center gap-2 text-white/60 hover:text-emerald-300 transition-colors mb-10"
-          >
-            <ArrowLeft className="size-4 rotate-180" />
-            <span>Back to Blogs</span>
-          </Link>
-
-          <article>
-            <div className="text-emerald-300 text-sm font-semibold tracking-wider uppercase mb-4">
-              {blog.date}
-            </div>
-            <h1 className="font-serif text-3xl md:text-5xl lg:text-6xl mb-8 leading-tight text-white">
-              {blog.title}
-            </h1>
-
-            {tags.length > 0 && (
-              <div className="flex flex-wrap gap-2 mb-8">
-                {tags.map((tag: string, index: number) => (
-                  <span
-                    key={index}
-                    className="inline-flex items-center rounded-full border border-emerald-300/20 bg-emerald-300/10 px-3 py-1 text-xs font-semibold text-emerald-300 tracking-wide"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            )}
-
-            <div className="relative w-full h-64 md:h-96 rounded-3xl overflow-hidden mb-12 border border-white/10">
-              <Image
-                src={blog.image}
-                alt={blog.title}
-                fill
-                className="object-cover"
-              />
-            </div>
-
-            <div className="prose prose-invert prose-lg text-white/70 leading-relaxed max-w-none">
-              <MarkdownPreview content={blog.content} />
-            </div>
-
-            <RelatedBlogsWrapper currentBlogId={blog.id} currentTags={tags} />
-            <CommentSection blogId={blog.id} />
-          </article>
-        </div>
-      </main>
+      <BlogPageClient
+        blog={{
+          id: blog.id,
+          title: blog.title,
+          date: blog.date,
+          content: blog.content,
+          image: blog.image,
+          tags,
+          slug: blog.slug,
+        }}
+      />
       <Footer />
     </div>
   );
