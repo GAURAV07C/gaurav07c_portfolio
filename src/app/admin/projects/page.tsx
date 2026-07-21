@@ -33,6 +33,7 @@ interface Project {
   skills?: { title: string }[];
   isRecent?: boolean;
   slug?: string;
+  views?: number;
 }
 
 function ProjectsInner() {
@@ -262,11 +263,18 @@ function ProjectsInner() {
         <div className="flex flex-col gap-3">
           {projectsList.map((project, index) => (
             <BlurFade key={project.id} delay={index * 0.05}>
-              <AdminItemCard
+               <AdminItemCard
                 title={project.title}
                 subtitle={
                   <span className="flex items-center gap-2 flex-wrap">
                     <span>{project.company} • {project.year}</span>
+                    <span className="flex items-center gap-1 text-white/40">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+                        <circle cx="12" cy="12" r="3" />
+                      </svg>
+                      {(project.views ?? 0).toLocaleString()}
+                    </span>
                     {project.isRecent && (
                       <span className="px-2 py-0.5 bg-emerald-300/20 text-emerald-300 text-xs rounded-full font-mono">
                         Recent

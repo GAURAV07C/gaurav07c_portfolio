@@ -44,6 +44,7 @@ model Project {
   features    String   @default("[]")
   outcomes    String   @default("[]")
   tags        String   @default("[]")
+  views       Int      @default(0)
   skills      Skill[]  @relation("ProjectToSkill")
   comments    Comment[]
 }
@@ -59,6 +60,7 @@ model Blog {
   image     String
   createdAt DateTime @default(now())
   tags      String   @default("[]")
+  views     Int      @default(0)
   comments  Comment[]
 }
 
@@ -181,6 +183,7 @@ model DocPage {
   slug      String
   content   String    @default("")
   order     Int       @default(0)
+  views     Int       @default(0)
   comments  Comment[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

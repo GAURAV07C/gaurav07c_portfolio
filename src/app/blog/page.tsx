@@ -15,6 +15,7 @@ interface Blog {
   excerpt: string;
   image: string;
   slug?: string;
+  views?: number;
 }
 
 export default function BlogPage() {
@@ -87,6 +88,16 @@ export default function BlogPage() {
                             <p className="text-sm text-white/50 leading-relaxed mb-4 line-clamp-2">
                               {blog.excerpt}
                             </p>
+
+                            <div className="flex items-center gap-4 text-xs text-white/40">
+                              <span className="flex items-center gap-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                  <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+                                  <circle cx="12" cy="12" r="3" />
+                                </svg>
+                                {(blog.views ?? 0).toLocaleString()} views
+                              </span>
+                            </div>
 
                             <div className="inline-flex items-center gap-2 text-sm font-medium text-emerald-300 group-hover:text-emerald-200 transition-colors">
                               <span>Read Article</span>

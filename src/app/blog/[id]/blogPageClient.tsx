@@ -8,6 +8,8 @@ import { MarkdownPreview } from "@/components/admin/MarkdownPreview";
 import { CommentSection } from "@/components/CommentSection";
 import { RelatedBlogsWrapper } from "@/components/blog/RelatedBlogsWrapper";
 import { BlogOutline } from "@/components/blog/BlogOutline";
+import { ViewCount } from "@/components/common/ViewCount";
+import { ShareButtons } from "@/components/common/ShareButtons";
 
 interface TocItem {
   id: string;
@@ -36,9 +38,17 @@ function slugify(text: string): string {
     .replace(/--+/g, "-");
 }
 
+function estimateReadingTime(content: string): number {
+  const text = content.replace(/[#*_\-\[\]\(\)>`]/g, "").replace(/\s+/g, " ").trim();
+  const words = text.split(" ").filter(Boolean).length;
+  const wordsPerMinute = 200;
+  return Math.max(1, Math.ceil(words / wordsPerMinute));
+}
+
 export function BlogPageClient({ blog }: BlogPageClientProps) {
   const blogSlug = blog.slug || blog.id;
   const blogLink = `/blog/${blogSlug}`;
+  const readingTime = estimateReadingTime(blog.content);
 
   const [headings, setHeadings] = useState<TocItem[]>([]);
   const [activeId, setActiveId] = useState("");
@@ -118,18 +128,30 @@ export function BlogPageClient({ blog }: BlogPageClientProps) {
                   {blog.title}
                 </h1>
 
-                {blog.tags.length > 0 && (
-                  <div className="flex flex-wrap gap-2 mb-8">
-                    {blog.tags.map((tag: string, index: number) => (
-                      <span
-                        key={index}
-                        className="inline-flex items-center rounded-full border border-emerald-300/20 bg-emerald-300/10 px-3 py-1 text-xs font-semibold text-emerald-300 tracking-wide"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                )}
+                <div className="flex flex-wrap items-center gap-4 mb-8">
+                  {blog.tags.length > 0 && (
+                    <div className="flex flex-wrap gap-2">
+                      {blog.tags.map((tag: string, index: number) => (
+                        <span
+                          key={index}
+                          className="inline-flex items-center rounded-full border border-emerald-300/20 bg-emerald-300/10 px-3 py-1 text-xs font-semibold text-emerald-300 tracking-wide"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex flex-wrap items-center gap-4 mb-8 text-sm text-white/60">
+                  <span>{readingTime} min read</span>
+                  <span className="text-white/20">•</span>
+                  <ViewCount id={blog.id} type="blog" />
+                </div>
+
+                <div className="flex items-center justify-between mb-12">
+                  <ShareButtons url={blogLink} title={blog.title} />
+                </div>
 
                 <div className="relative w-full h-64 md:h-96 rounded-3xl overflow-hidden mb-12 border border-white/10">
                   <Image

@@ -8,6 +8,8 @@ import { RelatedProjectsWrapper } from "@/components/project/RelatedProjectsWrap
 import { CommentSection } from "@/components/CommentSection";
 import { ProjectOutline } from "@/components/project/ProjectOutline";
 import { useTableOfContents } from "@/hooks/useTableOfContents";
+import { ViewCount } from "@/components/common/ViewCount";
+import { ShareButtons } from "@/components/common/ShareButtons";
 
 interface TocItem {
   id: string;
@@ -38,6 +40,17 @@ export function ProjectPageClient({
     demoLink?: string | null;
   };
 }) {
+  function estimateReadingTime(content: string): number {
+    const text = content.replace(/[#*_\-\[\]\(\)>`]/g, "").replace(/\s+/g, " ").trim();
+    const words = text.split(" ").filter(Boolean).length;
+    return Math.max(1, Math.ceil(words / 200));
+  }
+
+  const readingTime = estimateReadingTime(
+    [project.description, project.features, project.challenges, project.outcomes, project.results]
+      .filter(Boolean)
+      .join(" ")
+  );
   const hasDescription = !!project.description;
   const hasFeatures = project.features && project.features.trim() !== "[]";
   const hasChallenges = project.challenges && project.challenges.trim() !== "[]";
@@ -78,6 +91,15 @@ export function ProjectPageClient({
                   tags: project.tags,
                 }}
               />
+
+              <div className="flex items-center justify-between mb-8">
+                <div className="flex items-center gap-4 text-sm text-white/60">
+                  <span>{readingTime} min read</span>
+                  <span className="text-white/20">•</span>
+                  <ViewCount id={project.id} type="project" />
+                </div>
+                <ShareButtons url={`/project/${project.id}`} title={project.title} />
+              </div>
 
               <ProjectContent
                 description={project.description}

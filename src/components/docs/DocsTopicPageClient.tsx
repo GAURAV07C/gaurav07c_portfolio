@@ -11,6 +11,8 @@ import { TableOfContents } from "@/components/docs/TableOfContents";
 import { useTableOfContents } from "@/hooks/useTableOfContents";
 import Link from "next/link";
 import { CommentSection } from "@/components/CommentSection";
+import { ViewCount } from "@/components/common/ViewCount";
+import { ShareButtons } from "@/components/common/ShareButtons";
 
 export interface TocItem {
   id: string;
@@ -44,6 +46,13 @@ export function DocsTopicPageClient({ topic, page }: DocsTopicPageClientProps) {
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
   const [headings, setHeadings] = React.useState<TocItem[]>([]);
   const { activeId, scrollTo } = useTableOfContents(headings);
+
+  function estimateReadingTime(content: string): number {
+    const text = content.replace(/[#*_\-\[\]\(\)>`]/g, "").replace(/\s+/g, " ").trim();
+    const words = text.split(" ").filter(Boolean).length;
+    return Math.max(1, Math.ceil(words / 200));
+  }
+  const readingTime = estimateReadingTime(page.content);
 
   const handleHeadingsChange = (newHeadings: TocItem[]) => {
     setHeadings(newHeadings);
@@ -99,6 +108,15 @@ export function DocsTopicPageClient({ topic, page }: DocsTopicPageClientProps) {
                       <h1 className="font-serif text-3xl md:text-4xl lg:text-5xl mb-8 leading-tight">
                         {page.title}
                       </h1>
+
+                      <div className="flex items-center justify-between mb-8">
+                        <div className="flex items-center gap-4 text-sm text-white/60">
+                          <span>{readingTime} min read</span>
+                          <span className="text-white/20">•</span>
+                          <ViewCount id={page.id} type="doc" />
+                        </div>
+                        <ShareButtons url={`/docs/${topic.slug}/${page.slug}`} title={page.title} />
+                      </div>
 
                       <div className="text-white/70 text-lg leading-relaxed prose prose-invert max-w-none">
                         <MarkdownPreview content={page.content} onHeadingsChange={handleHeadingsChange} />

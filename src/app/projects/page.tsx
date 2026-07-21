@@ -21,6 +21,7 @@ interface Project {
   sourceLink?: string;
   demoLink?: string;
   slug?: string;
+  views?: number;
 }
 
 export default function ProjectsPage() {
@@ -91,6 +92,16 @@ export default function ProjectsPage() {
                                 }
                               })()}
                             </p>
+
+                            <div className="flex items-center gap-4 text-xs text-white/40">
+                              <span className="flex items-center gap-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                  <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+                                  <circle cx="12" cy="12" r="3" />
+                                </svg>
+                                {(project.views ?? 0).toLocaleString()} views
+                              </span>
+                            </div>
 
                             <div className="inline-flex items-center gap-2 text-sm font-medium text-emerald-300 group-hover:text-emerald-200 transition-colors">
                               <span>View Project</span>

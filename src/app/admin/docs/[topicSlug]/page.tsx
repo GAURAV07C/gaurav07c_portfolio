@@ -18,6 +18,7 @@ interface DocPage {
   slug: string;
   content: string;
   order: number;
+  views?: number;
 }
 
 interface DocTopic {
@@ -179,7 +180,18 @@ export default function AdminDocsTopicPage({ params }: AdminDocsTopicPageProps) 
             <BlurFade key={page.id} delay={index * 0.05}>
               <AdminItemCard
                 title={page.title}
-                subtitle={`Order: ${page.order} · ${page.slug}`}
+                subtitle={
+                  <span className="flex items-center gap-3 flex-wrap">
+                    <span>Order: {page.order} · {page.slug}</span>
+                    <span className="flex items-center gap-1 text-white/40">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+                        <circle cx="12" cy="12" r="3" />
+                      </svg>
+                      {(page.views ?? 0).toLocaleString()}
+                    </span>
+                  </span>
+                }
                 image=""
                 onView={() => window.open(`/docs/${topic.slug}/${page.slug}`, "_blank")}
                 onEdit={() => openEditModal(page)}
