@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
 const CACHE_HEADERS = {
-  "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300",
+  "Cache-Control": "no-store, no-cache, must-revalidate, private",
 };
 
 export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
