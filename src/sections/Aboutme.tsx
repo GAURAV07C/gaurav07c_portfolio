@@ -10,7 +10,7 @@ const Aboutme = () => {
   });
 
   const aboutMe = settings?.aboutMe || "";
-  const profileImage = settings?.profileImage || "";
+  const profileImage = settings?.profileImage || "/mypic.png";
 
   if (!aboutMe && !profileImage) return null;
 
