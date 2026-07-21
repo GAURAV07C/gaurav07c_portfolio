@@ -2,13 +2,17 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { ok, serverError } from "@/lib/api";
 
+const CACHE_HEADERS = {
+  "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400",
+};
+
 export async function GET() {
   try {
     const projects = await prisma.project.findMany({
       orderBy: { year: 'desc' },
       include: { skills: true }
     });
-    return NextResponse.json(projects, { status: 200 });
+    return NextResponse.json(projects, { status: 200, headers: CACHE_HEADERS });
   } catch {
     return NextResponse.json({ error: "Failed to fetch projects" }, { status: 500 });
   }
@@ -24,6 +28,7 @@ export async function POST(request: Request) {
         company: body.company,
         year: body.year,
         title: body.title,
+        slug: body.slug || body.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, ""),
         description: body.description || "",
         results: body.results || "[]",
         features: body.features || "[]",
@@ -63,6 +68,7 @@ export async function PUT(request: Request) {
         company: body.company,
         year: body.year,
         title: body.title,
+        slug: body.slug,
         description: body.description || "",
         results: body.results || "[]",
         techStack: body.techStack || "[]",

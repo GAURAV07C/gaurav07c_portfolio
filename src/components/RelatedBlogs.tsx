@@ -12,6 +12,7 @@ interface Blog {
   excerpt: string;
   image: string;
   tags: string;
+  slug?: string;
 }
 
 interface RelatedBlogsProps {
@@ -96,31 +97,34 @@ export function RelatedBlogs({ currentBlogId, currentTags = [] }: RelatedBlogsPr
         </Link>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {blogs.map((blog) => (
-          <Link
-            key={blog.id}
-            href={`/blog/${blog.id}`}
-            className="group block bg-gray-900 border border-white/10 rounded-2xl overflow-hidden hover:border-emerald-300/30 transition-all"
-          >
-            <div className="relative w-full h-48 overflow-hidden bg-gray-950">
-              {blog.image && (
-                <Image
-                  src={blog.image}
-                  alt={blog.title}
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-500"
-                />
-              )}
-            </div>
-            <div className="p-5">
-              <div className="text-xs text-emerald-300 font-mono mb-2">{blog.date}</div>
-              <h3 className="text-lg font-semibold text-white group-hover:text-emerald-300 transition-colors line-clamp-2">
-                {blog.title}
-              </h3>
-              <p className="text-white/50 text-sm mt-2 line-clamp-2">{blog.excerpt}</p>
-            </div>
-          </Link>
-        ))}
+        {blogs.map((blog) => {
+          const blogSlug = blog.slug || blog.id;
+          return (
+            <Link
+              key={blog.id}
+              href={`/blog/${blogSlug}`}
+              className="group block bg-gray-900 border border-white/10 rounded-2xl overflow-hidden hover:border-emerald-300/30 transition-all"
+            >
+              <div className="relative w-full h-48 overflow-hidden bg-gray-950">
+                {blog.image && (
+                  <Image
+                    src={blog.image}
+                    alt={blog.title}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                )}
+              </div>
+              <div className="p-5">
+                <div className="text-xs text-emerald-300 font-mono mb-2">{blog.date}</div>
+                <h3 className="text-lg font-semibold text-white group-hover:text-emerald-300 transition-colors line-clamp-2">
+                  {blog.title}
+                </h3>
+                <p className="text-white/50 text-sm mt-2 line-clamp-2">{blog.excerpt}</p>
+              </div>
+            </Link>
+          );
+        })}
       </div>
     </div>
   );

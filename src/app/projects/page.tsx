@@ -20,6 +20,7 @@ interface Project {
   liveLink?: string;
   sourceLink?: string;
   demoLink?: string;
+  slug?: string;
 }
 
 export default function ProjectsPage() {
@@ -27,7 +28,7 @@ export default function ProjectsPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/projects")
+    fetch("/api/projects", { next: { revalidate: 3600 } })
       .then(res => res.json())
       .then(data => setProjects(Array.isArray(data) ? data : []))
       .catch(console.error)
@@ -60,56 +61,59 @@ export default function ProjectsPage() {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
-              {projects.map((project, index) => (
-                <BlurFade key={project.id} delay={index * 0.05}>
-                  <Link href={`/project/${project.id}`} className="group block h-full">
-                    <div className="h-full bg-gray-900 border border-white/10 rounded-3xl overflow-hidden hover:border-emerald-300/30 transition-all duration-300">
-                      <div className="lg:grid lg:grid-cols-2 gap-0">
-                        <div className="p-6 md:p-8 flex flex-col justify-center">
-                          <div className="flex items-center gap-3 mb-3">
-                            <span className="text-xs font-semibold uppercase tracking-widest text-emerald-300">
-                              {project.company}
-                            </span>
-                            <span className="text-white/20">•</span>
-                            <span className="text-xs text-white/40">{project.year}</span>
+              {projects.map((project, index) => {
+                const projectSlug = project.slug || project.id;
+                return (
+                  <BlurFade key={project.id} delay={index * 0.05}>
+                    <Link href={`/project/${projectSlug}`} className="group block h-full">
+                      <div className="h-full bg-gray-900 border border-white/10 rounded-3xl overflow-hidden hover:border-emerald-300/30 transition-all duration-300">
+                        <div className="lg:grid lg:grid-cols-2 gap-0">
+                          <div className="p-6 md:p-8 flex flex-col justify-center">
+                            <div className="flex items-center gap-3 mb-3">
+                              <span className="text-xs font-semibold uppercase tracking-widest text-emerald-300">
+                                {project.company}
+                              </span>
+                              <span className="text-white/20">•</span>
+                              <span className="text-xs text-white/40">{project.year}</span>
+                            </div>
+
+                            <h3 className="font-serif text-xl md:text-2xl text-white group-hover:text-emerald-300 transition-colors mb-3">
+                              {project.title}
+                            </h3>
+
+                            <p className="text-sm text-white/50 leading-relaxed mb-4 line-clamp-2">
+                              {(() => {
+                                try {
+                                  const parsed = JSON.parse(project.results || "[]");
+                                  return Array.isArray(parsed) && parsed[0]?.title ? parsed[0].title : "";
+                                } catch {
+                                  return "";
+                                }
+                              })()}
+                            </p>
+
+                            <div className="inline-flex items-center gap-2 text-sm font-medium text-emerald-300 group-hover:text-emerald-200 transition-colors">
+                              <span>View Project</span>
+                              <ArrowUpRightIcon className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                            </div>
                           </div>
-
-                          <h3 className="font-serif text-xl md:text-2xl text-white group-hover:text-emerald-300 transition-colors mb-3">
-                            {project.title}
-                          </h3>
-
-                          <p className="text-sm text-white/50 leading-relaxed mb-4 line-clamp-2">
-                            {(() => {
-                              try {
-                                const parsed = JSON.parse(project.results || "[]");
-                                return Array.isArray(parsed) && parsed[0]?.title ? parsed[0].title : "";
-                              } catch {
-                                return "";
-                              }
-                            })()}
-                          </p>
-
-                          <div className="inline-flex items-center gap-2 text-sm font-medium text-emerald-300 group-hover:text-emerald-200 transition-colors">
-                            <span>View Project</span>
-                            <ArrowUpRightIcon className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                          <div className="relative min-h-[220px] md:min-h-[260px]">
+                            {project.image && (
+                              <Image
+                                src={project.image}
+                                alt={project.title}
+                                fill
+                                className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                              />
+                            )}
+                            <div className="absolute inset-0 bg-gradient-to-r from-gray-900/60 to-transparent lg:block hidden" />
                           </div>
-                        </div>
-                        <div className="relative min-h-[220px] md:min-h-[260px]">
-                          {project.image && (
-                            <Image
-                              src={project.image}
-                              alt={project.title}
-                              fill
-                              className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
-                            />
-                          )}
-                          <div className="absolute inset-0 bg-gradient-to-r from-gray-900/60 to-transparent lg:block hidden" />
                         </div>
                       </div>
-                    </div>
-                  </Link>
-                </BlurFade>
-              ))}
+                    </Link>
+                  </BlurFade>
+                );
+              })}
             </div>
           )}
         </div>

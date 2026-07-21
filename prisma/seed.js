@@ -52,6 +52,7 @@ async function main() {
       company: "Dec",
       year: "2025",
       title: "Watch Together App",
+      slug: "watch-together-app",
       results: JSON.stringify([{ title: "Developed a real-time Watch Together platform that allows multiple users to watch YouTube videos in sync while chatting. Implemented WebSocket-based signaling for room management and playback synchronization, ensuring minimal latency and a smooth shared viewing experience using WebRTC and React." }]),
       techStack: JSON.stringify([{ title: "React" }, { title: "WebRTC" }, { title: "WebSockets" }, { title: "Node.js" }, { title: "JavaScript" }]),
       liveLink: "https://watchtogetherstream.onrender.com/",
@@ -63,6 +64,7 @@ async function main() {
       company: "April",
       year: "2025",
       title: "Mini AI-Powered Notes App",
+      slug: "ai-notes-app",
       results: JSON.stringify([{ title: "Developed an amazing AI-Powered Notes App, a full-stack application that allows users to create, edit, and delete notes. The app uses Gemini API to summarize notes based on user input. I implemented Next.js for a fast and seamless experience, Tanstack Query for efficient data fetching, and Supabase for secure authentication and database management. This app is perfect for students and professionals who want to keep their notes organized and easily accessible." }]),
       techStack: JSON.stringify([{ title: "Next.js" }, { title: "Tanstack Query" }, { title: "Typescript" }, { title: "Gemini API" }, { title: "Shadcn UI" }, { title: "PostgreSQL" }, { title: "Supabase" }]),
       liveLink: "https://ai-notes-app-azure.vercel.app/",
@@ -74,6 +76,7 @@ async function main() {
       company: "Feb",
       year: "2025",
       title: "Project Hub",
+      slug: "project-hub",
       results: JSON.stringify([{ title: "Developed an amazing Project Hub platform, a full-stack social platform where students can showcase their projects, discuss ideas, and collaborate. I implemented Next.js for a fast and seamless experience, Tailwind CSS and ShadCN UI for a modern and intuitive design, and Auth.js for secure authentication, including two-factor authentication. This platform allows students to share their work, get feedback, and engage with a like-minded community." }]),
       techStack: JSON.stringify([{ title: "Next.js" }, { title: "React.js" }, { title: "Typescript" }, { title: "TailwindCSS" }, { title: "Shadcn UI" }, { title: "PostgreSQL" }, { title: "Auth.js" }]),
       liveLink: "https://project-hub-rho.vercel.app/",
@@ -85,6 +88,7 @@ async function main() {
       company: "DevAurasion",
       year: "2024",
       title: "DevAurasion Landing Page",
+      slug: "devaurasion-landing-page",
       results: JSON.stringify([{ title: "Developed a stunning landing page for DevaAurasion Community, built with Next.js, React.js, Tailwind CSS, and Framer Motion, offers a highly responsive and visually engaging experience. Designed with a strong focus on aesthetics and fluid animations, it provides a seamless user interface across all devices, ensuring a captivating first impression for visitors." }]),
       techStack: JSON.stringify([{ title: "Next.js" }, { title: "React.js" }, { title: "Typescript" }, { title: "TailwindCSS" }, { title: "Shadcn UI" }]),
       liveLink: "https://devaurasion.vercel.app/",
@@ -96,6 +100,7 @@ async function main() {
       company: "Jan",
       year: "2025",
       title: "Portfolio",
+      slug: "portfolio-website",
       results: JSON.stringify([{ title: "Developed an amazing Portfolio to showcase my work to potential recruiters. I used latest web designing techniques like TailwindCSS and Shadcn UI to make it look good and Next.js to make it fast." }]),
       techStack: JSON.stringify([{ title: "Next.js" }, { title: "React.js" }, { title: "Typescript" }, { title: "TailwindCSS" }, { title: "Shadcn UI" }]),
       liveLink: "https://gaurav07c.vercel.app/",
@@ -107,6 +112,7 @@ async function main() {
       company: "Dec",
       year: "2024",
       title: "AI Landing Page",
+      slug: "ai-landing-page",
       results: JSON.stringify([{ title: "Developed a stunning landing page, built with Next.js, React.js, Tailwind CSS, and Framer Motion, offers a highly responsive and visually engaging experience. Designed with a strong focus on aesthetics and fluid animations, it provides a seamless user interface across all devices, ensuring a captivating first impression for visitors." }]),
       techStack: JSON.stringify([{ title: "Next.js" }, { title: "React.js" }, { title: "Typescript" }, { title: "TailwindCSS" }, { title: "Shadcn UI" }]),
       liveLink: "https://ai-landing-page-virid.vercel.app/",
@@ -123,18 +129,20 @@ async function main() {
   const blogs = [
     {
       title: "Understanding React Server Components",
+      slug: "understanding-react-server-components",
       date: "July 12, 2026",
       excerpt: "A deep dive into how React Server Components are changing the way we build web applications. We'll explore the benefits and trade-offs.",
       content: "React Server Components (RSC) introduce a new way of building React applications. By allowing components to render exclusively on the server, we can significantly reduce the amount of JavaScript sent to the client. This leads to faster page loads and improved SEO. In this post, we explore the core concepts behind RSC, how they differ from traditional Server-Side Rendering (SSR), and practical examples of when to use them.",
-      link: "/blog/1",
+      link: "/blog/understanding-react-server-components",
       image: "/images/ai-notes.png"
     },
     {
       title: "Mastering Tailwind CSS in 2026",
+      slug: "mastering-tailwind-css-2026",
       date: "June 25, 2026",
       excerpt: "Tips and tricks for building scalable and maintainable design systems with Tailwind CSS, leveraging the latest features.",
       content: "Tailwind CSS has become the go-to utility-first CSS framework. In 2026, with the introduction of new features and better integration with component libraries like Shadcn UI, mastering Tailwind is more important than ever. We'll cover advanced configuration, creating reusable design tokens, and avoiding common pitfalls when working with large teams.",
-      link: "/blog/2",
+      link: "/blog/mastering-tailwind-css-2026",
       image: "/images/projectHub.png"
     }
   ];

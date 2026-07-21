@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
+const CACHE_HEADERS = {
+  "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400",
+};
+
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ topicSlug: string }> }
@@ -20,7 +24,7 @@ export async function GET(
       return NextResponse.json({ error: "Topic not found" }, { status: 404 });
     }
 
-    return NextResponse.json(topic, { status: 200 });
+    return NextResponse.json(topic, { status: 200, headers: CACHE_HEADERS });
   } catch {
     return NextResponse.json({ error: "Failed to fetch topic" }, { status: 500 });
   }

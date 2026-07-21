@@ -1,16 +1,24 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
+const CACHE_HEADERS = {
+  "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400",
+};
 
 export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
-    const blog = await prisma.blog.findUnique({
-      where: { id }
+    const blog = await prisma.blog.findFirst({
+      where: {
+        OR: [
+          { id },
+          { slug: id }
+        ]
+      }
     });
     
     if (!blog) return NextResponse.json({ error: "Blog not found" }, { status: 404 });
-    return NextResponse.json(blog, { status: 200 });
+    return NextResponse.json(blog, { status: 200, headers: CACHE_HEADERS });
   } catch {
     return NextResponse.json({ error: "Failed to fetch blog" }, { status: 500 });
   }

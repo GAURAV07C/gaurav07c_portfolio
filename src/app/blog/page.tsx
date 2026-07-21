@@ -8,13 +8,13 @@ import BlogCard from "@/components/BlogCard";
 import BlurFade from "@/components/BlurFade";
 
 export default function BlogPage() {
-  const [blogs, setBlogs] = useState<{ id: string; title: string; date: string; excerpt: string; image: string }[]>([]);
+  const [blogs, setBlogs] = useState<{ id: string; title: string; date: string; excerpt: string; image: string; slug?: string }[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const res = await fetch("/api/blogs");
+        const res = await fetch("/api/blogs", { next: { revalidate: 3600 } });
         if (!res.ok) throw new Error("Failed to fetch blogs");
         const data = await res.json();
         setBlogs(data);
@@ -42,17 +42,20 @@ export default function BlogPage() {
             <div className="mt-20 text-center text-white/50">Loading blogs...</div>
           ) : (
             <div className="mt-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {blogs.map((blog, index) => (
-                <BlurFade key={blog.id} delay={0.1 * index}>
-                  <BlogCard 
-                    id={blog.id}
-                    title={blog.title}
-                    date={blog.date}
-                    excerpt={blog.excerpt}
-                    image={blog.image}
-                  />
-                </BlurFade>
-              ))}
+              {blogs.map((blog, index) => {
+                const blogSlug = blog.slug || blog.id;
+                return (
+                  <BlurFade key={blog.id} delay={0.1 * index}>
+                    <BlogCard 
+                      id={blogSlug}
+                      title={blog.title}
+                      date={blog.date}
+                      excerpt={blog.excerpt}
+                      image={blog.image}
+                    />
+                  </BlurFade>
+                );
+              })}
             </div>
           )}
         </div>

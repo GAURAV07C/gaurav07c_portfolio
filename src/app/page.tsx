@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import { AboutSection } from "@/sections/About";
 import Aboutme from "@/sections/Aboutme";
 import { ContactSection } from "@/sections/Contact";
@@ -11,6 +12,13 @@ import { ProjectsSection } from "@/sections/Projects";
 import Skill from "@/sections/Skill";
 import { TapeSection } from "@/sections/Tape";
 import { TestimonialsSection } from "@/sections/Testimonials";
+
+export const revalidate = 3600;
+
+export const metadata: Metadata = {
+  title: "Gaurav07C | Full Stack Developer Portfolio",
+  description: "I specialize in transforming designs into functional, high-performing web applications. Let's discuss your next project.",
+};
 
 export default function Home() {
   return (

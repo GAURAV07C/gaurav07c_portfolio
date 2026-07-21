@@ -16,6 +16,7 @@ import { MarkdownEditor } from "@/components/admin/MarkdownEditor";
 interface Blog {
   id: string;
   title: string;
+  slug?: string;
   date: string;
   excerpt: string;
   content: string;
@@ -27,7 +28,7 @@ export default function BlogsAdminPage() {
   const [blogs, setBlogs] = useState<Blog[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [formData, setFormData] = useState({ title: "", date: "", excerpt: "", content: "", image: "", tags: "" });
+  const [formData, setFormData] = useState({ title: "", slug: "", date: "", excerpt: "", content: "", image: "", tags: "" });
   const [loading, setLoading] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const toast = useToast();
@@ -44,23 +45,32 @@ export default function BlogsAdminPage() {
     fetchBlogs();
   }, []);
 
+  const generateSlug = (title: string) => {
+    return title
+      .toLowerCase()
+      .trim()
+      .replace(/[^\w\s-]/g, "")
+      .replace(/\s+/g, "-")
+      .replace(/--+/g, "-");
+  };
+
   const openAddModal = () => {
     setEditingId(null);
-    setFormData({ title: "", date: "", excerpt: "", content: "", image: "", tags: "" });
+    setFormData({ title: "", slug: "", date: "", excerpt: "", content: "", image: "", tags: "" });
     setShowModal(true);
   };
 
   const openEditModal = (item: Blog) => {
     setEditingId(item.id);
     const tags = item.tags ? JSON.parse(item.tags).join(", ") : "";
-    setFormData({ title: item.title, date: item.date, excerpt: item.excerpt, content: item.content, image: item.image, tags });
+    setFormData({ title: item.title, slug: item.slug || generateSlug(item.title), date: item.date, excerpt: item.excerpt, content: item.content, image: item.image, tags });
     setShowModal(true);
   };
 
   const closeModal = () => {
     setShowModal(false);
     setEditingId(null);
-    setFormData({ title: "", date: "", excerpt: "", content: "", image: "", tags: "" });
+    setFormData({ title: "", slug: "", date: "", excerpt: "", content: "", image: "", tags: "" });
   };
 
   const handleView = (id: string) => {
@@ -79,10 +89,12 @@ export default function BlogsAdminPage() {
         .map((t) => t.trim())
         .filter(Boolean);
 
+      const slug = formData.slug || generateSlug(formData.title);
+
       const res = await fetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...formData, tags: JSON.stringify(tagsArray) }),
+        body: JSON.stringify({ ...formData, slug, tags: JSON.stringify(tagsArray) }),
       });
 
       if (res.ok) {
@@ -164,9 +176,25 @@ export default function BlogsAdminPage() {
             <Input
               type="text"
               value={formData.title}
-              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+              onChange={(e) => {
+                const title = e.target.value;
+                setFormData({ 
+                  ...formData, 
+                  title,
+                  slug: editingId ? formData.slug : generateSlug(title)
+                });
+              }}
               required
               autoFocus
+            />
+          </FormField>
+
+          <FormField label="Slug">
+            <Input
+              type="text"
+              value={formData.slug}
+              onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
+              placeholder="auto-generated from title"
             />
           </FormField>
 

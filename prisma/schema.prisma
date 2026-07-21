@@ -30,6 +30,7 @@ model Project {
   company     String
   year        String
   title       String
+  slug        String   @unique
   results     String   @default("[]")
   techStack   String   @default("[]")
   liveLink    String?
@@ -50,6 +51,7 @@ model Project {
 model Blog {
   id        String   @id @default(cuid())
   title     String
+  slug      String   @unique
   date      String
   excerpt   String
   content   String

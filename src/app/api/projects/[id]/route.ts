@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
+const CACHE_HEADERS = {
+  "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400",
+};
 
 export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -11,7 +14,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
     });
     
     if (!project) return NextResponse.json({ error: "Project not found" }, { status: 404 });
-    return NextResponse.json(project, { status: 200 });
+    return NextResponse.json(project, { status: 200, headers: CACHE_HEADERS });
   } catch {
     return NextResponse.json({ error: "Failed to fetch project" }, { status: 500 });
   }

@@ -1,30 +1,30 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import ArrowLeft from "@/assets/icons/arrow-up-right.svg";
 
-interface Project {
-  id: string;
-  company: string;
-  year: string;
-  title: string;
-  image: string;
-  techStack: string;
-  slug?: string;
-  skills?: { title: string }[];
-}
 
-interface RelatedProjectsProps {
+interface RelatedProjectsWrapperProps {
   currentProjectId: string;
   currentSkills?: { title: string }[];
 }
 
-export function RelatedProjects({ currentProjectId, currentSkills = [] }: RelatedProjectsProps) {
-  const [projects, setProjects] = useState<Project[]>([]);
+export function RelatedProjectsWrapper({ currentProjectId, currentSkills = [] }: RelatedProjectsWrapperProps) {
+  const [projects, setProjects] = useState<
+    {
+      id: string;
+      company: string;
+      year: string;
+      title: string;
+      image: string;
+      slug?: string;
+      skills?: { title: string }[];
+    }[]
+  >([]);
   const [loading, setLoading] = useState(true);
-  const fetchedRef = React.useRef(false);
+  const fetchedRef = useRef(false);
 
   useEffect(() => {
     if (fetchedRef.current) return;
@@ -36,25 +36,38 @@ export function RelatedProjects({ currentProjectId, currentSkills = [] }: Relate
         if (!res.ok) return;
         const data = await res.json();
         const allProjects = Array.isArray(data) ? data : [];
-        
-        let related = allProjects.filter((p: Project) => p.id !== currentProjectId);
-        
-        const currentSkillTitles = new Set(currentSkills.map(s => s.title));
-        
+
+        let related = allProjects.filter(
+          (p: { id: string }) => p.id !== currentProjectId,
+        );
+
+        const currentSkillTitles = new Set(currentSkills.map((s) => s.title));
+
         if (currentSkillTitles.size > 0) {
           related = related
-            .map((p: Project) => {
-              const projectSkills = (p.skills || []).map((s: { title: string }) => s.title);
-              const matchingSkills = projectSkills.filter((s: string) => currentSkillTitles.has(s));
+            .map((p: { id: string; skills?: { title: string }[] }) => {
+              const projectSkills = (p.skills || []).map(
+                (s: { title: string }) => s.title,
+              );
+              const matchingSkills = projectSkills.filter((s: string) =>
+                currentSkillTitles.has(s),
+              );
               return { ...p, matchCount: matchingSkills.length };
             })
-            .filter((p: Project & { matchCount: number }) => p.matchCount > 0)
-            .sort((a: Project & { matchCount: number }, b: Project & { matchCount: number }) => b.matchCount - a.matchCount);
+            .filter(
+              (p: { matchCount?: number }) => (p.matchCount || 0) > 0,
+            )
+            .sort(
+              (a: { matchCount?: number }, b: { matchCount?: number }) =>
+                (b.matchCount || 0) - (a.matchCount || 0),
+            );
         }
-        
-        const fallback = allProjects.filter((p: Project) => p.id !== currentProjectId).slice(0, 3);
+
+        const fallback = allProjects
+          .filter((p: { id: string }) => p.id !== currentProjectId)
+          .slice(0, 3);
         const display = related.length > 0 ? related.slice(0, 3) : fallback;
-        
+
         setProjects(display);
       } catch {
         // ignore
@@ -69,7 +82,9 @@ export function RelatedProjects({ currentProjectId, currentSkills = [] }: Relate
   if (loading) {
     return (
       <div className="mt-20">
-        <div className="text-xl font-serif text-white mb-6">Related Projects</div>
+        <div className="text-xl font-serif text-white mb-6">
+          Related Projects
+        </div>
         <div className="text-white/50">Loading...</div>
       </div>
     );
