@@ -348,6 +348,27 @@ function ProjectsInner() {
             placeholder="Add key results..."
           />
 
+          <MarkdownEditor
+            label="Features"
+            value={formData.features}
+            onChange={(value) => setFormData({ ...formData, features: value })}
+            placeholder="Add key features..."
+          />
+
+          <MarkdownEditor
+            label="Challenges"
+            value={formData.challenges}
+            onChange={(value) => setFormData({ ...formData, challenges: value })}
+            placeholder="Add challenges..."
+          />
+
+          <MarkdownEditor
+            label="Outcomes"
+            value={formData.outcomes}
+            onChange={(value) => setFormData({ ...formData, outcomes: value })}
+            placeholder="Add outcomes..."
+          />
+
           <FormField label="Tech Stack / Skills">
             <div className="space-y-3">
               <div className="flex flex-wrap gap-2">

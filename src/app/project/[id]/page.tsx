@@ -96,6 +96,7 @@ export default async function ProjectDetailPage({
               year: project.year,
               title: project.title,
               image: project.image,
+              tags: project.tags,
             }}
           />
 
@@ -103,6 +104,11 @@ export default async function ProjectDetailPage({
             description={project.description}
             results={project.results}
             techStack={project.techStack}
+            features={project.features}
+            challenges={project.challenges}
+            outcomes={project.outcomes}
+            tags={project.tags}
+            skills={project.skills}
           />
 
           <ProjectLinks
