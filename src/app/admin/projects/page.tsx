@@ -58,7 +58,9 @@ function ProjectsInner() {
     isRecent: false,
   });
   const [loading, setLoading] = useState(false);
+  const [aiLoading, setAiLoading] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [rawData, setRawData] = useState("");
   const toast = useToast();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -210,6 +212,54 @@ function ProjectsInner() {
     }
   };
 
+  const handleAiGenerate = async () => {
+    if (!rawData.trim()) {
+      toast.addToast({ type: "error", message: "Please paste some project info first" });
+      return;
+    }
+
+    setAiLoading(true);
+    try {
+      const res = await fetch("/api/ai/generate-project", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ rawData }),
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        const msg = err.error || "Failed to save project";
+        toast.addToast({ type: "error", message: msg });
+      }
+
+      const data = await res.json();
+      setFormData(prev => ({
+        ...prev,
+        company: data.company || prev.company,
+        year: data.year || prev.year,
+        title: data.title || prev.title,
+        slug: data.slug || prev.slug,
+        description: data.description || prev.description,
+        results: data.results || prev.results,
+        features: data.features || prev.features,
+        challenges: data.challenges || prev.challenges,
+        outcomes: data.outcomes || prev.outcomes,
+        techStack: data.techStack || prev.techStack,
+        tags: data.tags || prev.tags,
+        liveLink: data.liveLink || prev.liveLink,
+        sourceLink: data.sourceLink || prev.sourceLink,
+        demoLink: data.demoLink || prev.demoLink,
+        image: data.image || prev.image,
+        isRecent: data.isRecent ?? prev.isRecent,
+      }));
+      toast.addToast({ type: "success", message: "AI generated project data!" });
+    } catch (error) {
+      toast.addToast({ type: "error", message: error instanceof Error ? error.message : "AI generation failed" });
+    } finally {
+      setAiLoading(false);
+    }
+  };
+
   const handleDelete = async () => {
     if (!deleteId) return;
 
@@ -295,6 +345,29 @@ function ProjectsInner() {
       {/* Add/Edit Modal */}
       <Modal isOpen={showModal} onClose={closeModal} title={editingId ? "Edit Project" : "Add New Project"}>
         <form onSubmit={handleSubmit} className="space-y-5">
+          <div className="p-4 bg-gray-950 border border-white/10 rounded-xl space-y-3">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-sm font-semibold text-white">AI Auto Fill</h3>
+                <p className="text-xs text-white/50">Paste project info, README, or notes below and let AI fill the form.</p>
+              </div>
+              <button
+                type="button"
+                onClick={handleAiGenerate}
+                disabled={aiLoading}
+                className="px-4 py-2 bg-emerald-300 hover:bg-emerald-400 text-gray-950 text-sm font-bold rounded-lg transition disabled:opacity-50"
+              >
+                {aiLoading ? "Generating..." : "Generate"}
+              </button>
+            </div>
+            <textarea
+              value={rawData}
+              onChange={(e) => setRawData(e.target.value)}
+              placeholder="Paste GitHub README, project description, features, tech stack, or any notes here..."
+              className="w-full h-32 bg-gray-900 border border-white/10 rounded-lg p-3 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-emerald-300/50"
+            />
+          </div>
+
           <div className="grid grid-cols-2 gap-4">
             <FormField label="Company">
               <Input

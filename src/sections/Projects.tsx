@@ -59,32 +59,12 @@ export const ProjectsSection = () => {
                         {project.title}
                       </h3>
                       <ul className="flex flex-col gap-3 mt-4 md:mt-5">
-                        {(() => {
-                          if (!project.results) return null;
-                          const trimmed = project.results.trim();
-                          if (!trimmed) return null;
-                          if (trimmed.startsWith("[") && trimmed.includes("title")) {
-                            try {
-                              const parsed = JSON.parse(trimmed);
-                              if (Array.isArray(parsed)) {
-                                return parsed.map((result: { title: string }, i: number) => (
-                                  <li key={i} className="flex gap-2 text-sm text-white/50">
-                                    <CheakCircleIcon className="size-4 md:size-5 shrink-0 mt-0.5" />
-                                    <span> {result.title}</span>
-                                  </li>
-                                ));
-                              }
-                            } catch {
-                              // fall through
-                            }
-                          }
-                          return trimmed.split("\n").filter(line => line.trim()).map((line: string, i: number) => (
-                            <li key={i} className="flex gap-2 text-sm text-white/50">
-                              <CheakCircleIcon className="size-4 md:size-5 shrink-0 mt-0.5" />
-                              <span> {line.trim().replace(/^- /, "")}</span>
-                            </li>
-                          ));
-                        })()}
+                        {(Array.isArray(project.results) ? project.results : JSON.parse(project.results || "[]")).map((result: string | { title?: string }, i: number) => (
+                          <li key={i} className="flex gap-2 text-sm text-white/50">
+                            <CheakCircleIcon className="size-4 md:size-5 shrink-0 mt-0.5" />
+                            <span> {typeof result === "string" ? result : result.title ?? ""}</span>
+                          </li>
+                        ))}
                       </ul>
 
                       <div className="mt-6 flex flex-wrap items-center gap-4">

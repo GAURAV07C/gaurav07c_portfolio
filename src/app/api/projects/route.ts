@@ -60,7 +60,7 @@ export async function POST(request: Request) {
         liveLink: body.liveLink,
         sourceLink: body.sourceLink,
         demoLink: body.demoLink,
-        image: body.image,
+        image: body.image || "/images/project.png",
         isRecent: body.isRecent === true || body.isRecent === "true",
         skills: {
           connectOrCreate: skillTitles.map((title: string) => ({
@@ -84,9 +84,14 @@ export async function PUT(request: Request) {
   try {
     const body = await request.json();
     const skillTitles = Array.isArray(body.skills) ? body.skills : [];
-    
+    const id = body.id || new URL(request.url).pathname.split("/").pop();
+
+    if (!id) {
+      return NextResponse.json({ error: "Project ID is required" }, { status: 400 });
+    }
+
     const updatedProject = await prisma.project.update({
-      where: { id: body.id },
+      where: { id },
       data: {
         company: body.company,
         year: body.year,
@@ -102,7 +107,7 @@ export async function PUT(request: Request) {
         liveLink: body.liveLink,
         sourceLink: body.sourceLink,
         demoLink: body.demoLink,
-        image: body.image,
+        image: body.image || "/images/project.png",
         isRecent: body.isRecent === true || body.isRecent === "true",
         skills: {
           set: [],
