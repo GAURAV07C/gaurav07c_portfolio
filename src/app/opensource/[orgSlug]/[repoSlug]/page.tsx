@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import Link from "next/link";
 import SectionHeader from "@/components/SectionHeader";
 import Card from "@/components/Card";
-import Link from "next/link";
 
 interface Contribution {
   id: string;
@@ -65,7 +65,7 @@ export default function OpenSourceRepoPage() {
               {data.contributions.map((item) => (
                 <Link key={item.slug} href={`/opensource/${orgSlug}/${repoSlug}/${item.slug}`}>
                   <Card className="p-5 md:p-6 hover:border-emerald-300/30 transition-all group cursor-pointer">
-                    <div className="flex items-center gap-2 mb-2">
+                    <div className="flex items-center gap-2 mb-2 flex-wrap">
                       <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border ${
                         item.status === "merged" ? "border-emerald-300/30 bg-emerald-300/10 text-emerald-300" :
                         item.status === "pending" ? "border-amber-300/30 bg-amber-300/10 text-amber-300" :

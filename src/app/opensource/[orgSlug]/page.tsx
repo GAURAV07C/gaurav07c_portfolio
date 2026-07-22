@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import Link from "next/link";
 import SectionHeader from "@/components/SectionHeader";
 import Card from "@/components/Card";
-import Link from "next/link";
 
 interface Repo {
   id: string;
@@ -12,7 +12,6 @@ interface Repo {
   slug: string;
   url: string;
   description: string;
-  _count?: { contributions: number };
 }
 
 interface OrgData {
@@ -59,23 +58,24 @@ export default function OpenSourceOrgPage() {
           {data.repos.length === 0 ? (
             <div className="text-center py-20 text-white/50">No repositories yet.</div>
           ) : (
-            <div className="mt-12 md:mt-20 flex flex-col gap-6">
+            <div className="mt-12 md:mt-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {data.repos.map((repo) => (
                 <Link key={repo.slug} href={`/opensource/${orgSlug}/${repo.slug}`}>
-                  <Card className="p-6 md:p-8 hover:border-emerald-300/30 transition-all group cursor-pointer">
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="flex-1">
-                        <h2 className="font-serif text-xl md:text-2xl text-white group-hover:text-emerald-300 transition-colors">
-                          {repo.name}
-                        </h2>
-                        <p className="text-white/50 text-sm mt-2 line-clamp-2">
-                          {repo.description || "No description"}
+                  <Card className="h-full p-6 md:p-8 hover:border-emerald-300/30 transition-all group cursor-pointer flex flex-col">
+                    <div className="flex-1">
+                      <h2 className="font-serif text-xl md:text-2xl text-white group-hover:text-emerald-300 transition-colors mb-2">
+                        {repo.name}
+                      </h2>
+                      <p className="text-white/50 text-sm line-clamp-2 mb-4">
+                        {repo.description || "No description"}
+                      </p>
+                      {repo.url && (
+                        <p className="text-xs text-white/40 font-mono mb-3 truncate">
+                          {repo.url}
                         </p>
-                        {repo.url && (
-                          <p className="text-xs text-white/40 mt-2 font-mono">
-                            {repo.url}
-                          </p>
-                        )}
+                      )}
+                      <div className="flex items-center justify-end text-xs text-emerald-300">
+                        <span className="group-hover:translate-x-1 transition-transform">View contributions →</span>
                       </div>
                     </div>
                   </Card>

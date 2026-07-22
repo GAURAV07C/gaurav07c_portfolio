@@ -37,21 +37,20 @@ export default function OpenSourcePage() {
           {orgsList.length === 0 ? (
             <div className="text-center py-20 text-white/50">No organisations yet.</div>
           ) : (
-            <div className="mt-12 md:mt-20 flex flex-col gap-6">
+            <div className="mt-12 md:mt-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {orgsList.map((org) => (
                 <Link key={org.slug} href={`/opensource/${org.slug}`}>
-                  <Card className="p-6 md:p-8 hover:border-emerald-300/30 transition-all group cursor-pointer">
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="flex-1">
-                        <h2 className="font-serif text-xl md:text-2xl text-white group-hover:text-emerald-300 transition-colors">
-                          {org.name}
-                        </h2>
-                        <p className="text-white/50 text-sm mt-2 line-clamp-2">
-                          {org.description || "No description"}
-                        </p>
-                        <p className="text-xs text-white/40 mt-2">
-                          {org.repos.length} {org.repos.length === 1 ? "repository" : "repositories"}
-                        </p>
+                  <Card className="h-full p-6 md:p-8 hover:border-emerald-300/30 transition-all group cursor-pointer flex flex-col">
+                    <div className="flex-1">
+                      <h2 className="font-serif text-xl md:text-2xl text-white group-hover:text-emerald-300 transition-colors mb-2">
+                        {org.name}
+                      </h2>
+                      <p className="text-white/50 text-sm line-clamp-2 mb-4">
+                        {org.description || "No description"}
+                      </p>
+                      <div className="flex items-center justify-between text-xs text-white/40">
+                        <span>{org.repos.length} {org.repos.length === 1 ? "repository" : "repositories"}</span>
+                        <span className="text-emerald-300 group-hover:translate-x-1 transition-transform">→</span>
                       </div>
                     </div>
                   </Card>
