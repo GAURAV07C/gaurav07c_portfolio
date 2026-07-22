@@ -132,7 +132,24 @@ export default function AdminOpenSourceOrgPage() {
 
   return (
     <div className="max-w-5xl">
-      <AdminPageHeader title={org.name} description={org.description || ""} action={<AddButton onClick={openAddModal} label="+ Add Repository" loading={loading} disabled={loading || !!deleteId} />} />
+      <div className="flex items-center gap-6 mb-8">
+        <div className="relative w-20 h-20 md:w-24 md:h-24 rounded-2xl overflow-hidden flex-shrink-0 border border-white/10 bg-gray-950 flex items-center justify-center">
+          {org.image ? (
+            <img
+              src={org.image}
+              alt={org.name}
+              className="w-full h-full object-contain p-2"
+            />
+          ) : (
+            <span className="text-3xl font-bold text-white/30">
+              {org.name.charAt(0).toUpperCase()}
+            </span>
+          )}
+        </div>
+        <div className="min-w-0">
+          <AdminPageHeader title={org.name} description={org.description || ""} action={<AddButton onClick={openAddModal} label="+ Add Repository" loading={loading} disabled={loading || !!deleteId} />} />
+        </div>
+      </div>
 
       <div className="mb-6">
         <h2 className="text-2xl font-semibold text-white mb-2">Repositories</h2>
