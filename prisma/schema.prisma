@@ -64,6 +64,53 @@ model Blog {
   comments  Comment[]
 }
 
+model Organisation {
+  id          String    @id @default(cuid())
+  name        String    @unique
+  slug        String    @unique
+  image       String?
+  description String?
+  repos       Repository[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Repository {
+  id             String        @id @default(cuid())
+  organisationId String?
+  organisation   Organisation? @relation(fields: [organisationId], references: [id], onDelete: Cascade)
+  name           String
+  slug           String
+  url            String
+  image          String?
+  description    String?
+  contributions  OpenSource[]
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  @@unique([organisationId, slug])
+}
+
+model OpenSource {
+  id            String   @id @default(cuid())
+  repoId        String?
+  repo          Repository? @relation(fields: [repoId], references: [id], onDelete: SetNull)
+  title         String
+  slug          String   @unique
+  organisation  String?
+  description   String
+  repoUrl       String?
+  prUrl         String?
+  type          String   @default("feature") // bug-fix | feature | documentation | enhancement
+  techStack     String   @default("[]")
+  date          String
+  status        String   @default("merged") // merged | pending | closed
+  image         String?
+  createdAt     DateTime @default(now())
+  views         Int      @default(0)
+  comments      Comment[]
+}
+
 model Skill {
   id        String    @id @default(cuid())
   title     String    @unique
@@ -151,7 +198,9 @@ model Comment {
   projectId String?
   project   Project? @relation(fields: [projectId], references: [id])
   docPageId String?
-  docPage   DocPage? @relation(fields: [docPageId], references: [id])
+  docPage   DocPage?  @relation(fields: [docPageId], references: [id])
+  openSourceId String?
+  openSource   OpenSource? @relation(fields: [openSourceId], references: [id])
   createdAt DateTime @default(now())
 }
 

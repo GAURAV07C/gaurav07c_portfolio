@@ -26,10 +26,11 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
             <Link href="/admin/skills" className="hover:text-emerald-300 transition">Skills</Link>
             <Link href="/admin/education" className="hover:text-emerald-300 transition">Education</Link>
             <Link href="/admin/experience" className="hover:text-emerald-300 transition">Experience</Link>
-            <Link href="/admin/testimonials" className="hover:text-emerald-300 transition">Testimonials</Link>
-            <Link href="/admin/hobbies" className="hover:text-emerald-300 transition">Hobbies</Link>
-            <Link href="/admin/tape-words" className="hover:text-emerald-300 transition">Tape Words</Link>
-            <Link href="/admin/messages" className="hover:text-emerald-300 transition">Messages</Link>
+             <Link href="/admin/testimonials" className="hover:text-emerald-300 transition">Testimonials</Link>
+             <Link href="/admin/hobbies" className="hover:text-emerald-300 transition">Hobbies</Link>
+             <Link href="/admin/tape-words" className="hover:text-emerald-300 transition">Tape Words</Link>
+             <Link href="/admin/messages" className="hover:text-emerald-300 transition">Messages</Link>
+             <Link href="/admin/opensource" className="hover:text-emerald-300 transition">Open Source</Link>
           </nav>
           <div className="mt-auto flex flex-col gap-3">
             <Link href="/" className="text-sm text-white/40 hover:text-white transition">

@@ -8,6 +8,7 @@ import { Footer } from "@/sections/Footer";
 import { Header } from "@/sections/Header";
 import { HeroSection } from "@/sections/Hero";
 import Introduction from "@/sections/Introduction";
+import { OpenSourceSection } from "@/sections/OpenSource";
 import { ProjectsSection } from "@/sections/Projects";
 import Skill from "@/sections/Skill";
 import { TapeSection } from "@/sections/Tape";
@@ -30,6 +31,7 @@ export default function Home() {
       <Experience />
       <Education />
       <ProjectsSection />
+      <OpenSourceSection />
       <TapeSection />
       <TestimonialsSection />
       <Aboutme  />
