@@ -6,6 +6,7 @@ import Link from "next/link";
 import SectionHeader from "@/components/SectionHeader";
 import Card from "@/components/Card";
 import BlurFade from "@/components/BlurFade";
+import Image from "next/image";
 
 interface Repo {
   id: string;
@@ -38,7 +39,39 @@ export default function OpenSourceOrgPage() {
       .catch(() => setLoading(false));
   }, [orgSlug]);
 
-  if (loading) return <div className="text-center py-20 text-white/50">Loading...</div>;
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-950 text-white">
+        <section className="py-16 lg:py-24">
+          <div className="container">
+            <div className="mb-6">
+              <Link href="/opensource" className="text-sm text-emerald-300 hover:text-emerald-200 transition-colors">
+                ← Back to all organisations
+              </Link>
+            </div>
+            <div className="flex items-center gap-6 mb-8">
+              <div className="w-20 h-20 md:w-24 md:h-24 rounded-2xl bg-white/5 border border-white/10 animate-pulse" />
+              <div className="space-y-3">
+                <div className="h-6 bg-white/10 rounded w-48 animate-pulse" />
+                <div className="h-4 bg-white/5 rounded w-64 animate-pulse" />
+              </div>
+            </div>
+            <div className="mt-12 md:mt-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="rounded-2xl border border-white/10 bg-[#0a111f] p-6 h-full animate-pulse">
+                  <div className="space-y-3">
+                    <div className="h-5 bg-white/10 rounded w-3/4" />
+                    <div className="h-3 bg-white/5 rounded w-full" />
+                    <div className="h-3 bg-white/5 rounded w-1/2" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      </div>
+    );
+  }
   if (!data) return <div className="text-center py-20 text-white/50">Organisation not found</div>;
 
   return (
@@ -52,17 +85,20 @@ export default function OpenSourceOrgPage() {
           </div>
 
           <div className="flex items-center gap-6 mb-8">
-            <div className="relative w-20 h-20 md:w-24 md:h-24 rounded-2xl overflow-hidden flex-shrink-0 border border-white/10 bg-gray-950 flex items-center justify-center">
+            <div className="relative w-20 h-20 md:w-24 md:h-24 rounded-2xl overflow-hidden flex-shrink-0 border border-white/10 bg-gray-950">
               {data.image ? (
-                <img
+                <Image
                   src={data.image}
                   alt={data.name}
-                  className="w-full h-full object-contain p-2"
+                  fill
+                  className="object-contain p-2"
                 />
               ) : (
-                <span className="text-3xl font-bold text-white/30">
-                  {data.name.charAt(0).toUpperCase()}
-                </span>
+                <div className="w-full h-full flex items-center justify-center">
+                  <span className="text-3xl font-bold text-white/30">
+                    {data.name.charAt(0).toUpperCase()}
+                  </span>
+                </div>
               )}
             </div>
             <div>

@@ -1,24 +1,16 @@
 const { PrismaClient } = require('@prisma/client');
+const bcrypt = require('bcryptjs');
 const prisma = new PrismaClient();
 
 async function main() {
   await prisma.user.deleteMany();
-  await prisma.project.deleteMany();
-  await prisma.blog.deleteMany();
-  await prisma.siteSettings.deleteMany();
-  await prisma.tapeWord.deleteMany();
-  await prisma.heroOrbit.deleteMany();
-  await prisma.hobby.deleteMany();
-  await prisma.tool.deleteMany();
-  await prisma.education.deleteMany();
-  await prisma.experience.deleteMany();
-  await prisma.testimonial.deleteMany();
-  await prisma.docTopic.deleteMany();
+
+  const hashedPassword = await bcrypt.hash('admin123', 10);
 
   await prisma.user.create({
     data: {
       email: "admin@example.com",
-      password: "admin123"
+      password: hashedPassword
     }
   });
 

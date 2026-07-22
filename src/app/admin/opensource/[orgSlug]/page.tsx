@@ -10,7 +10,8 @@ import { AddButton } from "@/components/admin/AddButton";
 import { EmptyState } from "@/components/admin/EmptyState";
 import { FormField, Input, TextArea } from "@/components/admin/FormComponents";
 import { useCachedFetch, useInvalidateCache } from "@/hooks/useCachedFetch";
-import { Eye, Pencil, Trash2 } from "lucide-react";
+import { AdminItemCard } from "@/components/admin/AdminItemCard";
+import Image from "next/image";
 
 interface Organisation {
   id: string;
@@ -133,17 +134,20 @@ export default function AdminOpenSourceOrgPage() {
   return (
     <div className="max-w-5xl">
       <div className="flex items-center gap-6 mb-8">
-        <div className="relative w-20 h-20 md:w-24 md:h-24 rounded-2xl overflow-hidden flex-shrink-0 border border-white/10 bg-gray-950 flex items-center justify-center">
+        <div className="relative w-20 h-20 md:w-24 md:h-24 rounded-2xl overflow-hidden flex-shrink-0 border border-white/10 bg-gray-950">
           {org.image ? (
-            <img
+            <Image
               src={org.image}
               alt={org.name}
-              className="w-full h-full object-contain p-2"
+              fill
+              className="object-contain p-2"
             />
           ) : (
-            <span className="text-3xl font-bold text-white/30">
-              {org.name.charAt(0).toUpperCase()}
-            </span>
+            <div className="w-full h-full flex items-center justify-center">
+              <span className="text-3xl font-bold text-white/30">
+                {org.name.charAt(0).toUpperCase()}
+              </span>
+            </div>
           )}
         </div>
         <div className="min-w-0">
@@ -164,51 +168,28 @@ export default function AdminOpenSourceOrgPage() {
         <div className="flex flex-col gap-4">
           {repos.map((repo, index) => (
             <BlurFade key={repo.id} delay={index * 0.05}>
-              <div className="bg-[#0a111f] border border-white/10 rounded-2xl p-5 hover:border-emerald-300/30 transition-all group">
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-2">
-                      <h3 className="text-base font-semibold text-white group-hover:text-emerald-300 transition-colors truncate">
-                        {repo.name}
-                      </h3>
-                      <span className="text-[10px] text-white/30 font-mono border border-white/5 px-2 py-0.5 rounded-full">
-                        {repo.slug}
-                      </span>
-                    </div>
-                    {repo.url && (
-                      <a href={repo.url} target="_blank" rel="noopener noreferrer" className="text-xs text-emerald-300/70 hover:text-emerald-300 font-mono mb-2 block truncate transition-colors">
-                        {repo.url}
-                      </a>
-                    )}
-                    <p className="text-white/50 text-sm leading-relaxed line-clamp-2">
-                      {repo.description || "No description"}
-                    </p>
-                  </div>
-                  <div className="flex gap-1.5 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity flex-shrink-0">
-                    <button
-                      onClick={() => router.push(`/admin/opensource/${org.slug}/${repo.slug}`)}
-                      className="text-white/60 hover:text-emerald-300 p-2 rounded-lg transition-all hover:drop-shadow-[0_0_8px_rgba(16,185,129,0.8)]"
-                      title="View"
-                    >
-                      <Eye className="size-4" />
-                    </button>
-                    <button
-                      onClick={() => openEditModal(repo)}
-                      className="text-white/60 hover:text-emerald-300 p-2 rounded-lg transition-all hover:drop-shadow-[0_0_8px_rgba(16,185,129,0.8)]"
-                      title="Edit"
-                    >
-                      <Pencil className="size-4" />
-                    </button>
-                    <button
-                      onClick={() => setDeleteId(repo.id)}
-                      className="text-white/60 hover:text-red-400 p-2 rounded-lg transition-all hover:drop-shadow-[0_0_8px_rgba(248,113,113,0.8)]"
-                      title="Delete"
-                    >
-                      <Trash2 className="size-4" />
-                    </button>
-                  </div>
+              <AdminItemCard
+                title={repo.name}
+                subtitle={
+                  <span className="flex items-center gap-2 flex-wrap">
+                    <span className="text-[10px] text-white/30 font-mono border border-white/5 px-2 py-0.5 rounded-full">
+                      {repo.slug}
+                    </span>
+                  </span>
+                }
+                onView={() => router.push(`/admin/opensource/${org.slug}/${repo.slug}`)}
+                onEdit={() => openEditModal(repo)}
+                onDelete={() => setDeleteId(repo.id)}
+              >
+                <div className="space-y-1">
+                  {repo.url && (
+                    <a href={repo.url} target="_blank" rel="noopener noreferrer" className="text-xs text-emerald-300/70 hover:text-emerald-300 font-mono block truncate transition-colors">
+                      {repo.url}
+                    </a>
+                  )}
+                  <p>{repo.description || "No description"}</p>
                 </div>
-              </div>
+              </AdminItemCard>
             </BlurFade>
           ))}
         </div>

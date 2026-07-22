@@ -4,8 +4,8 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import SectionHeader from "@/components/SectionHeader";
 import Card from "@/components/Card";
-import BlurFade from "@/components/BlurFade";
 import { useCachedFetch } from "@/hooks/useCachedFetch";
+import Image from "next/image";
 
 interface Organisation {
   id: string;
@@ -76,17 +76,20 @@ export const OpenSourceSection = () => {
               <Link href={`/opensource/${org.slug}`} className="block h-full">
                 <Card className="p-6 md:p-8 hover:border-emerald-300/30 transition-all group cursor-pointer h-full">
                    <div className="flex items-center gap-5 mb-5">
-                     <div className="relative w-14 h-14 md:w-16 md:h-16 rounded-xl overflow-hidden flex-shrink-0 border border-white/10 bg-gray-950 flex items-center justify-center">
+                     <div className="relative w-14 h-14 md:w-16 md:h-16 rounded-xl overflow-hidden flex-shrink-0 border border-white/10 bg-gray-950">
                        {org.image ? (
-                         <img
+                         <Image
                            src={org.image}
                            alt={org.name}
-                           className="w-full h-full object-contain p-1"
+                           fill
+                           className="object-contain p-1"
                          />
                        ) : (
-                         <span className="text-xl font-bold text-white/30">
-                           {org.name.charAt(0).toUpperCase()}
-                         </span>
+                         <div className="w-full h-full flex items-center justify-center">
+                           <span className="text-xl font-bold text-white/30">
+                             {org.name.charAt(0).toUpperCase()}
+                           </span>
+                         </div>
                        )}
                      </div>
                      <div className="min-w-0">

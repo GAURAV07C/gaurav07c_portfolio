@@ -41,7 +41,36 @@ export default function OpenSourceRepoPage() {
       .catch(() => setLoading(false));
   }, [orgSlug, repoSlug]);
 
-  if (loading) return <div className="text-center py-20 text-white/50">Loading...</div>;
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-950 text-white">
+        <section className="py-16 lg:py-24">
+          <div className="container max-w-4xl">
+            <div className="mb-6">
+              <div className="h-4 bg-white/10 rounded w-32 animate-pulse" />
+            </div>
+            <div className="mb-10 space-y-3">
+              <div className="h-8 bg-white/10 rounded w-64 animate-pulse" />
+              <div className="h-4 bg-white/5 rounded w-48 animate-pulse" />
+            </div>
+            <div className="mt-12 md:mt-20 flex flex-col gap-4">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="rounded-2xl border border-white/10 bg-[#0a111f] p-5 md:p-6 animate-pulse">
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="h-5 bg-white/10 rounded-full w-16" />
+                    <div className="h-5 bg-white/10 rounded-full w-20" />
+                    <div className="h-4 bg-white/5 rounded w-24" />
+                  </div>
+                  <div className="h-5 bg-white/10 rounded w-3/4 mb-2" />
+                  <div className="h-3 bg-white/5 rounded w-full" />
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      </div>
+    );
+  }
   if (!data) return <div className="text-center py-20 text-white/50">Repository not found</div>;
 
   return (
