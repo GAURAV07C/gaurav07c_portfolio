@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import SectionHeader from "@/components/SectionHeader";
-import Card from "@/components/Card";
 import BlurFade from "@/components/BlurFade";
 import { useCachedFetch } from "@/hooks/useCachedFetch";
 import Image from "next/image";
@@ -69,42 +68,46 @@ export default function OpenSourcePage() {
             <div className="mt-12 md:mt-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {orgsList.map((org, index) => (
                 <BlurFade key={org.slug} delay={index * 0.05}>
-                  <Link href={`/opensource/${org.slug}`}>
-                    <Card className="h-full p-6 md:p-8 hover:border-emerald-300/30 transition-all group cursor-pointer flex flex-col">
-                      <div className="flex items-center gap-5 mb-5">
-                        <div className="relative w-14 h-14 md:w-16 md:h-16 rounded-xl overflow-hidden flex-shrink-0 border border-white/10 bg-gray-950">
-                          {org.image ? (
-                            <Image
-                              src={org.image}
-                              alt={org.name}
-                              fill
-                              className="object-contain p-1"
-                            />
-                          ) : (
-                            <div className="w-full h-full flex items-center justify-center">
-                              <span className="text-xl font-bold text-white/30">
-                                {org.name.charAt(0).toUpperCase()}
-                              </span>
-                            </div>
-                          )}
+                  <Link href={`/opensource/${org.slug}`} className="block h-full group/card">
+                    <div className="relative h-full rounded-2xl border border-white/10 bg-gray-900/50 p-6 md:p-8 transition-all duration-300 hover:border-emerald-300/40 hover:bg-gray-900/80 overflow-hidden">
+                      <div className="absolute inset-0 bg-gradient-to-br from-emerald-300/5 to-transparent opacity-0 transition-opacity duration-300 group-hover/card:opacity-100" />
+
+                      <div className="relative">
+                        <div className="flex items-center gap-5 mb-5">
+                          <div className="relative w-14 h-14 md:w-16 md:h-16 rounded-xl overflow-hidden flex-shrink-0 border border-white/10 bg-gray-950">
+                            {org.image ? (
+                              <Image
+                                src={org.image}
+                                alt={org.name}
+                                fill
+                                className="object-contain p-1"
+                              />
+                            ) : (
+                              <div className="w-full h-full flex items-center justify-center">
+                                <span className="text-xl font-bold text-white/30">
+                                  {org.name.charAt(0).toUpperCase()}
+                                </span>
+                              </div>
+                            )}
+                          </div>
+                          <div className="min-w-0">
+                            <h2 className="font-serif text-xl md:text-2xl text-white group-hover/card:text-emerald-300 transition-colors truncate">
+                              {org.name}
+                            </h2>
+                            <p className="text-white/40 text-xs font-mono mt-1">
+                              {org.repos.length} {org.repos.length === 1 ? "repository" : "repositories"}
+                            </p>
+                          </div>
                         </div>
-                        <div className="min-w-0">
-                          <h2 className="font-serif text-xl md:text-2xl text-white group-hover:text-emerald-300 transition-colors truncate">
-                            {org.name}
-                          </h2>
-                          <p className="text-white/40 text-xs font-mono mt-1">
-                            {org.repos.length} {org.repos.length === 1 ? "repository" : "repositories"}
-                          </p>
+                        <p className="text-white/50 text-sm leading-relaxed line-clamp-2 mb-5">
+                          {org.description || "No description"}
+                        </p>
+                        <div className="flex items-center justify-between text-xs text-white/40 mt-auto">
+                          <span>Explore contributions</span>
+                          <span className="text-emerald-300 group-hover/card:translate-x-1 transition-transform">→</span>
                         </div>
                       </div>
-                      <p className="text-white/50 text-sm leading-relaxed line-clamp-2 mb-5">
-                        {org.description || "No description"}
-                      </p>
-                      <div className="flex items-center justify-between text-xs text-white/40 mt-auto">
-                        <span>Explore contributions</span>
-                        <span className="text-emerald-300 group-hover:translate-x-1 transition-transform">→</span>
-                      </div>
-                    </Card>
+                    </div>
                   </Link>
                 </BlurFade>
               ))}

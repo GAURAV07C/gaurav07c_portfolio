@@ -3,7 +3,6 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import SectionHeader from "@/components/SectionHeader";
-import Card from "@/components/Card";
 import { useCachedFetch } from "@/hooks/useCachedFetch";
 import Image from "next/image";
 
@@ -64,7 +63,7 @@ export const OpenSourceSection = () => {
           description="My contributions to open source projects across different organisations."
         />
 
-        <motion.div className="mt-10 md:mt-20 grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="mt-10 md:mt-20 grid grid-cols-1 md:grid-cols-3 gap-6">
           {display.map((org, index) => (
             <motion.div
               key={org.id}
@@ -73,56 +72,64 @@ export const OpenSourceSection = () => {
               transition={{ duration: 0.4, delay: index * 0.1 }}
               viewport={{ once: true }}
             >
-              <Link href={`/opensource/${org.slug}`} className="block h-full">
-                <Card className="p-6 md:p-8 hover:border-emerald-300/30 transition-all group cursor-pointer h-full">
-                   <div className="flex items-center gap-5 mb-5">
-                     <div className="relative w-14 h-14 md:w-16 md:h-16 rounded-xl overflow-hidden flex-shrink-0 border border-white/10 bg-gray-950">
-                       {org.image ? (
-                         <Image
-                           src={org.image}
-                           alt={org.name}
-                           fill
-                           className="object-contain p-1"
-                         />
-                       ) : (
-                         <div className="w-full h-full flex items-center justify-center">
-                           <span className="text-xl font-bold text-white/30">
-                             {org.name.charAt(0).toUpperCase()}
-                           </span>
-                         </div>
-                       )}
-                     </div>
-                     <div className="min-w-0">
-                      <h3 className="font-serif text-lg md:text-xl text-white group-hover:text-emerald-300 transition-colors truncate">
-                        {org.name}
-                      </h3>
-                      <p className="text-white/40 text-xs font-mono mt-1">
-                        {org.repos.length} {org.repos.length === 1 ? "repository" : "repositories"}
-                      </p>
+              <Link href={`/opensource/${org.slug}`} className="block h-full group/card">
+                <div className="relative h-full rounded-2xl border border-white/10 bg-gray-900/50 p-6 md:p-8 transition-all duration-300 hover:border-emerald-300/40 hover:bg-gray-900/80 overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-emerald-300/5 to-transparent opacity-0 transition-opacity duration-300 group-hover/card:opacity-100" />
+
+                  <div className="relative">
+                    <div className="flex items-center gap-5 mb-5">
+                      <div className="relative w-14 h-14 md:w-16 md:h-16 rounded-xl overflow-hidden flex-shrink-0 border border-white/10 bg-gray-950">
+                        {org.image ? (
+                          <Image
+                            src={org.image}
+                            alt={org.name}
+                            fill
+                            className="object-contain p-1"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center">
+                            <span className="text-xl font-bold text-white/30">
+                              {org.name.charAt(0).toUpperCase()}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                      <div className="min-w-0">
+                        <h3 className="font-serif text-lg md:text-xl text-white group-hover/card:text-emerald-300 transition-colors truncate">
+                          {org.name}
+                        </h3>
+                        <p className="text-white/40 text-xs font-mono mt-1">
+                          {org.repos.length} {org.repos.length === 1 ? "repository" : "repositories"}
+                        </p>
+                      </div>
+                    </div>
+                    <p className="text-white/50 text-sm leading-relaxed line-clamp-2">
+                      {org.description || "Open source organisation"}
+                    </p>
+                    <div className="flex items-center gap-1.5 text-xs text-emerald-300 mt-5 font-medium">
+                      <span>View contributions</span>
+                      <svg className="size-3.5 transition-transform group-hover/card:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M5 12h14" />
+                        <path d="m12 5 7 7-7 7" />
+                      </svg>
                     </div>
                   </div>
-                  <p className="text-white/50 text-sm leading-relaxed line-clamp-2">
-                    {org.description || "Open source organisation"}
-                  </p>
-                  <div className="flex items-center gap-1.5 text-xs text-emerald-300 mt-5 font-medium">
-                    <span>View organisations</span>
-                    <svg className="size-3.5 transition-transform group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M5 12h14" />
-                      <path d="m12 5 7 7-7 7" />
-                    </svg>
-                  </div>
-                </Card>
+                </div>
               </Link>
             </motion.div>
           ))}
-        </motion.div>
+        </div>
 
         <div className="text-center mt-12 md:mt-16">
           <Link
             href="/opensource"
-            className="inline-flex items-center gap-2 bg-white text-gray-950 font-semibold px-6 h-10 rounded-lg hover:bg-white/80 transition-colors text-sm"
+            className="inline-flex items-center gap-2 bg-emerald-300 text-gray-950 font-semibold px-8 h-12 rounded-xl hover:bg-emerald-400 transition-all duration-200 shadow-lg shadow-emerald-300/10 hover:shadow-emerald-300/20 text-sm"
           >
             View All Organisations
+            <svg className="size-4 transition-transform group-hover:translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M5 12h14" />
+              <path d="m12 5 7 7-7 7" />
+            </svg>
           </Link>
         </div>
       </div>
