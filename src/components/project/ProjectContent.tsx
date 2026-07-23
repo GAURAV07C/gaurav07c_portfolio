@@ -14,35 +14,18 @@ interface ProjectContentProps {
   skills?: { title: string }[];
 }
 
-function parseJsonList(value: string | undefined): Array<string | { title?: string }> {
+function parseMarkdownList(value: string): string[] {
   if (!value) return [];
   const trimmed = value.trim();
   if (!trimmed) return [];
-  try {
-    const parsed = JSON.parse(trimmed);
-    if (Array.isArray(parsed)) return parsed;
-  } catch {
-    // ignore
-  }
-  return [];
+  return trimmed.split("\n").map(line => line.replace(/^[-•*]\s+/, "").trim()).filter(Boolean);
 }
 
-function renderMarkdownList(value: string) {
+function getTechItems(value: string): string[] {
+  if (!value) return [];
   const trimmed = value.trim();
   if (!trimmed) return [];
-  if (trimmed.startsWith("[") && trimmed.endsWith("]")) {
-    try {
-      const parsed = JSON.parse(trimmed);
-      if (Array.isArray(parsed)) return parsed;
-    } catch {
-      // fall through
-    }
-  }
-  return trimmed.split("\n").filter((line) => line.trim());
-}
-
-function getTitle(item: string | { title?: string }): string {
-  return typeof item === "string" ? item : item?.title || "";
+  return trimmed.split("\n").map(line => line.replace(/^[-•*]\s+/, "").trim()).filter(Boolean);
 }
 
 export function ProjectContent({
@@ -55,17 +38,17 @@ export function ProjectContent({
   tags,
   skills,
 }: ProjectContentProps) {
-  const parsedResults = renderMarkdownList(results);
-  const parsedTechStack = parseJsonList(techStack);
-  const parsedFeatures = renderMarkdownList(features || "");
-  const parsedChallenges = renderMarkdownList(challenges || "");
-  const parsedOutcomes = renderMarkdownList(outcomes || "");
-  const parsedTags = parseJsonList(tags || "");
+  const parsedResults = parseMarkdownList(results);
+  const parsedTechStack = getTechItems(techStack);
+  const parsedFeatures = parseMarkdownList(features || "");
+  const parsedChallenges = parseMarkdownList(challenges || "");
+  const parsedOutcomes = parseMarkdownList(outcomes || "");
+  const parsedTags = tags ? tags.split(",").map(t => t.trim()).filter(Boolean) : [];
   const skillTitles = Array.isArray(skills) ? skills.map((s) => s.title).filter(Boolean) : [];
 
   const allTechItems = [
-    ...parsedTechStack.map((item) => getTitle(item)),
-    ...skillTitles.filter((title) => !parsedTechStack.some((t) => getTitle(t) === title)),
+    ...parsedTechStack,
+    ...skillTitles.filter((title) => !parsedTechStack.includes(title)),
   ];
 
   return (
@@ -81,9 +64,9 @@ export function ProjectContent({
         <div id="features" className="mb-10">
           <h2 className="text-2xl font-serif text-white mb-4">Key Features</h2>
           <ul className="flex flex-col gap-1">
-            {parsedFeatures.map((item: string | { title?: string }, i: number) => (
+            {parsedFeatures.map((item, i) => (
               <li key={i} className="text-white/70 text-base leading-relaxed">
-                <MarkdownPreview content={getTitle(item)} />
+                <MarkdownPreview content={item} />
               </li>
             ))}
           </ul>
@@ -94,9 +77,9 @@ export function ProjectContent({
         <div id="challenges" className="mb-10">
           <h2 className="text-2xl font-serif text-white mb-4">Challenges</h2>
           <ul className="flex flex-col gap-1">
-            {parsedChallenges.map((item: string | { title?: string }, i: number) => (
+            {parsedChallenges.map((item, i) => (
               <li key={i} className="text-white/70 text-base leading-relaxed">
-                <MarkdownPreview content={getTitle(item)} />
+                <MarkdownPreview content={item} />
               </li>
             ))}
           </ul>
@@ -107,9 +90,9 @@ export function ProjectContent({
         <div id="outcomes" className="mb-10">
           <h2 className="text-2xl font-serif text-white mb-4">Outcomes</h2>
           <ul className="flex flex-col gap-1">
-            {parsedOutcomes.map((item: string | { title?: string }, i: number) => (
+            {parsedOutcomes.map((item, i) => (
               <li key={i} className="text-white/70 text-base leading-relaxed">
-                <MarkdownPreview content={getTitle(item)} />
+                <MarkdownPreview content={item} />
               </li>
             ))}
           </ul>
@@ -120,9 +103,9 @@ export function ProjectContent({
         <div id="results" className="mb-10">
           <h2 className="text-2xl font-serif text-white mb-4">Key Results</h2>
           <ul className="flex flex-col gap-1">
-            {parsedResults.map((item: string | { title?: string }, i: number) => (
+            {parsedResults.map((item, i) => (
               <li key={i} className="text-white/70 text-base leading-relaxed">
-                <MarkdownPreview content={getTitle(item)} />
+                <MarkdownPreview content={item} />
               </li>
             ))}
           </ul>
@@ -149,12 +132,12 @@ export function ProjectContent({
         <div id="tags" className="mb-10">
           <h2 className="text-2xl font-serif text-white mb-4">Tags</h2>
           <div className="flex flex-wrap gap-2">
-            {parsedTags.map((tag: string | { title?: string }, i: number) => (
+            {parsedTags.map((tag, i) => (
               <span
-                key={typeof tag === "string" ? tag : (tag.title ?? i)}
+                key={tag + i}
                 className="inline-flex items-center rounded-full border border-emerald-300/20 bg-emerald-300/10 px-3 py-1 text-xs font-semibold text-emerald-300 tracking-wide"
               >
-                {getTitle(tag)}
+                {tag}
               </span>
             ))}
           </div>

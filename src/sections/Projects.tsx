@@ -22,6 +22,11 @@ export const ProjectsSection = () => {
     return null;
   }
 
+  const getResults = (results: string) => {
+    if (!results) return [];
+    return results.split("\n").map(line => line.replace(/^[-•*]\s+/, "").trim()).filter(Boolean);
+  };
+
   return (
     <section id="project" className="py-16 lg:py-24">
       <div className="container">
@@ -59,10 +64,10 @@ export const ProjectsSection = () => {
                         {project.title}
                       </h3>
                       <ul className="flex flex-col gap-3 mt-4 md:mt-5">
-                        {(Array.isArray(project.results) ? project.results : JSON.parse(project.results || "[]")).map((result: string | { title?: string }, i: number) => (
+                        {getResults(project.results).map((result, i) => (
                           <li key={i} className="flex gap-2 text-sm text-white/50">
                             <CheakCircleIcon className="size-4 md:size-5 shrink-0 mt-0.5" />
-                            <span> {typeof result === "string" ? result : result.title ?? ""}</span>
+                            <span>{result}</span>
                           </li>
                         ))}
                       </ul>

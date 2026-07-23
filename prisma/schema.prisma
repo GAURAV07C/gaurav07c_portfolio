@@ -31,19 +31,19 @@ model Project {
   year        String
   title       String
   slug        String   @unique
-  results     String   @default("[]")
-  techStack   String   @default("[]")
+  results     String   @default("")
+  techStack   String   @default("")
   liveLink    String?
   sourceLink  String?
   demoLink    String?
   image       String
   createdAt   DateTime @default(now())
   isRecent    Boolean  @default(false)
-  challenges  String   @default("[]")
+  challenges  String   @default("")
   description String   @default("")
-  features    String   @default("[]")
-  outcomes    String   @default("[]")
-  tags        String   @default("[]")
+  features    String   @default("")
+  outcomes    String   @default("")
+  tags        String   @default("")
   views       Int      @default(0)
   skills      Skill[]  @relation("ProjectToSkill")
   comments    Comment[]

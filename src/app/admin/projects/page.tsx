@@ -45,12 +45,12 @@ function ProjectsInner() {
     title: "",
     slug: "",
     description: "",
-    results: "[]",
-    features: "[]",
-    challenges: "[]",
-    outcomes: "[]",
-    techStack: "[]",
-    tags: "[]",
+    results: "",
+    features: "",
+    challenges: "",
+    outcomes: "",
+    techStack: "",
+    tags: "",
     liveLink: "",
     sourceLink: "",
     demoLink: "",
@@ -97,12 +97,12 @@ function ProjectsInner() {
       title: "",
       slug: "",
       description: "",
-      results: "[]",
-      features: "[]",
-      challenges: "[]",
-      outcomes: "[]",
-      techStack: "[]",
-      tags: "[]",
+      results: "",
+      features: "",
+      challenges: "",
+      outcomes: "",
+      techStack: "",
+      tags: "",
       liveLink: "",
       sourceLink: "",
       demoLink: "",
@@ -120,12 +120,12 @@ function ProjectsInner() {
       title: item.title || "",
       slug: item.slug || "",
       description: item.description || "",
-      results: item.results || "[]",
-      features: item.features || "[]",
-      challenges: item.challenges || "[]",
-      outcomes: item.outcomes || "[]",
-      techStack: item.techStack || "[]",
-      tags: item.tags || "[]",
+      results: item.results || "",
+      features: item.features || "",
+      challenges: item.challenges || "",
+      outcomes: item.outcomes || "",
+      techStack: item.techStack || "",
+      tags: item.tags || "",
       liveLink: item.liveLink || "",
       sourceLink: item.sourceLink || "",
       demoLink: item.demoLink || "",
@@ -144,12 +144,12 @@ function ProjectsInner() {
       title: "",
       slug: "",
       description: "",
-      results: "[]",
-      features: "[]",
-      challenges: "[]",
-      outcomes: "[]",
-      techStack: "[]",
-      tags: "[]",
+      results: "",
+      features: "",
+      challenges: "",
+      outcomes: "",
+      techStack: "",
+      tags: "",
       liveLink: "",
       sourceLink: "",
       demoLink: "",
@@ -163,22 +163,19 @@ function ProjectsInner() {
   };
 
   const toggleSkill = (skillTitle: string) => {
-    let newTechStack: string[];
-    try {
-      newTechStack = JSON.parse(formData.techStack);
-    } catch {
-      newTechStack = [];
-    }
-
-    if (newTechStack.includes(skillTitle)) {
-      newTechStack = newTechStack.filter((s: string) => s !== skillTitle);
+    const current = formData.techStack || "";
+    const items = current.split("\n").map(line => line.replace(/^[-•*]\s*/, "").trim()).filter(Boolean);
+    
+    const index = items.indexOf(skillTitle);
+    if (index >= 0) {
+      items.splice(index, 1);
     } else {
-      newTechStack.push(skillTitle);
+      items.push(skillTitle);
     }
-
+    
     setFormData(prev => ({
       ...prev,
-      techStack: JSON.stringify(newTechStack),
+      techStack: items.map(item => `- ${item}`).join("\n"),
     }));
   };
 
@@ -281,11 +278,8 @@ function ProjectsInner() {
   };
 
   const selectedSkills = (() => {
-    try {
-      return JSON.parse(formData.techStack);
-    } catch {
-      return [];
-    }
+    if (!formData.techStack) return [];
+    return formData.techStack.split("\n").map(line => line.replace(/^[-•*]\s*/, "").trim()).filter(Boolean);
   })();
 
   return (
@@ -485,7 +479,7 @@ function ProjectsInner() {
               type="text"
               value={formData.tags}
               onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
-              placeholder='["react", "nextjs", "web development"]'
+              placeholder="react, nextjs, web development"
             />
           </FormField>
 

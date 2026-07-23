@@ -84,12 +84,9 @@ export default function ProjectsPage() {
 
                             <p className="text-sm text-white/50 leading-relaxed mb-4 line-clamp-2">
                               {(() => {
-                                try {
-                                  const parsed = JSON.parse(project.results || "[]");
-                                  return Array.isArray(parsed) && parsed[0]?.title ? parsed[0].title : "";
-                                } catch {
-                                  return "";
-                                }
+                                if (!project.results) return "";
+                                const lines = project.results.split("\n").map(line => line.replace(/^[-•*]\s+/, "").trim()).filter(Boolean);
+                                return lines[0] || "";
                               })()}
                             </p>
 

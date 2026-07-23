@@ -52,11 +52,11 @@ export function ProjectPageClient({
       .join(" ")
   );
   const hasDescription = !!project.description;
-  const hasFeatures = project.features && project.features.trim() !== "[]";
-  const hasChallenges = project.challenges && project.challenges.trim() !== "[]";
-  const hasOutcomes = project.outcomes && project.outcomes.trim() !== "[]";
-  const hasResults = project.results && project.results.trim() !== "[]";
-  const hasTechStack = project.techStack && project.techStack.trim() !== "[]";
+  const hasFeatures = project.features && project.features.trim() !== "";
+  const hasChallenges = project.challenges && project.challenges.trim() !== "";
+  const hasOutcomes = project.outcomes && project.outcomes.trim() !== "";
+  const hasResults = project.results && project.results.trim() !== "";
+  const hasTechStack = project.techStack && project.techStack.trim() !== "";
 
   const sections = [
     hasDescription && { id: "description", text: "Description" },
